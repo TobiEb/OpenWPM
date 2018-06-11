@@ -66,6 +66,15 @@ def execute_command(command, webdriver, browser_settings, browser_params,
         browser_commands.screenshot_full_page(
             visit_id=command[2], crawl_id=browser_params['crawl_id'],
             driver=webdriver, manager_params=manager_params, suffix=command[1])
+            
+	if command[0] == 'JIGGLE_MOUSE':
+		browser_commands.jiggle_mouse(webdriver=webdriver, number_jiggles=command[1])
+
+    if command[0] == 'EXEC_SCRIPT':
+		browser_commands.exec_script(webdriver=webdriver)
+
+    if command[0] == 'LOGIN':
+		browser_commands.login(webdriver=webdriver, credentials=command[1])
 
     if command[0] == 'RUN_CUSTOM_FUNCTION':
         arg_dict = {"command": command,

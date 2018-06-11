@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from __future__ import absolute_import
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -21,12 +23,16 @@ from ..MPLogger import loggingclient
 from .utils.lso import get_flash_cookies
 from .utils.firefox_profile import get_cookies
 from .utils.webdriver_extensions import (scroll_down,
+                                         scroll_to_bottom, is_loaded,
                                          wait_until_loaded,
                                          get_intra_links,
                                          execute_in_all_frames,
                                          execute_script_with_retry)
 from six.moves import range
 import six
+
+import subprocess # to execute shell script, test for tshark
+import sys, os
 
 # Constants for bot mitigation
 NUM_MOUSE_MOVES = 10  # Times to randomly move the mouse
@@ -141,6 +147,8 @@ def get_website(url, sleep, visit_id, webdriver,
 
     if browser_params['bot_mitigation']:
         bot_mitigation(webdriver)
+    if browser_params['scroll_down']:
+        my_scroll_down(webdriver)
 
 
 def extract_links(webdriver, browser_params, manager_params):
@@ -199,6 +207,8 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
             time.sleep(max(1, sleep))
             if browser_params['bot_mitigation']:
                 bot_mitigation(webdriver)
+            if browser_params['scroll_down']:
+                my_scroll_down(webdriver)
             webdriver.back()
             wait_until_loaded(webdriver, 300)
         except Exception:
@@ -435,3 +445,28 @@ def recursive_dump_page_source(visit_id, driver, manager_params, suffix=''):
 
     with gzip.GzipFile(outfile, 'wb') as f:
         f.write(json.dumps(page_source).encode('utf-8'))
+        
+def jiggle_mouse(webdriver, number_jiggles):
+    for i in xrange(0, number_jiggles):
+        x = random.randrange(0, 500)
+        y = random.randrange(0, 500)
+        action = ActionChains(webdriver)
+        action.move_by_offset(x, y)
+        action.perform()
+
+def my_scroll_down(webdriver):
+    scroll_down(webdriver)
+
+def exec_script(webdriver):
+    subprocess.call(['/home/tobi/Schreibtisch/OpenWPM/test.sh'])
+    
+def login(webdriver, credentials):
+    logger = loggingclient(*manager_params['logger_address'])
+    try:
+        inputElements = webdriver.find_elements_by_tag_name('input')
+    except Exception:
+        logger.info(
+                    "BROWSER %i: WebDriverException while scrolling, "
+                    "screenshot may be misaligned!" % crawl_id)
+        pass
+    #logger.info("At least i am here")
