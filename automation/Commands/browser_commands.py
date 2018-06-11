@@ -149,7 +149,17 @@ def get_website(url, sleep, visit_id, webdriver,
         bot_mitigation(webdriver)
     if browser_params['scroll_down']:
         my_scroll_down(webdriver)
+    #test
+    if browser_params['login']:
+        email = webdriver.find_element_by_id("email")
+        pw = webdriver.find_element_by_id("pass")
 
+        email.send_keys("admin")
+        pw.send_keys("admin")
+
+        webdriver.find_element_by_id("loginbutton").click()
+
+        time.sleep(5)
 
 def extract_links(webdriver, browser_params, manager_params):
     link_elements = webdriver.find_elements_by_tag_name('a')
@@ -209,6 +219,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
                 bot_mitigation(webdriver)
             if browser_params['scroll_down']:
                 my_scroll_down(webdriver)
+
             webdriver.back()
             wait_until_loaded(webdriver, 300)
         except Exception:
@@ -455,18 +466,18 @@ def jiggle_mouse(webdriver, number_jiggles):
         action.perform()
 
 def my_scroll_down(webdriver):
-    scroll_down(webdriver)
+    scroll_to_bottom(webdriver)
 
 def exec_script(webdriver):
     subprocess.call(['/home/tobi/Schreibtisch/OpenWPM/test.sh'])
     
-def login(webdriver, credentials):
+def login(webdriver, credentials, manager_params):
     logger = loggingclient(*manager_params['logger_address'])
-    try:
-        inputElements = webdriver.find_elements_by_tag_name('input')
-    except Exception:
-        logger.info(
-                    "BROWSER %i: WebDriverException while scrolling, "
-                    "screenshot may be misaligned!" % crawl_id)
-        pass
-    #logger.info("At least i am here")
+    logger.info("At least i am here")
+    #try:
+    #    inputElements = webdriver.find_elements_by_tag_name('input')
+    #except Exception:
+    #    logger.info(
+    #                "BROWSER %i: WebDriverException while scrolling, "
+    #                "screenshot may be misaligned!" % crawl_id)
+    #    pass

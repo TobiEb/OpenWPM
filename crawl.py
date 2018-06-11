@@ -5,10 +5,6 @@ from six.moves import range
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
 
-cred = {}
-cred["name"] = "Test"
-cred["pw"] = "Test"
-
 #sites = ['http://www.spiegel.de', 'http://www.zalando.de', 'http://www.web.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de']
 sites = ['https://www.facebook.de']
 
@@ -36,6 +32,7 @@ for i in range(NUM_BROWSERS):
 
     #self written
     browser_params[i]['scroll_down'] = False
+    browser_params[i]['login'] = True
 
 # Update TaskManager configuration (use this for crawl-wide settings)
 manager_params['data_directory'] = '/home/tobi/Schreibtisch/Tests/'
@@ -51,14 +48,13 @@ for site in sites:
     command_sequence_get = CommandSequence.CommandSequence(site, reset=True)
     #command_sequence_get.exec_script()
     command_sequence_get.get(sleep=0, timeout=default_timeout)
-    command_sequence_get.login(credentials=cred)
     command_sequence_get.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get.dump_flash_cookies(timeout=default_timeout)
 
-    #command_sequence_browse1 = CommandSequence.CommandSequence(site, reset=True)
-    #command_sequence_browse1.browse(num_links=1, sleep=0, timeout=(2*default_timeout))
-    #command_sequence_browse1.dump_profile_cookies(timeout=(2*default_timeout))
-    #command_sequence_browse1.dump_flash_cookies(timeout=(2*default_timeout))
+    command_sequence_browse1 = CommandSequence.CommandSequence(site, reset=True)
+    command_sequence_browse1.browse(num_links=1, sleep=0, timeout=(2*default_timeout))
+    command_sequence_browse1.dump_profile_cookies(timeout=(2*default_timeout))
+    command_sequence_browse1.dump_flash_cookies(timeout=(2*default_timeout))
 
     #command_sequence_browse2 = CommandSequence.CommandSequence(site, reset=True)
     #command_sequence_browse2.browse(num_links=2, sleep=0, timeout=(3*default_timeout))

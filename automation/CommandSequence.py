@@ -174,6 +174,14 @@ class CommandSequence:
         command = ('JIGGLE_MOUSE',num_jiggles)
         self.commands_with_timeout.append((command, timeout))
 
+    def scroll_down(self, timeout=60):
+        self.total_timeout += timeout
+        if not self.contains_get_or_browse:
+            raise CommandExecutionError("No get or browse request preceding "
+                                    "the scroll_down command", self)
+        command = ('SCROLL_DOWN')
+        self.commands_with_timeout.append((command, timeout))
+
     def exec_script(self, timeout=60):
         self.total_timeout += timeout
         command = ('EXEC_SCRIPT')

@@ -25,5 +25,6 @@
     "ublock-origin": false,
     "tracking-protection": false,
 
-    "scroll_down": false
+    "scroll_down": false,
+    "login": true
 }
