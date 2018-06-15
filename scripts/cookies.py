@@ -8,7 +8,12 @@ cur = conn.cursor()
 
 # MAIN CONFIG
 selected_crawl = 1
-show_index = 0 # 0 means landing page, 3 browsing 3 subpages
+selected_index = 0 # 0 means landing page, 3 browsing 3 subpages
+show_session_cookies = True
+observing_domains = ["facebook"] # if array is empty it will be not investigated. Otherwise add domains as strings into this array
+#
+#
+#
 result = []
 
 # get index and success from CrawlHistory, create result array
@@ -66,6 +71,7 @@ for res in result:
     third_party_cookie_values = []
     sessionCookies = 0
     visited_tld = ""
+    domain_cookies = []
 
     for name, value, host, is_session in cur.execute("SELECT name, value, host, is_session"
                                     " FROM javascript_cookies"
@@ -82,20 +88,39 @@ for res in result:
                     unique_third_party_cookie_names.append(str(name))
                     third_party_cookie_hosts.append(str(host))
                     third_party_cookie_values.append(str(value))
-                    if is_session == 1:
-                        sessionCookies = sessionCookies + 1
+                    # check if domain(s) is/are present
+                    if len(observing_domains) != 0:
+                        for domain in observing_domains:
+                            if domain in host:
+                                domain_cookies.append(str(name))
+                # check if session cookie
+                if is_session == 1:
+                    sessionCookies = sessionCookies + 1
 
     res["sum_cookies"] = len(unique_cookie_names)
     res["sum_third_party_cookies"] = len(unique_third_party_cookie_names)
+    res["sum_session_cookies"] = sessionCookies
+    res["sum_domain_cookies"] = len(domain_cookies)
 
 # print result
+# if all third-party domains want to be seen:
+#for domain in third_party_cookie_hosts:
+#    print domain 
+if len(observing_domains) != 0:
+    print "Cookies bezogen auf die Domains:", observing_domains
 for res in result:
     if res["success"] == True:
-        if show_index is not None:
-            if show_index == res["index"]:
-                print res["visited_site"], res["sum_cookies"], res["sum_third_party_cookies"], res["success"]
+        if selected_index is not None:
+            if selected_index == res["index"]:
+                if len(observing_domains) == 0:
+                    if show_session_cookies == True:
+                        print res["visited_site"], res["sum_cookies"], res["sum_third_party_cookies"], res["sum_session_cookies"]
+                    else:
+                        print res["visited_site"], res["sum_cookies"], res["sum_third_party_cookies"]
+                else:
+                    print res["visited_site"], res["sum_domain_cookies"]
         else:
-            print res["visited_site"], res["sum_cookies"], res["sum_third_party_cookies"], res["success"]
+            print "selected_index should be set"
 
 
 
