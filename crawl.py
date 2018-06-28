@@ -21,13 +21,13 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['cookie_instrument'] = True
     browser_params[i]['disable_flash'] = False
     browser_params[i]['tp_cookies'] = 'always' # or never or from_visited
-    browser_params[i]['bot_mitigation'] = True
+    browser_params[i]['bot_mitigation'] = False # throws a lot of errors if enabled
     # add ons related
     browser_params[i]['disconnect'] = False
     browser_params[i]['ghostery'] = False
     browser_params[i]['ublock-origin'] = False
     # if profile should be saved
-    browser_params[i]['profile_archive_dir'] = '/home/tobi/Schreibtisch/Tests/Profile/'
+    #browser_params[i]['profile_archive_dir'] = '/home/tobi/Schreibtisch/Tests/Profile/'
     # if profile should be loaded
     #browser_params[i]['profile_tar'] = '/home/tobi/Schreibtisch/Tests/Profile/'
 

@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import MoveTargetOutOfBoundsException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 from hashlib import md5
 from glob import glob
@@ -145,21 +146,44 @@ def get_website(url, sleep, visit_id, webdriver,
 
     close_other_windows(webdriver)
 
-    if browser_params['bot_mitigation']:
-        bot_mitigation(webdriver)
     if browser_params['scroll_down']:
         my_scroll_down(webdriver)
-    #test
+    #login
     if browser_params['login']:
-        email = webdriver.find_element_by_id("email")
-        pw = webdriver.find_element_by_id("pass")
-
-        email.send_keys("admin")
-        pw.send_keys("admin")
-
-        webdriver.find_element_by_id("loginbutton").click()
-
-        time.sleep(5)
+        if "facebook" in url:
+            try:
+                email = webdriver.find_element_by_id("email")
+                pw = webdriver.find_element_by_id("pass")
+                email.send_keys("admin")
+                pw.send_keys("admin")
+                webdriver.find_element_by_id("loginbutton").click()
+                time.sleep(10)
+            except Exception:
+                pass
+        elif "accounts.google" in url:
+            try:
+                email = webdriver.find_element_by_id("Email")
+                email.send_keys("admin")
+                webdriver.find_element_by_id("next").click()
+                time.sleep(10)
+                pw = webdriver.find_element_by_id("Passwd")
+                pw.send_keys("admin")
+                webdriver.find_element_by_id("signIn").click()
+                time.sleep(10)
+            except Exception:
+                pass
+        elif "amazon" in url:
+            try:
+                email = webdriver.find_element_by_id("ap_email")
+                email.send_keys("admin")
+                webdriver.find_element_by_id("continue").click()
+                time.sleep(10)
+                pw = webdriver.find_element_by_id("ap_password")
+                pw.send_keys("admin")
+                webdriver.find_element_by_id("signInSubmit").click()
+                time.sleep(10)
+            except Exception:
+                pass
 
 def extract_links(webdriver, browser_params, manager_params):
     link_elements = webdriver.find_elements_by_tag_name('a')
@@ -204,19 +228,19 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     for i in range(num_links):
         links = []
         for x in get_intra_links(webdriver, url):
-            if x.is_displayed() is True and x.is_enabled() is True:
+            if is_active(x) is True:
                 links.append(x)
-        #links = [x for x in get_intra_links(webdriver, url)
-        #         if x.is_displayed() is True and x.is_enabled() is True]
+
         if not links or len(links) == 0:
-            logger.info("No links found")
-            break
+            for x in get_intra_links(webdriver, url):
+                if is_active(x) is True:
+                    links.append(x)
         r = int(random.random()*len(links))
-        logger.info("BROWSER %i: visiting internal link %s" % (
-            browser_params['crawl_id'], links[r].get_attribute("href")))
 
         try:
             links[r].click()
+            logger.info("BROWSER %i: visiting internal link %s" % (
+            browser_params['crawl_id'], links[r].get_attribute("href")))
             wait_until_loaded(webdriver, 300)
             time.sleep(max(1, sleep))
             if browser_params['bot_mitigation']:
@@ -225,14 +249,27 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
                 my_scroll_down(webdriver)
             webdriver.back()
             wait_until_loaded(webdriver, 300)
-        except Exception:
-            logger.info("im exception")
+        except StaleElementReferenceException:
+            logger.info("im stale exception")
             # instead of clicking try to GET page
             # Execute a get through selenium
-            webdriver.get(links[r].get_attribute("href"))
+            try:
+                webdriver.get(links[r].get_attribute("href"))
+            except TimeoutException:
+                pass
             # Sleep after get returns
             time.sleep(sleep)
-            pass
+        except WebDriverException:
+            logger.info("im WebDriverException exception")
+            # instead of clicking try to GET page
+            # Execute a get through selenium
+            try:
+                logger.info("visiting internal link %s" % (links[r].get_attribute("href")))
+                webdriver.get(links[r].get_attribute("href"))
+            except TimeoutException:
+                pass
+            # Sleep after get returns
+            time.sleep(sleep)
 
 
 def dump_flash_cookies(start_time, visit_id, webdriver, browser_params,
