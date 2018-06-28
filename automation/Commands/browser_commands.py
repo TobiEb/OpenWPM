@@ -186,7 +186,6 @@ def extract_links(webdriver, browser_params, manager_params):
 
     sock.close()
 
-
 def browse_website(url, num_links, sleep, visit_id, webdriver,
                    browser_params, manager_params, extension_socket):
     """Calls get_website before visiting <num_links> present on the page.
@@ -203,9 +202,14 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
 
     # Then visit a few subpages
     for i in range(num_links):
-        links = [x for x in get_intra_links(webdriver, url)
-                 if x.is_displayed() is True]
-        if not links:
+        links = []
+        for x in get_intra_links(webdriver, url):
+            if x.is_displayed() is True and x.is_enabled() is True:
+                links.append(x)
+        #links = [x for x in get_intra_links(webdriver, url)
+        #         if x.is_displayed() is True and x.is_enabled() is True]
+        if not links or len(links) == 0:
+            logger.info("No links found")
             break
         r = int(random.random()*len(links))
         logger.info("BROWSER %i: visiting internal link %s" % (
@@ -219,10 +223,15 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
                 bot_mitigation(webdriver)
             if browser_params['scroll_down']:
                 my_scroll_down(webdriver)
-
             webdriver.back()
             wait_until_loaded(webdriver, 300)
         except Exception:
+            logger.info("im exception")
+            # instead of clicking try to GET page
+            # Execute a get through selenium
+            webdriver.get(links[r].get_attribute("href"))
+            # Sleep after get returns
+            time.sleep(sleep)
             pass
 
 
