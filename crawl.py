@@ -1,13 +1,16 @@
 from __future__ import absolute_import
 from automation import TaskManager, CommandSequence
 from six.moves import range
+from crawl_sites import top_50_sites
 
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
 
+sites = top_50_sites
+
 #sites = ['www.google.de', 'www.youtube.com', 'www.facebook.com', 'www.amazon.de', 'www.ebay.de', 'www.vk.com', 'www.web.de', 'www.gmx.net', 'www.reddit.com', 'www.t-online.de']
 #sites = ['http://www.spiegel.de', 'http://www.zalando.de', 'http://www.web.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
-sites = ['http://google.de']
+#sites = ['http://google.de']
 
 # Loads the manager preference and 3 copies of the default browser dictionaries
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)

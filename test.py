@@ -1,16 +1,24 @@
-import sqlite3 as lite
-from tld import get_tld
+import fileinput
 
-# connect to the output database
-wpm_db = '/home/tobi/Schreibtisch/Tests/crawl-data.sqlite'
-conn = lite.connect(wpm_db)
-cur = conn.cursor()
+list_of_lists = []
 
-visited_tld = ""
-total_localStorage_items = 0
-errors = 0
-third_party_cookies = 0
-#print "CHANGE : RAWHOST : HOST : STATUS"
-for url in cur.execute("SELECT *"
-                            " FROM CrawlHistory;"):
-    print url
+        # Read in the file
+# with open('./Sites/Quantcast-Top-Million8.txt', 'r') as file :
+#   filedata = file.read()
+
+# # Replace the target string
+# filedata = filedata.replace('[\'\',', '')
+
+with open('./Sites/Quantcast-Top-Million.txt') as f:
+    for line in f:
+        # inner_list = [elt.strip() for elt in line.split(',')]
+        # in alternative, if you need to use the file content as numbers
+        # inner_list = [int(elt.strip()) for elt in line.split(',')]
+        list_of_lists.append(line)
+        if line.startswith('[\'114005'):
+            break
+
+
+# Write the file out again
+with open('./Sites/Quantcast-Top-Million2.txt', 'w') as file:
+  file.write(str(list_of_lists))
