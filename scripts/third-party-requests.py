@@ -2,14 +2,14 @@ import sqlite3 as lite
 from tld import get_tld
 
 # connect to the output database
-wpm_db = '/home/tobi/Schreibtisch/Tests/crawl-data.sqlite'
+wpm_db = '/home/tobi/Workspace/OpenWPM/Output/crawl-data.sqlite'
 conn = lite.connect(wpm_db)
 cur = conn.cursor()
 
 # MAIN CONFIG
-selected_crawl = 35
-selected_index = 1 # 0 means landing page, 4 browsing 4 subpages
-observing_domains = [] # if array is empty it will be not investigated. Otherwise add domains as strings into this array
+selected_crawl = 8
+selected_index = 0 # 0 means landing page, 4 browsing 4 subpages
+observing_domains = ['google', 'doubleclick'] # if array is empty it will be not investigated. Otherwise add domains as strings into this array
 #
 #
 #

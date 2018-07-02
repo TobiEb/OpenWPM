@@ -7,7 +7,7 @@ conn = lite.connect(wpm_db)
 cur = conn.cursor()
 
 # MAIN CONFIG
-selected_crawl = 35
+selected_crawl = 19
 show_index = 0 # 0 means landing page, 4 browsing 4 subpages
 result = []
 
@@ -74,9 +74,9 @@ for res in result:
 	if res["success"] == True:
 		if show_index is not None:
 			if show_index == res["index"]:
-				print res["visited_site"], res["content-length"], res["success"]
+				print res["visited_site"], res["content-length"]
 		else:
-			print res["visited_site"], res["content-length"], res["success"]
+			print res["visited_site"], res["content-length"]
 
 
 

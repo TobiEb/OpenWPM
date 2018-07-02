@@ -2,7 +2,7 @@ import sqlite3 as lite
 from tld import get_tld
 
 # connect to the output database
-wpm_db = '/home/tobi/Schreibtisch/Tests/crawl-data.sqlite'
+wpm_db = '/home/tobi/Workspace/OpenWPM/Output/crawl-data.sqlite'
 conn = lite.connect(wpm_db)
 cur = conn.cursor()
 

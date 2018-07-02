@@ -26,5 +26,6 @@
     "tracking-protection": false,
 
     "scroll_down": false,
-    "login": false
+    "login": false,
+    "execute_script": false
 }

@@ -27,12 +27,14 @@ from .utils.webdriver_extensions import (scroll_down,
                                          scroll_to_bottom, is_loaded,
                                          wait_until_loaded,
                                          get_intra_links,
+                                         is_active,
                                          execute_in_all_frames,
                                          execute_script_with_retry)
 from six.moves import range
 import six
 
-import subprocess # to execute shell script, test for tshark
+import subprocess # to execute shell script for tshark
+from tld import get_tld
 import sys, os
 
 # Constants for bot mitigation
@@ -121,6 +123,9 @@ def get_website(url, sleep, visit_id, webdriver,
     goes to <url> using the given <webdriver> instance
     """
 
+    if browser_params['execute_script']:
+        subprocess.call(['/home/tobi/Workspace/OpenWPM/start_tshark.sh', str(get_tld(url)), str(visit_id)])
+
     tab_restart_browser(webdriver)
 
     if extension_socket is not None:
@@ -144,12 +149,11 @@ def get_website(url, sleep, visit_id, webdriver,
     except TimeoutException:
         pass
 
-    close_other_windows(webdriver)
-
     if browser_params['scroll_down']:
         my_scroll_down(webdriver)
     #login
     if browser_params['login']:
+        print url
         if "facebook" in url:
             try:
                 email = webdriver.find_element_by_id("email")
@@ -161,17 +165,15 @@ def get_website(url, sleep, visit_id, webdriver,
             except Exception:
                 pass
         elif "accounts.google" in url:
-            try:
-                email = webdriver.find_element_by_id("Email")
-                email.send_keys("admin")
-                webdriver.find_element_by_id("next").click()
-                time.sleep(10)
-                pw = webdriver.find_element_by_id("Passwd")
-                pw.send_keys("admin")
-                webdriver.find_element_by_id("signIn").click()
-                time.sleep(10)
-            except Exception:
-                pass
+            time.sleep(5)
+            email = webdriver.find_element_by_id("identifierId")
+            email.send_keys("admin")
+            webdriver.find_element_by_id("identifierNext").click()
+            time.sleep(10)
+            pw = webdriver.find_element_by_id("password")
+            pw.send_keys("admin")
+            webdriver.find_element_by_id("passwordNext").click()
+            time.sleep(10)
         elif "amazon" in url:
             try:
                 email = webdriver.find_element_by_id("ap_email")
@@ -184,6 +186,8 @@ def get_website(url, sleep, visit_id, webdriver,
                 time.sleep(10)
             except Exception:
                 pass
+
+    #close_other_windows(webdriver)
 
 def extract_links(webdriver, browser_params, manager_params):
     link_elements = webdriver.find_elements_by_tag_name('a')
@@ -502,28 +506,9 @@ def recursive_dump_page_source(visit_id, driver, manager_params, suffix=''):
 
     with gzip.GzipFile(outfile, 'wb') as f:
         f.write(json.dumps(page_source).encode('utf-8'))
-        
-def jiggle_mouse(webdriver, number_jiggles):
-    for i in xrange(0, number_jiggles):
-        x = random.randrange(0, 500)
-        y = random.randrange(0, 500)
-        action = ActionChains(webdriver)
-        action.move_by_offset(x, y)
-        action.perform()
 
 def my_scroll_down(webdriver):
     scroll_to_bottom(webdriver)
 
-def exec_script(webdriver):
-    subprocess.call(['/home/tobi/Schreibtisch/OpenWPM/test.sh'])
-    
-def login(webdriver, credentials, manager_params):
-    logger = loggingclient(*manager_params['logger_address'])
-    logger.info("At least i am here")
-    #try:
-    #    inputElements = webdriver.find_elements_by_tag_name('input')
-    #except Exception:
-    #    logger.info(
-    #                "BROWSER %i: WebDriverException while scrolling, "
-    #                "screenshot may be misaligned!" % crawl_id)
-    #    pass
+def stop_tshark(webdriver):
+    subprocess.call(['/home/tobi/Workspace/OpenWPM/stop_tshark.sh'])
