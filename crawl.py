@@ -45,6 +45,7 @@ manager_params['log_directory'] = '/home/OpenWPM/Output'
 #manager_params['database_name'] = 'output.sqlite'
 
 default_timeout = 90
+default_sleep = 5
 
 manager = TaskManager.TaskManager(manager_params, browser_params)
 
@@ -53,33 +54,33 @@ for site in sites:
     # define crawl actions
     # define prior login
     #command_sequence_google = CommandSequence.CommandSequence('http://accounts.google.de', reset=False)
-    #command_sequence_google.get(sleep=5, timeout=default_timeout)
+    #command_sequence_google.get(sleep=default_sleep, timeout=default_timeout)
     #command_sequence_google.dump_profile_cookies(timeout=default_timeout)
     #command_sequence_google.dump_flash_cookies(timeout=default_timeout)
 
     command_sequence_get = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence_get.get(sleep=5, timeout=default_timeout)
+    command_sequence_get.get(sleep=default_sleep, timeout=default_timeout)
     command_sequence_get.stop_tshark(timeout=10)
     command_sequence_get.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get.dump_flash_cookies(timeout=default_timeout)
 
     command_sequence_browse1 = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence_browse1.browse(num_links=1, sleep=5, timeout=(2*default_timeout))
+    command_sequence_browse1.browse(num_links=1, sleep=default_sleep, timeout=(2*default_timeout))
     command_sequence_browse1.dump_profile_cookies(timeout=(2*default_timeout))
     command_sequence_browse1.dump_flash_cookies(timeout=(2*default_timeout))
 
     command_sequence_browse2 = CommandSequence.CommandSequence(site, reset=False)
-    command_sequence_browse2.browse(num_links=2, sleep=5, timeout=(3*default_timeout))
+    command_sequence_browse2.browse(num_links=2, sleep=default_sleep, timeout=(3*default_timeout))
     command_sequence_browse2.dump_profile_cookies(timeout=(3*default_timeout))
     command_sequence_browse2.dump_flash_cookies(timeout=(3*default_timeout))
 
     command_sequence_browse3 = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence_browse3.browse(num_links=3, sleep=5, timeout=(4*default_timeout))
+    command_sequence_browse3.browse(num_links=3, sleep=default_sleep, timeout=(4*default_timeout))
     command_sequence_browse3.dump_profile_cookies(timeout=(4*default_timeout))
     command_sequence_browse3.dump_flash_cookies(timeout=(4*default_timeout))
 
     command_sequence_browse4 = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence_browse4.browse(num_links=4, sleep=5, timeout=(5*default_timeout))
+    command_sequence_browse4.browse(num_links=4, sleep=default_sleep, timeout=(5*default_timeout))
     command_sequence_browse4.dump_profile_cookies(timeout=(5*default_timeout))
     command_sequence_browse4.dump_flash_cookies(timeout=(5*default_timeout))
 
