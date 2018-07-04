@@ -152,6 +152,9 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
             links.append(el)
         print links
         set_sub_sites(links)
+    else:
+        elems = get_sub_sites
+        print(elems)
 
     # Sleep after get returns
     time.sleep(sleep)
