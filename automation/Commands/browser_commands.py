@@ -123,6 +123,9 @@ def get_website(url, sleep, visit_id, webdriver,
     goes to <url> using the given <webdriver> instance
     """
 
+    print url
+    print get_tld(url)
+
     if browser_params['execute_script']:
         subprocess.call(['/home/OpenWPM/start_tshark.sh', str(get_tld(url)), str(visit_id)])
 
