@@ -146,10 +146,10 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
 
     if initiator is True:
         # get 4 sub_sites and set them to visit now
+        links = []
         for i in range(4):
-            links = {}
-            links[i] = my_get_intra_link(webdriver, url)
-
+            el = my_get_intra_link(webdriver, url)
+            links.append(el)
         print links
         set_sub_sites(links)
 

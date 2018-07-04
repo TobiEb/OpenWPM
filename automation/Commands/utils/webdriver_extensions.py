@@ -78,7 +78,7 @@ def my_get_intra_link(webdriver, url):
             finalElement['full'] = elems[r]
             finalElement['url'] = href
             if 'http' in finalElement['url']:
-                return finalElement
+                return finalElement['url']
             else:
                 continue
 
