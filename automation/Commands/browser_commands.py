@@ -258,14 +258,13 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
             wait_until_loaded(webdriver, 300)
         except StaleElementReferenceException:
             logger.info("im stale exception")
+            logger.info("link is %s" % links[r])
+            webdriver.get(links[r])
             # instead of clicking try to GET page
             # Execute a get through selenium
-            try:
-                webdriver.get(links[r].get_attribute("href"))
-            except TimeoutException:
-                pass
             # Sleep after get returns
             time.sleep(sleep)
+            pass
         except WebDriverException:
             logger.info("im WebDriverException exception")
             # instead of clicking try to GET page
@@ -277,6 +276,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
                 pass
             # Sleep after get returns
             time.sleep(sleep)
+            pass
 
 
 def dump_flash_cookies(start_time, visit_id, webdriver, browser_params,
