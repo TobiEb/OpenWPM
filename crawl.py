@@ -85,11 +85,11 @@ for site in sites:
     command_sequence_browse4.dump_flash_cookies(timeout=(5*default_timeout))
 
     #manager.execute_command_sequence(command_sequence_google, index='**')
-    manager.execute_command_sequence(command_sequence_get, index=None) # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse1, index=None) # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse2, index=None) # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse3, index=None) # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse4, index=None) # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_get, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse1, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse2, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse3, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse4, index='**') # ** = synchronized browsers
     print "We will visit ", site
     
 # Shuts down the browsers and waits for the data to finish logging
