@@ -28,6 +28,7 @@ from .utils.webdriver_extensions import (scroll_down,
                                          wait_until_loaded,
                                          get_intra_links,
                                          my_get_intra_stable_link,
+                                         my_get_intra_link,
                                          is_active,
                                          execute_in_all_frames,
                                          execute_script_with_retry)
