@@ -124,7 +124,7 @@ def get_website(url, sleep, visit_id, webdriver,
     """
 
     if browser_params['execute_script']:
-        subprocess.call(['/home/tobi/Workspace/OpenWPM/start_tshark.sh', str(get_tld(url)), str(visit_id)])
+        subprocess.call(['/home/OpenWPM/start_tshark.sh', str(get_tld(url)), str(visit_id)])
 
     tab_restart_browser(webdriver)
 
@@ -511,4 +511,4 @@ def my_scroll_down(webdriver):
     scroll_to_bottom(webdriver)
 
 def stop_tshark(webdriver):
-    subprocess.call(['/home/tobi/Workspace/OpenWPM/stop_tshark.sh'])
+    subprocess.call(['/home/OpenWPM/stop_tshark.sh'])

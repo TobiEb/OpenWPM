@@ -1,3 +1,3 @@
 #!/bin/sh
 
-killall tshark
+/usr/bin/killall tshark
