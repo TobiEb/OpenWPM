@@ -248,15 +248,15 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     for i in range(num_links):
         try:
             logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], sub_sites[i]))
-                # Execute a get through selenium
-                webdriver.get(sub_sites[i])
-            except TimeoutException:
-                logger.info("im browse Timeout exception")
-                pass
-            except StaleElementReferenceException:
-                logger.info("beim getten im stale exception")
-                pass
-            time.sleep(sleep)
+            # Execute a get through selenium
+            webdriver.get(sub_sites[i])
+        except TimeoutException:
+            logger.info("im browse Timeout exception")
+            pass
+        except StaleElementReferenceException:
+            logger.info("beim getten im stale exception")
+            pass
+        time.sleep(sleep)
         # links = {}
         # links[i] = my_get_intra_stable_link(webdriver, url)
         #print links[i]['full']
