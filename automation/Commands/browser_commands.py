@@ -234,8 +234,8 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
         links = {}
         links[i] = my_get_intra_stable_link(webdriver, url)
         print links[i]
-        print links[i][0]
-        print links[i][1]
+        print links[i]['full']
+        print links[i]['url']
 
         if is_active(links[i]) is True:
             try:
