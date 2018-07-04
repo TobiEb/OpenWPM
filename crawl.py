@@ -1,12 +1,10 @@
 from __future__ import absolute_import
 from automation import TaskManager, CommandSequence
 from six.moves import range
+from crawl_sites import get_sub_sites
 
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
-
-#from crawl_sites import top_50_sites
-top_50_sites = [ 'google.com',  'youtube.com',  'facebook.com',  'amazon.com',  'wikipedia.org',  'twitter.com',  'yahoo.com',  'nytimes.com',  'ebay.com',  'reddit.com',  'yelp.com',  'walmart.com',  'paypal.com',  'apple.com',  'bing.com',  'craigslist.org',  'live.com',  'linkedin.com',   'adobe.com',  'wikia.com',   'quora.com',  'buzzfeed.com',  'espn.com',  'weather.com',  'netflix.com',   'pinterest.com',   'msn.com',    'spotify.com',  'ranker.com',  'instagram.com',  'capitalone.com',  'urbandictionary.com',  'tripadvisor.com',  'target.com',  'chase.com',  'avast.com',   'npr.org',  'wordpress.com',  'people.com',  'bustle.com',  'zillow.com',  'theguardian.com',   'giphy.com',  'whitepages.com',  'usatoday.com',   'cnet.com',  'cbsnews.com',  'businessinsider.com',  'lowes.com',  'legacy.com',  'glassdoor.com',  'stackexchange.com',  'webmd.com',  'wikimedia.org',  'usps.com',   'fandango.com',   'indeed.com',  'healthyway.com',  'bestbuy.com',  'macys.com',   'cnbc.com',  'mozilla.org']
 
 #sites = ['www.google.de', 'www.youtube.com', 'www.facebook.com', 'www.amazon.de', 'www.ebay.de', 'www.vk.com', 'www.web.de', 'www.gmx.net', 'www.reddit.com', 'www.t-online.de']
 sites = ['http://www.spiegel.de', 'http://www.zalando.de', 'http://www.web.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
@@ -58,38 +56,49 @@ for site in sites:
     #command_sequence_google.dump_profile_cookies(timeout=default_timeout)
     #command_sequence_google.dump_flash_cookies(timeout=default_timeout)
 
-    command_sequence_get = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence_get.get(sleep=default_sleep, timeout=default_timeout)
-    #command_sequence_get.stop_tshark(timeout=10)
-    command_sequence_get.dump_profile_cookies(timeout=default_timeout)
-    command_sequence_get.dump_flash_cookies(timeout=default_timeout)
+    command_sequence_get1 = CommandSequence.CommandSequence(site, reset=True)
+    command_sequence_get1.get(sleep=default_sleep, timeout=default_timeout)
+    #command_sequence_get1.stop_tshark(timeout=10)
+    command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
+    command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
 
-    command_sequence_browse1 = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence_browse1.browse(num_links=1, sleep=default_sleep, timeout=(2*default_timeout))
-    command_sequence_browse1.dump_profile_cookies(timeout=(2*default_timeout))
-    command_sequence_browse1.dump_flash_cookies(timeout=(2*default_timeout))
+    command_sequence_get2 = CommandSequence.CommandSequence(sub_sites[0], reset=False)
+    command_sequence_get2.get(sleep=default_sleep, timeout=default_timeout)
+    #command_sequence_get2.stop_tshark(timeout=10)
+    command_sequence_get2.dump_profile_cookies(timeout=default_timeout)
+    command_sequence_get2.dump_flash_cookies(timeout=default_timeout)
 
-    command_sequence_browse2 = CommandSequence.CommandSequence(site, reset=False)
-    command_sequence_browse2.browse(num_links=2, sleep=default_sleep, timeout=(3*default_timeout))
-    command_sequence_browse2.dump_profile_cookies(timeout=(3*default_timeout))
-    command_sequence_browse2.dump_flash_cookies(timeout=(3*default_timeout))
+    command_sequence_get3 = CommandSequence.CommandSequence(sub_sites[1], reset=False)
+    command_sequence_get3.get(sleep=default_sleep, timeout=default_timeout)
+    #command_sequence_get3.stop_tshark(timeout=10)
+    command_sequence_get3.dump_profile_cookies(timeout=default_timeout)
+    command_sequence_get3.dump_flash_cookies(timeout=default_timeout)
 
-    command_sequence_browse3 = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence_browse3.browse(num_links=3, sleep=default_sleep, timeout=(4*default_timeout))
-    command_sequence_browse3.dump_profile_cookies(timeout=(4*default_timeout))
-    command_sequence_browse3.dump_flash_cookies(timeout=(4*default_timeout))
+    command_sequence_get4 = CommandSequence.CommandSequence(sub_sites[2], reset=False)
+    command_sequence_get4.get(sleep=default_sleep, timeout=default_timeout)
+    #command_sequence_get4.stop_tshark(timeout=10)
+    command_sequence_get4.dump_profile_cookies(timeout=default_timeout)
+    command_sequence_get4.dump_flash_cookies(timeout=default_timeout)
 
-    command_sequence_browse4 = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence_browse4.browse(num_links=4, sleep=default_sleep, timeout=(5*default_timeout))
-    command_sequence_browse4.dump_profile_cookies(timeout=(5*default_timeout))
-    command_sequence_browse4.dump_flash_cookies(timeout=(5*default_timeout))
+    command_sequence_get5 = CommandSequence.CommandSequence(sub_sites[3], reset=False)
+    command_sequence_get5.get(sleep=default_sleep, timeout=default_timeout)
+    #command_sequence_get5.stop_tshark(timeout=10)
+    command_sequence_get5.dump_profile_cookies(timeout=default_timeout)
+    command_sequence_get5.dump_flash_cookies(timeout=default_timeout)
+
+    command_sequence_browse5 = CommandSequence.CommandSequence(site, reset=True)
+    command_sequence_browse5.browse(num_links=4, sleep=default_sleep, timeout=(5*default_timeout))
+    command_sequence_browse5.dump_profile_cookies(timeout=(5*default_timeout))
+    command_sequence_browse5.dump_flash_cookies(timeout=(5*default_timeout))
 
     #manager.execute_command_sequence(command_sequence_google, index='**')
-    manager.execute_command_sequence(command_sequence_get, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse1, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse2, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse3, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse4, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_get1, index='**') # ** = synchronized browsers
+    sub_sites = get_sub_sites()
+    manager.execute_command_sequence(command_sequence_get2, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_get3, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_get4, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_get5, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse5, index='**') # ** = synchronized browsers
     print "We will visit ", site
     
 # Shuts down the browsers and waits for the data to finish logging
