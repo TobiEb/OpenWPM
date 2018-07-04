@@ -240,8 +240,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
         if is_active(links[i]) is True:
             try:
                 links[i].click()
-                logger.info("BROWSER %i: visiting internal link %s" % (
-                browser_params['crawl_id'], links[i])
+                logger.info("BROWSER %i: visiting internal link %s" % (browser_params['crawl_id'], links[i])
                 wait_until_loaded(webdriver, 300)
                 time.sleep(max(1, sleep))
                 webdriver.back()
