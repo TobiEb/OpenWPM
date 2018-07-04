@@ -123,9 +123,7 @@ def get_website(url, sleep, visit_id, webdriver,
     """
     goes to <url> using the given <webdriver> instance
     """
-
     print url
-    print get_tld(url)
 
     if browser_params['execute_script']:
         subprocess.call(['/home/OpenWPM/start_tshark.sh', str(get_tld(url)), str(visit_id)])
@@ -236,6 +234,8 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
         links = {}
         links[i] = my_get_intra_stable_link(webdriver, url)
         print links[i]
+        print links[i][0]
+        print links[i][1]
 
         if is_active(links[i]) is True:
             try:

@@ -85,7 +85,10 @@ def my_get_intra_stable_link(webdriver, url):
             full_href = urljoin(url, href)
             if not full_href.startswith('http'):
                 continue
-            return elems[r].get_attribute('href')
+            finalElement = {}
+            finalElement['full'] = elems[r]
+            finalElement['url'] = elems[r].get_attribute('href')
+            return finalElement
 
 
 def get_intra_links(webdriver, url):
