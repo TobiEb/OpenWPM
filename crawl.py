@@ -3,7 +3,7 @@ from automation import TaskManager, CommandSequence
 from six.moves import range
 
 # The list of sites that we wish to crawl
-NUM_BROWSERS = 3
+NUM_BROWSERS = 1
 
 #from crawl_sites import top_50_sites
 top_50_sites = [ 'google.com',  'youtube.com',  'facebook.com',  'amazon.com',  'wikipedia.org',  'twitter.com',  'yahoo.com',  'nytimes.com',  'ebay.com',  'reddit.com',  'yelp.com',  'walmart.com',  'paypal.com',  'apple.com',  'bing.com',  'craigslist.org',  'live.com',  'linkedin.com',   'adobe.com',  'wikia.com',   'quora.com',  'buzzfeed.com',  'espn.com',  'weather.com',  'netflix.com',   'pinterest.com',   'msn.com',    'spotify.com',  'ranker.com',  'instagram.com',  'capitalone.com',  'urbandictionary.com',  'tripadvisor.com',  'target.com',  'chase.com',  'avast.com',   'npr.org',  'wordpress.com',  'people.com',  'bustle.com',  'zillow.com',  'theguardian.com',   'giphy.com',  'whitepages.com',  'usatoday.com',   'cnet.com',  'cbsnews.com',  'businessinsider.com',  'lowes.com',  'legacy.com',  'glassdoor.com',  'stackexchange.com',  'webmd.com',  'wikimedia.org',  'usps.com',   'fandango.com',   'indeed.com',  'healthyway.com',  'bestbuy.com',  'macys.com',   'cnbc.com',  'mozilla.org']
