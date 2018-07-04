@@ -37,7 +37,7 @@ for i in range(NUM_BROWSERS):
     #self written
     browser_params[i]['scroll_down'] = False
     browser_params[i]['login'] = False
-    browser_params[i]['execute_script'] = True
+    browser_params[i]['execute_script'] = False
 
 # Update TaskManager configuration (use this for crawl-wide settings)
 manager_params['data_directory'] = '/home/OpenWPM/Output'
@@ -60,7 +60,7 @@ for site in sites:
 
     command_sequence_get = CommandSequence.CommandSequence(site, reset=True)
     command_sequence_get.get(sleep=default_sleep, timeout=default_timeout)
-    command_sequence_get.stop_tshark(timeout=10)
+    #command_sequence_get.stop_tshark(timeout=10)
     command_sequence_get.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get.dump_flash_cookies(timeout=default_timeout)
 
