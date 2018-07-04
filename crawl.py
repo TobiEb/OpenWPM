@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 from automation import TaskManager, CommandSequence
 from six.moves import range
-#from crawl_sites import top_50_sites
 
 # The list of sites that we wish to crawl
-NUM_BROWSERS = 1
+NUM_BROWSERS = 3
 
+#from crawl_sites import top_50_sites
 top_50_sites = [ 'google.com',  'youtube.com',  'facebook.com',  'amazon.com',  'wikipedia.org',  'twitter.com',  'yahoo.com',  'nytimes.com',  'ebay.com',  'reddit.com',  'yelp.com',  'walmart.com',  'paypal.com',  'apple.com',  'bing.com',  'craigslist.org',  'live.com',  'linkedin.com',   'adobe.com',  'wikia.com',   'quora.com',  'buzzfeed.com',  'espn.com',  'weather.com',  'netflix.com',   'pinterest.com',   'msn.com',    'spotify.com',  'ranker.com',  'instagram.com',  'capitalone.com',  'urbandictionary.com',  'tripadvisor.com',  'target.com',  'chase.com',  'avast.com',   'npr.org',  'wordpress.com',  'people.com',  'bustle.com',  'zillow.com',  'theguardian.com',   'giphy.com',  'whitepages.com',  'usatoday.com',   'cnet.com',  'cbsnews.com',  'businessinsider.com',  'lowes.com',  'legacy.com',  'glassdoor.com',  'stackexchange.com',  'webmd.com',  'wikimedia.org',  'usps.com',   'fandango.com',   'indeed.com',  'healthyway.com',  'bestbuy.com',  'macys.com',   'cnbc.com',  'mozilla.org']
 
 #sites = ['www.google.de', 'www.youtube.com', 'www.facebook.com', 'www.amazon.de', 'www.ebay.de', 'www.vk.com', 'www.web.de', 'www.gmx.net', 'www.reddit.com', 'www.t-online.de']
@@ -44,7 +44,7 @@ manager_params['data_directory'] = '/home/OpenWPM/Output'
 manager_params['log_directory'] = '/home/OpenWPM/Output'
 #manager_params['database_name'] = 'output.sqlite'
 
-default_timeout = 90
+default_timeout = 60
 default_sleep = 5
 
 manager = TaskManager.TaskManager(manager_params, browser_params)
@@ -85,11 +85,11 @@ for site in sites:
     command_sequence_browse4.dump_flash_cookies(timeout=(5*default_timeout))
 
     #manager.execute_command_sequence(command_sequence_google, index='**')
-    manager.execute_command_sequence(command_sequence_get, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse1, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse2, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse3, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse4, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_get, index=None) # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse1, index=None) # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse2, index=None) # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse3, index=None) # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse4, index=None) # ** = synchronized browsers
     print "We will visit ", site
     
 # Shuts down the browsers and waits for the data to finish logging
