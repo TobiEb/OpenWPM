@@ -57,6 +57,36 @@ def wait_until_loaded(webdriver, timeout, period=0.25, min_time=0):
         time.sleep(period)
     return False
 
+def my_get_intra_stable_link(webdriver, url):
+    ps1 = du.get_ps_plus_1(url)
+    elems = webdriver.find_elements_by_tag_name("a")
+    # iterate over the amount of times which is available in links
+    for i in range(len(elems)):
+        # generate a random
+        r = int(random.random()*len(elems))
+        try:
+            href = elems[r].get_attribute('href')
+        except StaleElementReferenceException:
+            continue
+        if href is None:
+            continue
+        full_href = urljoin(url, href)
+        if not full_href.startswith('http'):
+            continue
+        if du.get_ps_plus_1(full_href) == ps1:
+            # may add check after timeout here
+            time.sleep(5)
+            try:
+                href = elems[r].get_attribute('href')
+            except StaleElementReferenceException:
+                continue
+            if href is None:
+                continue
+            full_href = urljoin(url, href)
+            if not full_href.startswith('http'):
+                continue
+            return elems[r].get_attribute('href')
+
 
 def get_intra_links(webdriver, url):
     ps1 = du.get_ps_plus_1(url)

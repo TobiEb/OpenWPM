@@ -22,7 +22,7 @@ def get_psl():
         psl_file = fetch()
         with codecs.open(PSL_CACHE_LOC, 'w', encoding='utf8') as f:
             f.write(psl_file.read())
-    print("Using psl from cache: %s" % PSL_CACHE_LOC)
+    #print("Using psl from cache: %s" % PSL_CACHE_LOC)
     psl_cache = codecs.open(PSL_CACHE_LOC, encoding='utf8')
     return PublicSuffixList(psl_cache)
 

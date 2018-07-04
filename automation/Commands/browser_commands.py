@@ -27,6 +27,7 @@ from .utils.webdriver_extensions import (scroll_down,
                                          scroll_to_bottom, is_loaded,
                                          wait_until_loaded,
                                          get_intra_links,
+                                         my_get_intra_stable_link,
                                          is_active,
                                          execute_in_all_frames,
                                          execute_script_with_retry)
@@ -231,52 +232,55 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     # Connect to logger
     logger = loggingclient(*manager_params['logger_address'])
 
-    # Then visit a few subpages
     for i in range(num_links):
-        links = []
-        for x in get_intra_links(webdriver, url):
-            if is_active(x) is True:
-                links.append(x)
+        links = {}
+        links[i] = my_get_intra_stable_link(webdriver, url)
+        print links[i]
 
-        if not links or len(links) == 0:
-            for x in get_intra_links(webdriver, url):
-                if is_active(x) is True:
-                    links.append(x)
-        r = int(random.random()*len(links))
-
-        try:
-            links[r].click()
-            logger.info("BROWSER %i: visiting internal link %s" % (
-            browser_params['crawl_id'], links[r].get_attribute("href")))
-            wait_until_loaded(webdriver, 300)
-            time.sleep(max(1, sleep))
-            if browser_params['bot_mitigation']:
-                bot_mitigation(webdriver)
-            if browser_params['scroll_down']:
-                my_scroll_down(webdriver)
-            webdriver.back()
-            wait_until_loaded(webdriver, 300)
-        except StaleElementReferenceException:
-            logger.info("im stale exception")
-            logger.info("link is %s" % links[r])
-            webdriver.get(links[r])
-            # instead of clicking try to GET page
-            # Execute a get through selenium
-            # Sleep after get returns
-            time.sleep(sleep)
-            pass
-        except WebDriverException:
-            logger.info("im WebDriverException exception")
-            # instead of clicking try to GET page
-            # Execute a get through selenium
+        if is_active(links[i]) is True:
             try:
-                logger.info("visiting internal link %s" % (links[r].get_attribute("href")))
-                webdriver.get(links[r].get_attribute("href"))
-            except TimeoutException:
+                links[i].click()
+                logger.info("BROWSER %i: visiting internal link %s" % (
+                browser_params['crawl_id'], links[i])
+                wait_until_loaded(webdriver, 300)
+                time.sleep(max(1, sleep))
+                webdriver.back()
+                wait_until_loaded(webdriver, 300)
+            except StaleElementReferenceException:
+                logger.info("im stale exception")
                 pass
-            # Sleep after get returns
-            time.sleep(sleep)
-            pass
+            except WebDriverException:
+                logger.info("im WebDriverException exception")
+                pass
+        else:
+            try:
+                logger.info("BROWSER %i: visiting internal link %s" % (
+                browser_params['crawl_id'], links[i])
+                # Execute a get through selenium
+                try:
+                    webdriver.get(links[i])
+                except TimeoutException:
+                    pass
+                time.sleep(sleep)
+            except StaleElementReferenceException:
+                logger.info("beim getten im stale exception")
+                pass
+            except WebDriverException:
+                logger.info("beim getten im WebDriverException exception")
+                pass
+
+    # Then visit a few subpages
+    #for i in range(num_links):
+    #    links = []
+    #    for x in get_intra_links(webdriver, url):
+    #        if is_active(x) is True:
+    #            links.append(x)
+
+    #    if not links or len(links) == 0:
+    #        for x in get_intra_links(webdriver, url):
+    #            if is_active(x) is True:
+    #                links.append(x)
+    #    r = int(random.random()*len(links))
 
 
 def dump_flash_cookies(start_time, visit_id, webdriver, browser_params,
