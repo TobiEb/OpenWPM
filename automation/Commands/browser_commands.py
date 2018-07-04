@@ -233,14 +233,13 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     for i in range(num_links):
         links = {}
         links[i] = my_get_intra_stable_link(webdriver, url)
-        print links[i]
-        print links[i]['full']
-        print links[i]['url']
+        #print links[i]['full']
+        #print links[i]['url']
 
-        if is_active(links[i]) is True:
+        if is_active(links[i]['full']) is True:
             try:
-                links[i].click()
-                logger.info("BROWSER %i: visiting internal link %s" % (browser_params['crawl_id'], links[i]))
+                links[i]['full'].click()
+                logger.info("BROWSER %i: visiting internal link by click %s" % (browser_params['crawl_id'], links[i]['url']))
                 wait_until_loaded(webdriver, 300)
                 time.sleep(max(1, sleep))
                 webdriver.back()
@@ -253,9 +252,9 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
                 pass
         else:
             try:
-                logger.info("BROWSER %i: visiting internal link %s" % (browser_params['crawl_id'], links[i]))
+                logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], links[i]['url']))
                 # Execute a get through selenium
-                webdriver.get(links[i])
+                webdriver.get(links[i]['url'])
             except TimeoutException:
                 pass
             except StaleElementReferenceException:
