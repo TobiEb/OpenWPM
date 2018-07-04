@@ -49,6 +49,7 @@ manager = TaskManager.TaskManager(manager_params, browser_params)
 
 # Visits the sites with all browsers simultaneously
 for site in sites:
+    sub_sites = []
     # define crawl actions
     # define prior login
     #command_sequence_google = CommandSequence.CommandSequence('http://accounts.google.de', reset=False)
