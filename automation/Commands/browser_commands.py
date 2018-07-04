@@ -119,11 +119,12 @@ def tab_restart_browser(webdriver):
     webdriver.switch_to_window(webdriver.window_handles[0])
 
 
-def get_website(url, sleep, visit_id, webdriver,
+def get_website(url, initiator, sleep, visit_id, webdriver,
                 browser_params, extension_socket):
     """
     goes to <url> using the given <webdriver> instance
     """
+    print initiator
     print url
     #visited_tld = get_tld(url)
     #print visited_tld
@@ -142,13 +143,14 @@ def get_website(url, sleep, visit_id, webdriver,
     except TimeoutException:
         pass
 
-    # get 4 sub_sites and set them to visit now
-    for i in range(4):
-        links = {}
-        links[i] = my_get_intra_link(webdriver, url)
+    if initiator is True:
+        # get 4 sub_sites and set them to visit now
+        for i in range(4):
+            links = {}
+            links[i] = my_get_intra_link(webdriver, url)
 
-    print links
-    set_sub_sites(links)
+        print links
+        set_sub_sites(links)
 
     # Sleep after get returns
     time.sleep(sleep)

@@ -10,7 +10,7 @@ def execute_command(command, webdriver, browser_settings, browser_params,
     """
     if command[0] == 'GET':
         browser_commands.get_website(
-            url=command[1], sleep=command[2], visit_id=command[3],
+            url=command[1], initiator=command[2], sleep=command[3], visit_id=command[4],
             webdriver=webdriver, browser_params=browser_params,
             extension_socket=extension_socket)
 
