@@ -6,7 +6,7 @@ from six.moves import range
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
 
-#sites = top_50_sites
+top_50_sites = [ 'google.com',  'youtube.com',  'facebook.com',  'amazon.com',  'wikipedia.org',  'twitter.com',  'yahoo.com',  'nytimes.com',  'ebay.com',  'reddit.com',  'yelp.com',  'walmart.com',  'paypal.com',  'apple.com',  'bing.com',  'craigslist.org',  'live.com',  'linkedin.com',   'adobe.com',  'wikia.com',   'quora.com',  'buzzfeed.com',  'espn.com',  'weather.com',  'netflix.com',   'pinterest.com',   'msn.com',    'spotify.com',  'ranker.com',  'instagram.com',  'capitalone.com',  'urbandictionary.com',  'tripadvisor.com',  'target.com',  'chase.com',  'avast.com',   'npr.org',  'wordpress.com',  'people.com',  'bustle.com',  'zillow.com',  'theguardian.com',   'giphy.com',  'whitepages.com',  'usatoday.com',   'cnet.com',  'cbsnews.com',  'businessinsider.com',  'lowes.com',  'legacy.com',  'glassdoor.com',  'stackexchange.com',  'webmd.com',  'wikimedia.org',  'usps.com',   'fandango.com',   'indeed.com',  'healthyway.com',  'bestbuy.com',  'macys.com',   'cnbc.com',  'mozilla.org']
 
 #sites = ['www.google.de', 'www.youtube.com', 'www.facebook.com', 'www.amazon.de', 'www.ebay.de', 'www.vk.com', 'www.web.de', 'www.gmx.net', 'www.reddit.com', 'www.t-online.de']
 sites = ['http://www.spiegel.de', 'http://www.zalando.de', 'http://www.web.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
@@ -30,9 +30,9 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['ghostery'] = False
     browser_params[i]['ublock-origin'] = False
     # if profile should be saved
-    #browser_params[i]['profile_archive_dir'] = '/home/tobi/Workspace/OpenWPM/Output/Profile'
+    #browser_params[i]['profile_archive_dir'] = '/home/OpenWPM/Output/Profile'
     # if profile should be loaded
-    #browser_params[i]['profile_tar'] = '/home/tobi/Workspace/OpenWPM/Output/Profile'
+    #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Profile'
 
     #self written
     browser_params[i]['scroll_down'] = False
