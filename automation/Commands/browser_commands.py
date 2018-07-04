@@ -246,10 +246,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
                 wait_until_loaded(webdriver, 300)
             except StaleElementReferenceException:
                 logger.info("im stale exception")
-                pass
-            except WebDriverException:
-                logger.info("im WebDriverException exception")
-                
+                pass   
         else:
             try:
                 logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], links[i]['url']))
@@ -260,8 +257,6 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
             except StaleElementReferenceException:
                 logger.info("beim getten im stale exception")
                 pass
-            except WebDriverException:
-                logger.info("beim getten im WebDriverException exception")
             time.sleep(sleep)
 
     # Then visit a few subpages
