@@ -130,8 +130,6 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
     SubSites = SubSites()
     elems = SubSites.sub_sites
     print(elems)
-    #visited_tld = get_tld(url)
-    #print visited_tld
 
     if browser_params['execute_script']:
         subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
