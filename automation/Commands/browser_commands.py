@@ -128,7 +128,7 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
     print initiator
     print url
     subsites = SubSites()
-    elems = subsites.get_sub_sites()
+    elems = subsites.sub_sites
     print(elems)
 
     if browser_params['execute_script']:
@@ -152,9 +152,9 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         print links
-        subsites.set_sub_sites(links)
+        subsites.sub_sites = links
         print ("after setting it is")
-        print(subsites.get_sub_sites())
+        print(subsites.sub_sites)
     else:
         print("im else")
 
@@ -252,7 +252,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     logger = loggingclient(*manager_params['logger_address'])
 
     subsites = SubSites()
-    sub_sites = subsites.get_sub_sites()
+    sub_sites = subsites.sub_sites
 
     for i in range(num_links):
         try:

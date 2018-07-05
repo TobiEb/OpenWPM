@@ -45,7 +45,7 @@ manager_params['log_directory'] = '/home/OpenWPM/Output'
 default_timeout = 60
 default_sleep = 5
 subsites = SubSites()
-sub_sites = subsites.get_sub_sites()
+sub_sites = subsites.sub_sites
 
 manager = TaskManager.TaskManager(manager_params, browser_params)
 
@@ -64,9 +64,9 @@ for site in sites:
     command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
 
-    tests = subsites.get_sub_sites()
+    tests = subsites.sub_sites
     print tests
-    command_sequence_get2 = CommandSequence.CommandSequence((subsites.get_sub_sites())[0], reset=False)
+    command_sequence_get2 = CommandSequence.CommandSequence((subsites.sub_sites[0], reset=False)
     command_sequence_get2.get(initiator=False, sleep=default_sleep, timeout=default_timeout)
     #command_sequence_get2.stop_tshark(timeout=10)
     command_sequence_get2.dump_profile_cookies(timeout=default_timeout)

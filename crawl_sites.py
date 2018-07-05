@@ -9,14 +9,22 @@ class SubSites():
     #top_sites_100_world = [ 'google.com',  'youtube.com',  'facebook.com',  'amazon.com',  'wikipedia.org',  'twitter.com',  'yahoo.com',  'nytimes.com',  'ebay.com',  'reddit.com',  'yelp.com',  'walmart.com',  'paypal.com',  'apple.com',  'bing.com',  'craigslist.org',  'live.com',  'linkedin.com',   'adobe.com',  'wikia.com',   'quora.com',  'buzzfeed.com',  'espn.com',  'weather.com',  'netflix.com',   'pinterest.com',   'msn.com',    'spotify.com',  'ranker.com',  'instagram.com',  'capitalone.com',  'urbandictionary.com',  'tripadvisor.com',  'target.com',  'chase.com',  'avast.com',   'npr.org',  'wordpress.com',  'people.com',  'bustle.com',  'zillow.com',  'theguardian.com',   'giphy.com',  'whitepages.com',  'usatoday.com',   'cnet.com',  'cbsnews.com',  'businessinsider.com',  'lowes.com',  'legacy.com',  'glassdoor.com',  'stackexchange.com',  'webmd.com',  'wikimedia.org',  'usps.com',   'fandango.com',   'indeed.com',  'healthyway.com',  'bestbuy.com',  'macys.com',   'cnbc.com',  'mozilla.org',  'icepop.com',  'etsy.com',    'icloud.com',  'priceline.com',  'urbo.com',  'latimes.com',   'att.com',  'gizmodo.com',  'fashionbeans.com',  'bankofamerica.com',   'microsoft.com',   'airbnb.com',  'imdb.com',  'go.com',  'ups.com',  'snopes.com',  'foodnetwork.com',  'dailymail.co.uk',  'twentytwowords.com',  'wellsfargo.com',  'drudgereport.com',   'quizlet.com',  'medicinenet.com',   'xfinity.com',  'youtu.be',   'groupon.com',  'wikihow.com',  'slate.com',  'trend-chaser.com',  'thehill.com',  'mapquest.com',  'goodreads.com',  'imgur.com',  'allrecipes.com',  'discover.com',  'usbank.com',  'directexpose.com',   'vimeo.com']
     #sub_sites = ['','','','']
 
-    def __init__(self):
-        self._sub_sites = ['','','','']
-        print "init"
+    _sub_sites = ['','','','']
+    @property
+    def sub_sites(self):
+        return self.__class__._sub_sites
+    @sub_sites.setter
+    def sub_sites(self, sites):
+        self.__class__._sub_sites = sites
 
-    def set_sub_sites(self, sites):
-        self._sub_sites = sites
+    #def __init__(self):
+     #   self._sub_sites = ['','','','']
+     #   print "init"
 
-    def get_sub_sites(self):
-        return self._sub_sites
+    #def set_sub_sites(self, sites):
+    #    self._sub_sites = sites
+
+    #def get_sub_sites(self):
+    #    return self._sub_sites
 
 
