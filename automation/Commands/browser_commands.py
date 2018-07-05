@@ -152,7 +152,7 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         print links
-        SubSites.sub_sites = links
+        SubSites.set_sub_sites(links)
     else:
         SubSites = SubSites()
         elems = SubSites.sub_sites

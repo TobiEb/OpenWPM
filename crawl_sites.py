@@ -12,6 +12,9 @@ class SubSites():
     def __init__(self):
         print "init"
 
+    def set_sub_sites(self, sites):
+        self.sub_sites = sites
+
     def get_sub_sites(self):
         return self.sub_sites
 
