@@ -128,8 +128,8 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
     """
     print initiator
     print url
-    elems = SubSites.sub_sites
-    print(elems)
+   # elems = SubSites.sub_sites
+    #print(elems)
     #visited_tld = get_tld(url)
     #print visited_tld
 
