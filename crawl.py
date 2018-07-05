@@ -66,7 +66,7 @@ for site in sites:
 
     tests = subsites.sub_sites
     print tests
-    command_sequence_get2 = CommandSequence.CommandSequence((subsites.sub_sites[0], reset=False)
+    command_sequence_get2 = CommandSequence.CommandSequence(subsites.sub_sites[0], reset=False)
     command_sequence_get2.get(initiator=False, sleep=default_sleep, timeout=default_timeout)
     #command_sequence_get2.stop_tshark(timeout=10)
     command_sequence_get2.dump_profile_cookies(timeout=default_timeout)
