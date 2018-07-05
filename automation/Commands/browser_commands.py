@@ -38,7 +38,7 @@ import six
 import subprocess # to execute shell script for tshark
 from tld import get_tld
 import sys, os
-from crawl_sites import set_sub_sites, get_sub_sites
+from crawl_sites import SubSites
 
 # Constants for bot mitigation
 NUM_MOUSE_MOVES = 10  # Times to randomly move the mouse
@@ -153,9 +153,11 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         print links
-        set_sub_sites(links)
+        SubSites = SubSites()
+        SubSites.sub_sites = links
     else:
-        elems = get_sub_sites
+        SubSites = SubSites()
+        elems = SubSites.sub_sites
         print(elems)
 
     # Sleep after get returns

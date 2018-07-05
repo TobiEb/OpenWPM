@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from automation import TaskManager, CommandSequence
 from six.moves import range
-from crawl_sites import get_sub_sites
+from crawl_sites import SubSites
 
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
@@ -44,12 +44,13 @@ manager_params['log_directory'] = '/home/OpenWPM/Output'
 
 default_timeout = 60
 default_sleep = 5
+SubSites = SubSites()
+sub_sites = SubSites.sub_sites
 
 manager = TaskManager.TaskManager(manager_params, browser_params)
 
 # Visits the sites with all browsers simultaneously
 for site in sites:
-    sub_sites = [0,0,0,0]
     # define crawl actions
     # define prior login
     #command_sequence_google = CommandSequence.CommandSequence('http://accounts.google.de', reset=False)
@@ -94,7 +95,7 @@ for site in sites:
 
     #manager.execute_command_sequence(command_sequence_google, index='**')
     manager.execute_command_sequence(command_sequence_get1, index='**') # ** = synchronized browsers
-    sub_sites = get_sub_sites()
+    sub_sites = SubSites.sub_sites
     manager.execute_command_sequence(command_sequence_get2, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get3, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get4, index='**') # ** = synchronized browsers
