@@ -44,8 +44,6 @@ from crawl_sites import SubSites
 NUM_MOUSE_MOVES = 10  # Times to randomly move the mouse
 RANDOM_SLEEP_LOW = 1  # low (in sec) for random sleep between page loads
 RANDOM_SLEEP_HIGH = 7  # high (in sec) for random sleep between page loads
-SubSites = SubSites()
-
 
 def bot_mitigation(webdriver):
     """ performs three optional commands for bot-detection
@@ -126,10 +124,12 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
     """
     goes to <url> using the given <webdriver> instance
     """
+    global SubSites
     print initiator
     print url
-   # elems = SubSites.sub_sites
-    #print(elems)
+    SubSites = SubSites()
+    elems = SubSites.sub_sites
+    print(elems)
     #visited_tld = get_tld(url)
     #print visited_tld
 
