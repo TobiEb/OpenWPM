@@ -45,6 +45,9 @@ NUM_MOUSE_MOVES = 10  # Times to randomly move the mouse
 RANDOM_SLEEP_LOW = 1  # low (in sec) for random sleep between page loads
 RANDOM_SLEEP_HIGH = 7  # high (in sec) for random sleep between page loads
 
+global b
+b = SubSites()
+
 def bot_mitigation(webdriver):
     """ performs three optional commands for bot-detection
     mitigation when getting a site """
@@ -124,10 +127,8 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
     """
     goes to <url> using the given <webdriver> instance
     """
-    global b
     print initiator
     print url
-    b = SubSites()
     elems = b.sub_sites
     print(elems)
 
