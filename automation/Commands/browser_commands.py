@@ -127,7 +127,8 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
     """
     print initiator
     print url
-    elems = get_sub_sites
+    SubSites = SubSites()
+    elems = SubSites.sub_sites
     print(elems)
     #visited_tld = get_tld(url)
     #print visited_tld
@@ -153,7 +154,6 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         print links
-        SubSites = SubSites()
         SubSites.sub_sites = links
     else:
         SubSites = SubSites()
