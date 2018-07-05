@@ -63,8 +63,6 @@ for site in sites:
     command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
 
-    print "not it is in crawl.py"
-    print a.sub_sites
     command_sequence_get2 = CommandSequence.CommandSequence(a.sub_sites[0], reset=False)
     command_sequence_get2.get(initiator=False, sleep=default_sleep, timeout=default_timeout)
     #command_sequence_get2.stop_tshark(timeout=10)
@@ -96,6 +94,8 @@ for site in sites:
 
     #manager.execute_command_sequence(command_sequence_google, index='**')
     manager.execute_command_sequence(command_sequence_get1, index='**') # ** = synchronized browsers
+    print "dazwischen"
+    print a.sub_sites
     manager.execute_command_sequence(command_sequence_get2, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get3, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get4, index='**') # ** = synchronized browsers
