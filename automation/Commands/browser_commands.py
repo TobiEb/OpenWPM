@@ -44,6 +44,7 @@ from crawl_sites import SubSites
 NUM_MOUSE_MOVES = 10  # Times to randomly move the mouse
 RANDOM_SLEEP_LOW = 1  # low (in sec) for random sleep between page loads
 RANDOM_SLEEP_HIGH = 7  # high (in sec) for random sleep between page loads
+SubSites
 
 
 def bot_mitigation(webdriver):
