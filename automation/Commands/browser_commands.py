@@ -251,7 +251,8 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     # Connect to logger
     logger = loggingclient(*manager_params['logger_address'])
 
-    sub_sites = get_sub_sites()
+    SubSites = SubSites()
+    sub_sites = SubSites.sub_sites
 
     for i in range(num_links):
         try:
