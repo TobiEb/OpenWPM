@@ -124,11 +124,11 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
     """
     goes to <url> using the given <webdriver> instance
     """
-    global subsites
+    global b
     print initiator
     print url
-    subsites = SubSites()
-    elems = subsites.sub_sites
+    b = SubSites()
+    elems = b.sub_sites
     print(elems)
 
     if browser_params['execute_script']:
@@ -152,9 +152,9 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         print links
-        subsites.sub_sites = links
+        b.sub_sites = links
         print ("after setting it is")
-        print(subsites.sub_sites)
+        print(b.sub_sites)
     else:
         print("im else")
 
@@ -251,14 +251,13 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     # Connect to logger
     logger = loggingclient(*manager_params['logger_address'])
 
-    subsites = SubSites()
-    sub_sites = subsites.sub_sites
+    c = SubSites()
 
     for i in range(num_links):
         try:
-            logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], sub_sites[i]))
+            logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], c.sub_sites[i]))
             # Execute a get through selenium
-            webdriver.get(sub_sites[i])
+            webdriver.get(c.sub_sites[i])
         except TimeoutException:
             logger.info("im browse Timeout exception")
             pass
