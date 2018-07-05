@@ -124,11 +124,11 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
     """
     goes to <url> using the given <webdriver> instance
     """
-    global SubSites
+    global subsites
     print initiator
     print url
-    SubSites = SubSites()
-    elems = SubSites.sub_sites
+    subsites = SubSites()
+    elems = subsites.get_sub_sites()
     print(elems)
 
     if browser_params['execute_script']:
@@ -152,11 +152,11 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         print links
-        SubSites.set_sub_sites(links)
+        subsites.set_sub_sites(links)
+        print ("after setting it is")
+        print(subsites.get_sub_sites())
     else:
-        SubSites = SubSites()
-        elems = SubSites.sub_sites
-        print(elems)
+        print("im else")
 
     # Sleep after get returns
     time.sleep(sleep)
@@ -242,6 +242,8 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     Note: the site_url in the site_visits table for the links visited will
     be the site_url of the original page and NOT the url of the links visited.
     """
+    global subsites
+
     # First get the site
     get_website(url, sleep, visit_id, webdriver,
                 browser_params, extension_socket)
@@ -249,8 +251,8 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     # Connect to logger
     logger = loggingclient(*manager_params['logger_address'])
 
-    SubSites = SubSites()
-    sub_sites = SubSites.sub_sites
+    subsites = SubSites()
+    sub_sites = subsites.get_sub_sites()
 
     for i in range(num_links):
         try:
