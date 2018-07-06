@@ -149,10 +149,17 @@ def get_website(url, step, sleep, visit_id, webdriver,
             # it is empty as soon as there was an error in previous measurement like a timeout. 
             # This leads to a restart of BrowserManager and SubSites() is newly instantiated
             # So we have to get sub_sites again!
+            # ATTENTION: url is ...-subX so we have to subtract that again
             # get 4 sub_sites and set them to visit now
             links = []
             for i in range(4):
-                el = my_get_intra_link(webdriver, url)
+                c
+                if url.endswith('-sub1') or url.endswith('-sub2') or url.endswith('-sub3') or url.endswith('-sub4'):
+                    c = url[:-5]
+                else:
+                    c = url
+                print "i got: ", c
+                el = my_get_intra_link(webdriver, c)
                 links.append(el)
             b.sub_sites = links
             print "AGAIN set to: ", b.sub_sites
