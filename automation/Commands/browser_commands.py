@@ -272,18 +272,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     be the site_url of the original page and NOT the url of the links visited.
     """
 
-    if browser_params['execute_tshark']:
-    # set readable url name to for tshark file names
-        if 'http' in url:
-            r = url.replace('://', '/')
-            p = r.split('/')
-            o = p[1]
-            if 'www' in o:
-                w = o.split('.')
-                f = w[1]
-                subprocess.call(['/home/OpenWPM/start_tshark.sh', str(f), str(visit_id)])
-        else:
-            subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
+    # execute tshark is not necessary here, since it is executed in the get request which comes here as well
 
     # First get the site
     get_website(url, 0, sleep, visit_id, webdriver,
