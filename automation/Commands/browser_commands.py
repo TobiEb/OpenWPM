@@ -246,7 +246,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     """
 
     # First get the site
-    get_website(url, sleep, visit_id, webdriver,
+    get_website(url, step=0, sleep, visit_id, webdriver,
                 browser_params, extension_socket)
 
     # Connect to logger
