@@ -130,14 +130,27 @@ def get_website(url, step, sleep, visit_id, webdriver,
 
     if browser_params['execute_script']:
         # set readable url name to for tshark file names
-        #if 'http' in url or 'www' in url:
-        subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
+        if 'http' in url:
+            r = url.replace('://', '/')
+            p = r.split('/')
+            o = p[1]
+            print o
+            if 'www' in o:
+                w = o.split('.')
+                fertisch = w[1]
+                print fertisch
+                subprocess.call(['/home/OpenWPM/start_tshark.sh', str(fertisch), str(visit_id)])
+        else:
+            subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
-        url = b.sub_sites[step - 1]
-        print "new url: ", url
-        if url == '':
+        if b.sub_sites[step-1] != '':
+            url = b.sub_sites[step-1]
+            print "new url: ", url
+        else:
             print "url is empty!"
+            print step
+            print b.sub_sites[step-1]
             parts = url.split('-')
             url = parts[0]
             print "so new url is: ", url
