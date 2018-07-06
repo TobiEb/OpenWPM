@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 from automation import TaskManager, CommandSequence
 from six.moves import range
-from crawl_sites import SubSites
 
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
@@ -44,7 +43,6 @@ manager_params['log_directory'] = '/home/OpenWPM/Output'
 
 default_timeout = 60
 default_sleep = 5
-a = SubSites()
 
 manager = TaskManager.TaskManager(manager_params, browser_params)
 
@@ -58,31 +56,31 @@ for site in sites:
     #command_sequence_google.dump_flash_cookies(timeout=default_timeout)
 
     command_sequence_get1 = CommandSequence.CommandSequence(site, reset=False)
-    command_sequence_get1.get(initiator=True, sleep=default_sleep, timeout=default_timeout)
+    command_sequence_get1.get(step=0, sleep=default_sleep, timeout=default_timeout)
     #command_sequence_get1.stop_tshark(timeout=10)
     command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
 
-    command_sequence_get2 = CommandSequence.CommandSequence(a.sub_sites[0], reset=False)
-    command_sequence_get2.get(initiator=False, sleep=default_sleep, timeout=default_timeout)
+    command_sequence_get2 = CommandSequence.CommandSequence(site + "-sub1", reset=False)
+    command_sequence_get2.get(step=1, sleep=default_sleep, timeout=default_timeout)
     #command_sequence_get2.stop_tshark(timeout=10)
     command_sequence_get2.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get2.dump_flash_cookies(timeout=default_timeout)
 
-    command_sequence_get3 = CommandSequence.CommandSequence(a.sub_sites[1], reset=False)
-    command_sequence_get3.get(initiator=False, sleep=default_sleep, timeout=default_timeout)
+    command_sequence_get3 = CommandSequence.CommandSequence(site + "-sub2", reset=False)
+    command_sequence_get3.get(step=2, sleep=default_sleep, timeout=default_timeout)
     #command_sequence_get3.stop_tshark(timeout=10)
     command_sequence_get3.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get3.dump_flash_cookies(timeout=default_timeout)
 
-    command_sequence_get4 = CommandSequence.CommandSequence(a.sub_sites[2], reset=False)
-    command_sequence_get4.get(initiator=False, sleep=default_sleep, timeout=default_timeout)
+    command_sequence_get4 = CommandSequence.CommandSequence(site + "-sub3", reset=False)
+    command_sequence_get4.get(step=3, sleep=default_sleep, timeout=default_timeout)
     #command_sequence_get4.stop_tshark(timeout=10)
     command_sequence_get4.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get4.dump_flash_cookies(timeout=default_timeout)
 
-    command_sequence_get5 = CommandSequence.CommandSequence(a.sub_sites[3], reset=True)
-    command_sequence_get5.get(initiator=False, sleep=default_sleep, timeout=default_timeout)
+    command_sequence_get5 = CommandSequence.CommandSequence(site + "-sub4", reset=True)
+    command_sequence_get5.get(step=4, sleep=default_sleep, timeout=default_timeout)
     #command_sequence_get5.stop_tshark(timeout=10)
     command_sequence_get5.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get5.dump_flash_cookies(timeout=default_timeout)
@@ -94,8 +92,6 @@ for site in sites:
 
     #manager.execute_command_sequence(command_sequence_google, index='**')
     manager.execute_command_sequence(command_sequence_get1, index='**') # ** = synchronized browsers
-    print "dazwischen"
-    print a.sub_sites
     manager.execute_command_sequence(command_sequence_get2, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get3, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get4, index='**') # ** = synchronized browsers

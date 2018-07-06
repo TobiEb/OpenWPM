@@ -122,14 +122,19 @@ def tab_restart_browser(webdriver):
     webdriver.switch_to_window(webdriver.window_handles[0])
 
 
-def get_website(url, initiator, sleep, visit_id, webdriver,
+def get_website(url, step, sleep, visit_id, webdriver,
                 browser_params, extension_socket):
     """
     goes to <url> using the given <webdriver> instance
     """
     print url
-    elems = b.sub_sites
-    print(elems)
+    print step
+    sub_sites = b.sub_sites
+    print(sub_sites)
+    if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
+        url = b.sub_sites[step - 1]
+        print "new url"
+        print url
 
     if browser_params['execute_script']:
         subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
@@ -145,18 +150,15 @@ def get_website(url, initiator, sleep, visit_id, webdriver,
     except TimeoutException:
         pass
 
-    if initiator is True:
+    if step == 0:
         # get 4 sub_sites and set them to visit now
         links = []
         for i in range(4):
             el = my_get_intra_link(webdriver, url)
             links.append(el)
-        print links
         b.sub_sites = links
         print ("after setting it is")
         print(b.sub_sites)
-    else:
-        print("im else")
 
     # Sleep after get returns
     time.sleep(sleep)
@@ -242,7 +244,6 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     Note: the site_url in the site_visits table for the links visited will
     be the site_url of the original page and NOT the url of the links visited.
     """
-    global subsites
 
     # First get the site
     get_website(url, sleep, visit_id, webdriver,
@@ -263,23 +264,6 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
             logger.info("beim getten im stale exception")
             pass
         time.sleep(sleep)
-        # links = {}
-        # links[i] = my_get_intra_stable_link(webdriver, url)
-        #print links[i]['full']
-        #print links[i]['url']
-
-        # if is_active(links[i]['full']) is True:
-        #     try:
-        #         links[i]['full'].click()
-        #         logger.info("BROWSER %i: visiting internal link by click %s" % (browser_params['crawl_id'], links[i]['url']))
-        #         wait_until_loaded(webdriver, 300)
-        #         time.sleep(max(1, sleep))
-        #         webdriver.back()
-        #         wait_until_loaded(webdriver, 300)
-        #     except StaleElementReferenceException:
-        #         logger.info("im stale exception")
-        #         pass   
-        # else:
 
 
 def dump_flash_cookies(start_time, visit_id, webdriver, browser_params,
