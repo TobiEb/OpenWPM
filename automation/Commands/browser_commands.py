@@ -127,14 +127,10 @@ def get_website(url, step, sleep, visit_id, webdriver,
     """
     goes to <url> using the given <webdriver> instance
     """
-    print url
-    print step
     sub_sites = b.sub_sites
-    print(sub_sites)
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
         url = b.sub_sites[step - 1]
-        print "new url"
-        print url
+        print "new url: ", url
 
     if browser_params['execute_script']:
         subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
@@ -157,8 +153,6 @@ def get_website(url, step, sleep, visit_id, webdriver,
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         b.sub_sites = links
-        print ("after setting it is")
-        print(b.sub_sites)
 
     # Sleep after get returns
     time.sleep(sleep)
