@@ -68,17 +68,14 @@ def my_get_intra_link(webdriver, url):
             href = elems[r].get_attribute('href')
         except StaleElementReferenceException:
             continue
-        if href is None:
+        if href is None or href == '':
             continue
         full_href = urljoin(url, href)
         if not full_href.startswith('http'):
             continue
         if du.get_ps_plus_1(full_href) == ps1:
-            finalElement = {}
-            finalElement['full'] = elems[r]
-            finalElement['url'] = href
-            if 'http' in finalElement['url']:
-                return finalElement['url']
+            if 'http' in href and '#' not in href and 'login' not in href:
+                return href
             else:
                 continue
 

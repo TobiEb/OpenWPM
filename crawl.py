@@ -34,7 +34,7 @@ for i in range(NUM_BROWSERS):
     #self written
     browser_params[i]['scroll_down'] = False
     browser_params[i]['login'] = False
-    browser_params[i]['execute_script'] = False
+    browser_params[i]['execute_script'] = True
 
 # Update TaskManager configuration (use this for crawl-wide settings)
 manager_params['data_directory'] = '/home/OpenWPM/Output'
@@ -81,9 +81,9 @@ for site in sites:
 
     command_sequence_get5 = CommandSequence.CommandSequence(site + "-sub4", reset=True)
     command_sequence_get5.get(step=4, sleep=default_sleep, timeout=default_timeout)
-    #command_sequence_get5.stop_tshark(timeout=10)
     command_sequence_get5.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get5.dump_flash_cookies(timeout=default_timeout)
+    command_sequence_get5.stop_tshark(timeout=10)
 
     command_sequence_browse5 = CommandSequence.CommandSequence(site, reset=True)
     command_sequence_browse5.browse(num_links=4, sleep=default_sleep, timeout=(5*default_timeout))
@@ -97,7 +97,6 @@ for site in sites:
     manager.execute_command_sequence(command_sequence_get4, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get5, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_browse5, index='**') # ** = synchronized browsers
-    print "We will visit ", site
     
 # Shuts down the browsers and waits for the data to finish logging
 manager.close()
