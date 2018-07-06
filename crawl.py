@@ -96,7 +96,7 @@ for site in sites:
     manager.execute_command_sequence(command_sequence_get3, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get4, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get5, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse5, index='**') # ** = synchronized browsers
+    #manager.execute_command_sequence(command_sequence_browse5, index='**') # ** = synchronized browsers
     
 # Shuts down the browsers and waits for the data to finish logging
 manager.close()
