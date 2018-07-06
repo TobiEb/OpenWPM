@@ -5,8 +5,7 @@ from six.moves import range
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
 
-#sites = ['www.google.de', 'www.youtube.com', 'www.facebook.com', 'www.amazon.de', 'www.ebay.de', 'www.vk.com', 'www.web.de', 'www.gmx.net', 'www.reddit.com', 'www.t-online.de']
-sites = ['http://www.web.de', 'http://www.zalando.de', 'http://www.spiegel.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
+sites = ['www.google.de', 'www.youtube.com', 'www.facebook.com', 'www.amazon.de', 'www.ebay.de', 'www.vk.com', 'www.reddit.com', 'http://www.web.de', 'http://www.zalando.de', 'http://www.spiegel.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
 #sites = ['http://google.de']
 
 # Loads the manager preference and 3 copies of the default browser dictionaries
@@ -34,7 +33,7 @@ for i in range(NUM_BROWSERS):
     #self written
     browser_params[i]['scroll_down'] = False
     browser_params[i]['login'] = False
-    browser_params[i]['execute_script'] = True
+    browser_params[i]['execute_tshark'] = True
 
 # Update TaskManager configuration (use this for crawl-wide settings)
 manager_params['data_directory'] = '/home/OpenWPM/Output'
@@ -49,7 +48,6 @@ manager = TaskManager.TaskManager(manager_params, browser_params)
 # Visits the sites with all browsers simultaneously
 for site in sites:
     # define crawl actions
-    # define prior login
     #command_sequence_google = CommandSequence.CommandSequence('http://accounts.google.de', reset=False)
     #command_sequence_google.get(sleep=default_sleep, timeout=default_timeout)
     #command_sequence_google.dump_profile_cookies(timeout=default_timeout)
@@ -89,6 +87,7 @@ for site in sites:
     command_sequence_browse5.browse(num_links=4, sleep=default_sleep, timeout=(5*default_timeout))
     command_sequence_browse5.dump_profile_cookies(timeout=(5*default_timeout))
     command_sequence_browse5.dump_flash_cookies(timeout=(5*default_timeout))
+    command_sequence_browse5.stop_tshark(timeout=10)
 
     #manager.execute_command_sequence(command_sequence_google, index='**')
     manager.execute_command_sequence(command_sequence_get1, index='**') # ** = synchronized browsers
@@ -96,7 +95,7 @@ for site in sites:
     manager.execute_command_sequence(command_sequence_get3, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get4, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get5, index='**') # ** = synchronized browsers
-    #manager.execute_command_sequence(command_sequence_browse5, index='**') # ** = synchronized browsers
+    manager.execute_command_sequence(command_sequence_browse5, index='**') # ** = synchronized browsers
     
 # Shuts down the browsers and waits for the data to finish logging
 manager.close()

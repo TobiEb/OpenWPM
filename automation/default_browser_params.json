@@ -6,7 +6,6 @@
     "http_instrument": false,
     "save_javascript": false,
     "save_all_content": false,
-
     "random_attributes": false,
     "bot_mitigation": false,
     "disable_flash": true,
@@ -15,7 +14,6 @@
     "headless": false,
     "browser": "firefox",
     "prefs": {},
-
     "tp_cookies": "always",
     "donottrack": false,
     "disconnect": false,
@@ -24,8 +22,7 @@
     "adblock-plus": false,
     "ublock-origin": false,
     "tracking-protection": false,
-
     "scroll_down": false,
     "login": false,
-    "execute_script": false
+    "execute_tshark": false
 }
