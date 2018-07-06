@@ -46,6 +46,7 @@ RANDOM_SLEEP_LOW = 1  # low (in sec) for random sleep between page loads
 RANDOM_SLEEP_HIGH = 7  # high (in sec) for random sleep between page loads
 
 global b
+global c
 b = SubSites()
 
 def bot_mitigation(webdriver):
@@ -151,7 +152,6 @@ def get_website(url, step, sleep, visit_id, webdriver,
             # So we have to get sub_sites again!
             # ATTENTION: url is ...-subX so we have to subtract that again
             # get 4 sub_sites and set them to visit now
-            c
             if url.endswith('-sub1') or url.endswith('-sub2') or url.endswith('-sub3') or url.endswith('-sub4'):
                 c = url[:-5]
             else:

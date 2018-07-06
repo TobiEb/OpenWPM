@@ -5,7 +5,7 @@ from six.moves import range
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
 
-sites = ['www.google.de', 'www.youtube.com', 'www.facebook.com', 'www.amazon.de', 'www.ebay.de', 'www.vk.com', 'www.reddit.com', 'http://www.web.de', 'http://www.zalando.de', 'http://www.spiegel.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
+sites = ['http://www.google.de', 'http://www.youtube.com', 'http://www.facebook.com', 'http://www.amazon.de', 'http://www.ebay.de', 'http://www.vk.com', 'http://www.reddit.com', 'http://www.web.de', 'http://www.zalando.de', 'http://www.spiegel.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
 #sites = ['http://google.de']
 
 # Loads the manager preference and 3 copies of the default browser dictionaries
