@@ -134,12 +134,10 @@ def get_website(url, step, sleep, visit_id, webdriver,
             r = url.replace('://', '/')
             p = r.split('/')
             o = p[1]
-            print o
             if 'www' in o:
                 w = o.split('.')
-                fertisch = w[1]
-                print fertisch
-                subprocess.call(['/home/OpenWPM/start_tshark.sh', str(fertisch), str(visit_id)])
+                f = w[1]
+                subprocess.call(['/home/OpenWPM/start_tshark.sh', str(f), str(visit_id)])
         else:
             subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
 
@@ -148,12 +146,19 @@ def get_website(url, step, sleep, visit_id, webdriver,
             url = b.sub_sites[step-1]
             print "new url: ", url
         else:
-            print "url is empty!"
-            print step
-            print b.sub_sites[step-1]
-            parts = url.split('-')
-            url = parts[0]
-            print "so new url is: ", url
+            # it is empty as soon as there was an error in previous measurement like a timeout. 
+            # This leads to a restart of BrowserManager and SubSites() is newly instantiated
+            # So we have to get sub_sites again!
+            # get 4 sub_sites and set them to visit now
+            links = []
+            for i in range(4):
+                el = my_get_intra_link(webdriver, url)
+                links.append(el)
+            b.sub_sites = links
+            print "AGAIN set to: ", b.sub_sites
+            url = b.sub_sites[step-1]
+            print "new url: ", url
+
 
     tab_restart_browser(webdriver)
 

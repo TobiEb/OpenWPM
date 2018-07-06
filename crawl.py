@@ -57,27 +57,27 @@ for site in sites:
 
     command_sequence_get1 = CommandSequence.CommandSequence(site, reset=False)
     command_sequence_get1.get(step=0, sleep=default_sleep, timeout=default_timeout)
-    #command_sequence_get1.stop_tshark(timeout=10)
     command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
+    command_sequence_get1.stop_tshark(timeout=10)
 
     command_sequence_get2 = CommandSequence.CommandSequence(site + "-sub1", reset=False)
     command_sequence_get2.get(step=1, sleep=default_sleep, timeout=default_timeout)
-    #command_sequence_get2.stop_tshark(timeout=10)
     command_sequence_get2.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get2.dump_flash_cookies(timeout=default_timeout)
+    command_sequence_get2.stop_tshark(timeout=10)
 
     command_sequence_get3 = CommandSequence.CommandSequence(site + "-sub2", reset=False)
     command_sequence_get3.get(step=2, sleep=default_sleep, timeout=default_timeout)
-    #command_sequence_get3.stop_tshark(timeout=10)
     command_sequence_get3.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get3.dump_flash_cookies(timeout=default_timeout)
+    command_sequence_get3.stop_tshark(timeout=10)
 
     command_sequence_get4 = CommandSequence.CommandSequence(site + "-sub3", reset=False)
     command_sequence_get4.get(step=3, sleep=default_sleep, timeout=default_timeout)
-    #command_sequence_get4.stop_tshark(timeout=10)
     command_sequence_get4.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get4.dump_flash_cookies(timeout=default_timeout)
+    command_sequence_get4.stop_tshark(timeout=10)
 
     command_sequence_get5 = CommandSequence.CommandSequence(site + "-sub4", reset=True)
     command_sequence_get5.get(step=4, sleep=default_sleep, timeout=default_timeout)
