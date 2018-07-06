@@ -151,13 +151,13 @@ def get_website(url, step, sleep, visit_id, webdriver,
             # So we have to get sub_sites again!
             # ATTENTION: url is ...-subX so we have to subtract that again
             # get 4 sub_sites and set them to visit now
+            c
+            if url.endswith('-sub1') or url.endswith('-sub2') or url.endswith('-sub3') or url.endswith('-sub4'):
+                c = url[:-5]
+            else:
+                c = url
             links = []
             for i in range(4):
-                c
-                if url.endswith('-sub1') or url.endswith('-sub2') or url.endswith('-sub3') or url.endswith('-sub4'):
-                    c = url[:-5]
-                else:
-                    c = url
                 print "i got: ", c
                 el = my_get_intra_link(webdriver, c)
                 links.append(el)
