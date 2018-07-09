@@ -9,16 +9,17 @@ list_of_lists = []
 # # Replace the target string
 # filedata = filedata.replace('[\'\',', '')
 
-with open('./Sites/Quantcast-Top-Million.txt') as f:
+with open('./sites/10000Global.txt') as f:
     for line in f:
         # inner_list = [elt.strip() for elt in line.split(',')]
         # in alternative, if you need to use the file content as numbers
         # inner_list = [int(elt.strip()) for elt in line.split(',')]
-        list_of_lists.append(line)
-        if line.startswith('[\'114005'):
-            break
+        if '<aws:DataUrl>' in line:
+            first = line.split('>')
+            second = first[1].split('<')
+            list_of_lists.append('http://www.' + second[0])
 
 
 # Write the file out again
-with open('./Sites/Quantcast-Top-Million2.txt', 'w') as file:
+with open('./sites/10000Global.py', 'w') as file:
   file.write(str(list_of_lists))

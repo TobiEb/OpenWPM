@@ -185,7 +185,6 @@ def get_website(url, step, sleep, visit_id, webdriver,
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         b.sub_sites = links
-        print "after setting it is: ", b.sub_sites
 
     # Sleep after get returns
     time.sleep(sleep)

@@ -1,12 +1,14 @@
 from __future__ import absolute_import
 from automation import TaskManager, CommandSequence
 from six.moves import range
+from crawl_sites import SubSites
 
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
+global sites_to_crawl
+sites_to_crawl = SubSites().sites_1000_DE
 
-sites = ['http://www.google.de', 'http://www.youtube.com', 'http://www.facebook.com', 'http://www.amazon.de', 'http://www.ebay.de', 'http://www.vk.com', 'http://www.reddit.com', 'http://www.web.de', 'http://www.zalando.de', 'http://www.spiegel.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
-#sites = ['http://google.de']
+#sites = ['http://www.google.de', 'http://www.youtube.com', 'http://www.facebook.com', 'http://www.amazon.de', 'http://www.ebay.de', 'http://www.vk.com', 'http://www.reddit.com', 'http://www.web.de', 'http://www.zalando.de', 'http://www.spiegel.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
 
 # Loads the manager preference and 3 copies of the default browser dictionaries
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)
@@ -46,7 +48,7 @@ default_sleep = 5
 manager = TaskManager.TaskManager(manager_params, browser_params)
 
 # Visits the sites with all browsers simultaneously
-for site in sites:
+for site in sites_to_crawl:
     # define crawl actions
     #command_sequence_google = CommandSequence.CommandSequence('http://accounts.google.de', reset=False)
     #command_sequence_google.get(sleep=default_sleep, timeout=default_timeout)
