@@ -6,7 +6,7 @@ from crawl_sites import SubSites
 # The list of sites that we wish to crawl
 NUM_BROWSERS = 1
 global sites_to_crawl
-sites_to_crawl = SubSites().sites_1000_DE
+sites_to_crawl = SubSites().sites_100_DE
 
 #sites = ['http://www.google.de', 'http://www.youtube.com', 'http://www.facebook.com', 'http://www.amazon.de', 'http://www.ebay.de', 'http://www.vk.com', 'http://www.reddit.com', 'http://www.web.de', 'http://www.zalando.de', 'http://www.spiegel.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
 
@@ -35,7 +35,7 @@ for i in range(NUM_BROWSERS):
     #self written
     browser_params[i]['scroll_down'] = False
     browser_params[i]['login'] = False
-    browser_params[i]['execute_tshark'] = True
+    browser_params[i]['execute_tshark'] = False
 
 # Update TaskManager configuration (use this for crawl-wide settings)
 manager_params['data_directory'] = '/home/OpenWPM/Output'
@@ -59,37 +59,37 @@ for site in sites_to_crawl:
     command_sequence_get1.get(step=0, sleep=default_sleep, timeout=default_timeout)
     command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
-    command_sequence_get1.stop_tshark(timeout=10)
+    #command_sequence_get1.stop_tshark(timeout=10)
 
     command_sequence_get2 = CommandSequence.CommandSequence(site + "-sub1", reset=False)
     command_sequence_get2.get(step=1, sleep=default_sleep, timeout=default_timeout)
     command_sequence_get2.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get2.dump_flash_cookies(timeout=default_timeout)
-    command_sequence_get2.stop_tshark(timeout=10)
+    #command_sequence_get2.stop_tshark(timeout=10)
 
     command_sequence_get3 = CommandSequence.CommandSequence(site + "-sub2", reset=False)
     command_sequence_get3.get(step=2, sleep=default_sleep, timeout=default_timeout)
     command_sequence_get3.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get3.dump_flash_cookies(timeout=default_timeout)
-    command_sequence_get3.stop_tshark(timeout=10)
+    #command_sequence_get3.stop_tshark(timeout=10)
 
     command_sequence_get4 = CommandSequence.CommandSequence(site + "-sub3", reset=False)
     command_sequence_get4.get(step=3, sleep=default_sleep, timeout=default_timeout)
     command_sequence_get4.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get4.dump_flash_cookies(timeout=default_timeout)
-    command_sequence_get4.stop_tshark(timeout=10)
+    #command_sequence_get4.stop_tshark(timeout=10)
 
     command_sequence_get5 = CommandSequence.CommandSequence(site + "-sub4", reset=True)
     command_sequence_get5.get(step=4, sleep=default_sleep, timeout=default_timeout)
     command_sequence_get5.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get5.dump_flash_cookies(timeout=default_timeout)
-    command_sequence_get5.stop_tshark(timeout=10)
+    #command_sequence_get5.stop_tshark(timeout=10)
 
     command_sequence_browse5 = CommandSequence.CommandSequence(site, reset=True)
     command_sequence_browse5.browse(num_links=4, sleep=default_sleep, timeout=(5*default_timeout))
     command_sequence_browse5.dump_profile_cookies(timeout=(5*default_timeout))
     command_sequence_browse5.dump_flash_cookies(timeout=(5*default_timeout))
-    command_sequence_browse5.stop_tshark(timeout=10)
+    #command_sequence_browse5.stop_tshark(timeout=10)
 
     #manager.execute_command_sequence(command_sequence_google, index='**')
     manager.execute_command_sequence(command_sequence_get1, index='**') # ** = synchronized browsers
