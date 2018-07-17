@@ -132,7 +132,7 @@ for resObject in result:
                     sessionCookies = sessionCookies + 1
 
     resObject["sum_unique_cookies_names"] = unique_cookie_names
-    resObject["sum_third_party_cookies"] = len(unique_tp_cookie_names)
+    resObject["sum_unique_third_party_cookies_names"] = unique_tp_cookie_names
     resObject["sum_session_cookies"] = sessionCookies
     resObject["sum_domain_cookies"] = len(domain_cookies)
 
@@ -147,45 +147,84 @@ get_3_unique_cookie_names = []
 get_4_unique_cookie_names = []
 browse_unique_cookie_names = []
 
+get_0_unique_tp_cookie_names = []
+get_1_unique_tp_cookie_names = []
+get_2_unique_tp_cookie_names = []
+get_3_unique_tp_cookie_names = []
+get_4_unique_tp_cookie_names = []
+browse_unique_tp_cookie_names = []
+
 for resObject in result:
     if resObject['index'] == 0:
         sites.append(resObject['visited_site'])
         get_0_unique_cookie_names = resObject['sum_unique_cookies_names']
+        get_0_unique_tp_cookie_names = resObject['sum_unique_third_party_cookies_names']
         resObject.update({"final_sum_unique_cookies_names": len(get_0_unique_cookie_names)})
+        resObject.update({"final_sum_unique_tp_cookies_names": len(get_0_unique_tp_cookie_names)})
     elif resObject['index'] == 1:
         get_1_unique_cookie_names = get_0_unique_cookie_names
+        get_1_unique_tp_cookie_names = get_0_unique_tp_cookie_names
         for site in resObject['sum_unique_cookies_names']:
             if not site in get_0_unique_cookie_names:
                 get_1_unique_cookie_names.append(site)
+        for tp_site in resObject['sum_unique_third_party_cookies_names']:
+            if not tp_site in get_0_unique_tp_cookie_names:
+                get_1_unique_tp_cookie_names.append(tp_site)
         resObject.update({"final_sum_unique_cookies_names": len(get_1_unique_cookie_names)})
+        resObject.update({"final_sum_unique_tp_cookies_names": len(get_1_unique_tp_cookie_names)})
     elif resObject['index'] == 2:
         get_2_unique_cookie_names = get_1_unique_cookie_names
+        get_2_unique_tp_cookie_names = get_1_unique_tp_cookie_names
         for site in resObject['sum_unique_cookies_names']:
             if not site in get_1_unique_cookie_names:
                 get_2_unique_cookie_names.append(site)
+        for tp_site in resObject['sum_unique_third_party_cookies_names']:
+            if not tp_site in get_1_unique_tp_cookie_names:
+                get_2_unique_tp_cookie_names.append(tp_site)
         resObject.update({"final_sum_unique_cookies_names": len(get_2_unique_cookie_names)})
+        resObject.update({"final_sum_unique_tp_cookies_names": len(get_2_unique_tp_cookie_names)})
     elif resObject['index'] == 3:
         get_3_unique_cookie_names = get_2_unique_cookie_names
+        get_3_unique_tp_cookie_names = get_2_unique_tp_cookie_names
         for site in resObject['sum_unique_cookies_names']:
             if not site in get_2_unique_cookie_names:
                 get_3_unique_cookie_names.append(site)
+        for tp_site in resObject['sum_unique_third_party_cookies_names']:
+            if not tp_site in get_2_unique_tp_cookie_names:
+                get_3_unique_tp_cookie_names.append(tp_site)
         resObject.update({"final_sum_unique_cookies_names": len(get_3_unique_cookie_names)})
+        resObject.update({"final_sum_unique_tp_cookies_names": len(get_3_unique_tp_cookie_names)})
     elif resObject['index'] == 4:
         get_4_unique_cookie_names = get_3_unique_cookie_names
+        get_4_unique_tp_cookie_names = get_3_unique_tp_cookie_names
         for site in resObject['sum_unique_cookies_names']:
             if not site in get_3_unique_cookie_names:
                 get_4_unique_cookie_names.append(site)
+        for tp_site in resObject['sum_unique_third_party_cookies_names']:
+            if not tp_site in get_3_unique_tp_cookie_names:
+                get_4_unique_tp_cookie_names.append(tp_site)
         resObject.update({"final_sum_unique_cookies_names": len(get_4_unique_cookie_names)})
+        resObject.update({"final_sum_unique_tp_cookies_names": len(get_4_unique_tp_cookie_names)})
     elif resObject['index'] == 5:
         # index 5 is BROWSE command
         browse_unique_cookie_names = resObject['sum_unique_cookies_names']
+        browse_unique_tp_cookie_names = resObject['sum_unique_third_party_cookies_names']
         resObject.update({"final_sum_unique_cookies_names": len(browse_unique_cookie_names)})
+        resObject.update({"final_sum_unique_tp_cookies_names": len(browse_unique_tp_cookie_names)})
+
         get_0_unique_cookie_names = []
         get_1_unique_cookie_names = []
         get_2_unique_cookie_names = []
         get_3_unique_cookie_names = []
         get_4_unique_cookie_names = []
         browse_unique_cookie_names = []
+
+        get_0_unique_tp_cookie_names = []
+        get_1_unique_tp_cookie_names = []
+        get_2_unique_tp_cookie_names = []
+        get_3_unique_tp_cookie_names = []
+        get_4_unique_tp_cookie_names = []
+        browse_unique_tp_cookie_names = []
 
 
 # from sub_sites get the length to show in diagram
@@ -197,22 +236,36 @@ cumulative_get_3_unique_cookies = []
 cumulative_get_4_unique_cookies = []
 browse_unique_cookies = []
 
+cumulative_get_0_unique_third_party_cookies = []
+cumulative_get_1_unique_third_party_cookies = []
+cumulative_get_2_unique_third_party_cookies = []
+cumulative_get_3_unique_third_party_cookies = []
+cumulative_get_4_unique_third_party_cookies = []
+browse_unique_third_party_cookies = []
+
 for resObject in result:
     if resObject['index'] == 0:
         cumulative_get_0_unique_cookies.append(resObject['final_sum_unique_cookies_names'])
+        cumulative_get_0_unique_third_party_cookies.append(resObject['final_sum_unique_tp_cookies_names'])
     elif resObject['index'] == 1:
         cumulative_get_1_unique_cookies.append(resObject['final_sum_unique_cookies_names'])
+        cumulative_get_1_unique_third_party_cookies.append(resObject['final_sum_unique_tp_cookies_names'])
     elif resObject['index'] == 2:
         cumulative_get_2_unique_cookies.append(resObject['final_sum_unique_cookies_names'])
+        cumulative_get_2_unique_third_party_cookies.append(resObject['final_sum_unique_tp_cookies_names'])
     elif resObject['index'] == 3:
         cumulative_get_3_unique_cookies.append(resObject['final_sum_unique_cookies_names'])
+        cumulative_get_3_unique_third_party_cookies.append(resObject['final_sum_unique_tp_cookies_names'])
     elif resObject['index'] == 4:
         cumulative_get_4_unique_cookies.append(resObject['final_sum_unique_cookies_names'])
+        cumulative_get_4_unique_third_party_cookies.append(resObject['final_sum_unique_tp_cookies_names'])
     elif resObject['index'] == 5:
         browse_unique_cookies.append(resObject['final_sum_unique_cookies_names'])
+        browse_unique_third_party_cookies.append(resObject['final_sum_unique_tp_cookies_names'])
 
 # fix since last element in browse was not recorded
 browse_unique_cookies.append(0)
+browse_unique_third_party_cookies.append(0)
 
 #######################################################
 # CREATE CONSOLE RESULT
@@ -224,14 +277,14 @@ browse_unique_cookies.append(0)
 
 #plt.bar(sites, browse_unique_cookies, color="yellow")
 plt.plot(sites, cumulative_get_0_unique_cookies, color="red")
-plt.plot(sites, cumulative_get_4_unique_cookies, color="blue")
+plt.plot(sites, cumulative_get_0_unique_third_party_cookies, color="blue")
 #plt.plot(sites, cumulative_get_1_tp_percentage_lengths, color="red")
 #plt.plot(sites, cumulative_get_2_tp_percentage_lengths, color="green")
 #plt.plot(sites, cumulative_get_3_tp_percentage_lengths, color="yellow")
 plt.title("HTTP Cookies")
 plt.xlabel("Site")
 plt.ylabel("# of Unique Cookies")
-plt.legend(['# Cookies GET 0', '# Cookies GET 4'])
+plt.legend(['# Cookies GET 0', '# Third-Party Cookies GET 0'])
 plt.xticks(rotation=90)
 plt.show()
 
