@@ -38,16 +38,15 @@ import six
 import subprocess # to execute shell script for tshark
 from tld import get_tld
 import sys, os
-#from crawl_sites import SubSites
+from crawl_sites import SubSites
 
 # Constants for bot mitigation
 NUM_MOUSE_MOVES = 10  # Times to randomly move the mouse
 RANDOM_SLEEP_LOW = 1  # low (in sec) for random sleep between page loads
 RANDOM_SLEEP_HIGH = 7  # high (in sec) for random sleep between page loads
 
-#global instance
-#global tld_url
-#instance = SubSites()
+global browser_commands_subsite_instance
+browser_commands_subsite_instance = SubSites()
 
 def bot_mitigation(webdriver):
     """ performs three optional commands for bot-detection
@@ -123,7 +122,7 @@ def tab_restart_browser(webdriver):
     webdriver.switch_to_window(webdriver.window_handles[0])
 
 
-def get_website(url, instance, step, sleep, visit_id, webdriver,
+def get_website(url, step, sleep, visit_id, webdriver,
                 browser_params, extension_socket):
 
     """
@@ -144,9 +143,9 @@ def get_website(url, instance, step, sleep, visit_id, webdriver,
             subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
-        print "im sub", instance.sub_sites
-        if instance.sub_sites[step-1] != '' or instance.sub_sites[step-1] is not None:
-            url = instance.sub_sites[step-1]
+        print "im sub", browser_commands_subsite_instance.sub_sites
+        if browser_commands_subsite_instance.sub_sites[step-1] != '' or browser_commands_subsite_instance.sub_sites[step-1] is not None:
+            url = browser_commands_subsite_instance.sub_sites[step-1]
             print "new url: ", url
         else:
             # it is empty as soon as there was an error in previous measurement like a timeout. 
@@ -164,9 +163,9 @@ def get_website(url, instance, step, sleep, visit_id, webdriver,
                 el = my_get_intra_link(webdriver, tld_url)
                 links.append(el)
             print "Links are: ", links
-            instance.sub_sites = links
-            print "AGAIN set to: ", instance.sub_sites
-            url = instance.sub_sites[step-1]
+            browser_commands_subsite_instance.sub_sites = links
+            print "AGAIN set to: ", browser_commands_subsite_instance.sub_sites
+            url = browser_commands_subsite_instance.sub_sites[step-1]
             print "new url: ", url
             if url == '' or url is None:
                 print "however it is still None"
@@ -191,7 +190,7 @@ def get_website(url, instance, step, sleep, visit_id, webdriver,
         for i in range(4):
             el = my_get_intra_link(webdriver, url)
             links.append(el)
-        instance.sub_sites = links
+        browser_commands_subsite_instance.sub_sites = links
 
     # Sleep after get returns
     time.sleep(sleep)
@@ -270,7 +269,7 @@ def extract_links(webdriver, browser_params, manager_params):
 
     sock.close()
 
-def browse_website(url, instance, num_links, sleep, visit_id, webdriver,
+def browse_website(url, num_links, sleep, visit_id, webdriver,
                    browser_params, manager_params, extension_socket):
     """Calls get_website before visiting <num_links> present on the page.
 
@@ -282,18 +281,17 @@ def browse_website(url, instance, num_links, sleep, visit_id, webdriver,
 
     # First get the site
     # set step (second parameter) to 0 will lead to generating new sub_sites
-    get_website(url, 1, instance, sleep, visit_id, webdriver,
+    get_website(url, 0, sleep, visit_id, webdriver,
                 browser_params, extension_socket)
 
     # Connect to logger
     logger = loggingclient(*manager_params['logger_address'])
 
-    print "Im Browse: ",instance.sub_sites
     for i in range(num_links):
         try:
-            logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], instance.sub_sites[i]))
+            logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], browser_commands_subsite_instance.sub_sites[i]))
             # Execute a get through selenium
-            webdriver.get(instance.sub_sites[i])
+            webdriver.get(browser_commands_subsite_instance.sub_sites[i])
         except TimeoutException:
             logger.info("im browse Timeout exception")
             pass

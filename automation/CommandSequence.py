@@ -41,17 +41,17 @@ class CommandSequence:
         self.total_timeout = 0
         self.contains_get_or_browse = False
 
-    def get(self, instance, step=0, sleep=0, timeout=60):
+    def get(self, step=0, sleep=0, timeout=60):
         """ goes to a url """
         self.total_timeout += timeout
-        command = ('GET', self.url, instance, step, sleep)
+        command = ('GET', self.url, step, sleep)
         self.commands_with_timeout.append((command, timeout))
         self.contains_get_or_browse = True
 
-    def browse(self, instance, num_links=2, sleep=0, timeout=60):
+    def browse(self, num_links=2, sleep=0, timeout=60):
         """ browse a website and visit <num_links> links on the page """
         self.total_timeout += timeout
-        command = ('BROWSE', self.url, instance, num_links, sleep)
+        command = ('BROWSE', self.url, num_links, sleep)
         self.commands_with_timeout.append((command, timeout))
         self.contains_get_or_browse = True
 
