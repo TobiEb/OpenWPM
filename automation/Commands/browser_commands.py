@@ -45,9 +45,9 @@ NUM_MOUSE_MOVES = 10  # Times to randomly move the mouse
 RANDOM_SLEEP_LOW = 1  # low (in sec) for random sleep between page loads
 RANDOM_SLEEP_HIGH = 7  # high (in sec) for random sleep between page loads
 
-global subsites
+global subsite_instance
 #global c
-subsites = SubSites()
+subsite_instance = SubSites()
 
 def bot_mitigation(webdriver):
     """ performs three optional commands for bot-detection
@@ -144,8 +144,8 @@ def get_website(url, step, sleep, visit_id, webdriver,
             subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
-        if subsites.sub_sites[step-1] != '' or subsites.sub_sites[step-1] is not None:
-            url = subsites.sub_sites[step-1]
+        if subsite_instance.sub_sites[step-1] != '' or subsite_instance.sub_sites[step-1] is not None:
+            url = subsite_instance.sub_sites[step-1]
             print "new url: ", url
         else:
             # it is empty as soon as there was an error in previous measurement like a timeout. 
@@ -158,13 +158,14 @@ def get_website(url, step, sleep, visit_id, webdriver,
             else:
                 tld_url = url
             links = []
+            print "drin im else, subsites was empty"
             for i in range(4):
                 el = my_get_intra_link(webdriver, tld_url)
                 links.append(el)
             print "Links are: ", links
-            subsites.sub_sites = links
-            print "AGAIN set to: ", subsites.sub_sites
-            url = subsites.sub_sites[step-1]
+            subsite_instance.sub_sites = links
+            print "AGAIN set to: ", subsite_instance.sub_sites
+            url = subsite_instance.sub_sites[step-1]
             print "new url: ", url
             if url == '' or url is None:
                 print "however it is still None"
@@ -184,12 +185,13 @@ def get_website(url, step, sleep, visit_id, webdriver,
         pass
 
     if step == 0 or step == '0':
+        print "drin im step 0"
         # get 4 sub_sites and set them to visit now
         links = []
         for i in range(4):
             el = my_get_intra_link(webdriver, url)
             links.append(el)
-        subsites.sub_sites = links
+        subsite_instance.sub_sites = links
 
     # Sleep after get returns
     time.sleep(sleep)
@@ -286,12 +288,12 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     # Connect to logger
     logger = loggingclient(*manager_params['logger_address'])
 
-    print "Im Browse: ",subsites.sub_sites
+    print "Im Browse: ",subsite_instance.sub_sites
     for i in range(num_links):
         try:
-            logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], subsites.sub_sites[i]))
+            logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], subsite_instance.sub_sites[i]))
             # Execute a get through selenium
-            webdriver.get(subsites.sub_sites[i])
+            webdriver.get(subsite_instance.sub_sites[i])
         except TimeoutException:
             logger.info("im browse Timeout exception")
             pass
@@ -331,7 +333,6 @@ def dump_flash_cookies(start_time, visit_id, webdriver, browser_params,
 def dump_profile_cookies(start_time, visit_id, webdriver,
                          browser_params, manager_params):
 
-    print start_time
     """ Save changes to Firefox's cookies.sqlite to database
 
     We determine which cookies to save by the `start_time` timestamp.
