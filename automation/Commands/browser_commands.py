@@ -282,13 +282,12 @@ def browse_website(url, num_links, subsites, sleep, visit_id, webdriver,
 
     # First get the site
     # set step (second parameter) to 0 will lead to generating new sub_sites
-    get_website(url, 0, subsites, sleep, visit_id, webdriver,
+    get_website(url, 1, subsites, sleep, visit_id, webdriver,
                 browser_params, extension_socket)
 
     # Connect to logger
     logger = loggingclient(*manager_params['logger_address'])
 
-    print "Im Browser Param: ",subsites
     print "Im Browse: ",browser_cmd_sub_sites_instance.sub_sites
     for i in range(num_links):
         try:
