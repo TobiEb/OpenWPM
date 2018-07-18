@@ -123,7 +123,7 @@ def tab_restart_browser(webdriver):
     webdriver.switch_to_window(webdriver.window_handles[0])
 
 
-def get_website(url, step, instance, sleep, visit_id, webdriver,
+def get_website(url, instance, step, sleep, visit_id, webdriver,
                 browser_params, extension_socket):
 
     """
@@ -270,7 +270,7 @@ def extract_links(webdriver, browser_params, manager_params):
 
     sock.close()
 
-def browse_website(url, num_links, instance, sleep, visit_id, webdriver,
+def browse_website(url, instance, num_links, sleep, visit_id, webdriver,
                    browser_params, manager_params, extension_socket):
     """Calls get_website before visiting <num_links> present on the page.
 

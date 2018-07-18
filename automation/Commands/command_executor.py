@@ -10,13 +10,13 @@ def execute_command(command, webdriver, browser_settings, browser_params,
     """
     if command[0] == 'GET':
         browser_commands.get_website(
-            url=command[1], step=command[2], instance=command[3], sleep=command[4], visit_id=command[5],
+            url=command[1], instance=command[2], step=command[3], sleep=command[4], visit_id=command[5],
             webdriver=webdriver, browser_params=browser_params,
             extension_socket=extension_socket)
 
     if command[0] == 'BROWSE':
         browser_commands.browse_website(
-            url=command[1], num_links=command[2], instance=command[3], sleep=command[4],
+            url=command[1], instance=command[2], num_links=command[3], sleep=command[4],
             visit_id=command[5], webdriver=webdriver,
             browser_params=browser_params, manager_params=manager_params,
             extension_socket=extension_socket)
