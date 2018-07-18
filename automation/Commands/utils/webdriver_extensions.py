@@ -64,7 +64,6 @@ def my_get_intra_link(webdriver, url):
     for i in range(len(elems)):
         # generate a random
         r = int(random.random()*len(elems))
-        print r
         try:
             href = elems[r].get_attribute('href')
         except StaleElementReferenceException:

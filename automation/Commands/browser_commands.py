@@ -46,7 +46,7 @@ RANDOM_SLEEP_LOW = 1  # low (in sec) for random sleep between page loads
 RANDOM_SLEEP_HIGH = 7  # high (in sec) for random sleep between page loads
 
 global subsite_instance
-#global c
+global tld_url
 subsite_instance = SubSites()
 
 def bot_mitigation(webdriver):
@@ -189,6 +189,7 @@ def get_website(url, step, sleep, visit_id, webdriver,
         # get 4 sub_sites and set them to visit now
         links = []
         for i in range(4):
+            print "neue runde hol element"
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         subsite_instance.sub_sites = links
