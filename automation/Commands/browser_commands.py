@@ -191,7 +191,6 @@ def get_website(url, step, sleep, visit_id, webdriver,
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         subsite_instance.sub_sites = links
-        print subsite_instance.sub_sites
 
     # Sleep after get returns
     time.sleep(sleep)
@@ -282,7 +281,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
 
     # First get the site
     # set step (second parameter) to 0 will lead to generating new sub_sites
-    get_website(url, 1, sleep, visit_id, webdriver,
+    get_website(url, 0, sleep, visit_id, webdriver,
                 browser_params, extension_socket)
 
     # Connect to logger
