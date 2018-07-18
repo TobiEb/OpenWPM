@@ -184,15 +184,14 @@ def get_website(url, step, sleep, visit_id, webdriver,
     except TimeoutException:
         pass
 
-    if step == 0 or step == '0':
-        print "drin im step 0"
+    if step == 0:
         # get 4 sub_sites and set them to visit now
         links = []
         for i in range(4):
-            print "neue runde hol element"
             el = my_get_intra_link(webdriver, url)
             links.append(el)
         subsite_instance.sub_sites = links
+        print subsite_instance.sub_sites
 
     # Sleep after get returns
     time.sleep(sleep)
