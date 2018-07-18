@@ -1,8 +1,8 @@
 import sqlite3 as lite
-from tld import get_tld
+#from tld import get_tld
 
 # connect to the output database
-wpm_db = '/home/OpenWPM/Output/crawl-data.sqlite'
+wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/crawl-data.sqlite'
 conn = lite.connect(wpm_db)
 cur = conn.cursor()
 

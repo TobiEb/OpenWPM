@@ -8,8 +8,6 @@ NUM_BROWSERS = 1
 global sites_to_crawl
 sites_to_crawl = SubSites().sites_100_DE
 
-#sites = ['http://www.google.de', 'http://www.youtube.com', 'http://www.facebook.com', 'http://www.amazon.de', 'http://www.ebay.de', 'http://www.vk.com', 'http://www.reddit.com', 'http://www.web.de', 'http://www.zalando.de', 'http://www.spiegel.de', 'http://www.wetter.de', 'http://www.tvspielfilm.de', 'http://www.gmx.net', 'http://www.t-online.de', 'http://www.ebay.de']
-
 # Loads the manager preference and 3 copies of the default browser dictionaries
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)
 

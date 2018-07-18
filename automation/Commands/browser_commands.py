@@ -45,9 +45,9 @@ NUM_MOUSE_MOVES = 10  # Times to randomly move the mouse
 RANDOM_SLEEP_LOW = 1  # low (in sec) for random sleep between page loads
 RANDOM_SLEEP_HIGH = 7  # high (in sec) for random sleep between page loads
 
-global b
-global c
-b = SubSites()
+global subsites
+#global c
+subsites = SubSites()
 
 def bot_mitigation(webdriver):
     """ performs three optional commands for bot-detection
@@ -125,6 +125,7 @@ def tab_restart_browser(webdriver):
 
 def get_website(url, step, sleep, visit_id, webdriver,
                 browser_params, extension_socket):
+
     """
     goes to <url> using the given <webdriver> instance
     """
@@ -143,8 +144,8 @@ def get_website(url, step, sleep, visit_id, webdriver,
             subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
-        if b.sub_sites[step-1] != '':
-            url = b.sub_sites[step-1]
+        if subsites.sub_sites[step-1] != '' or subsites.sub_sites[step-1] is not None:
+            url = subsites.sub_sites[step-1]
             print "new url: ", url
         else:
             # it is empty as soon as there was an error in previous measurement like a timeout. 
@@ -153,18 +154,22 @@ def get_website(url, step, sleep, visit_id, webdriver,
             # ATTENTION: url is ...-subX so we have to subtract that again
             # get 4 sub_sites and set them to visit now
             if url.endswith('-sub1') or url.endswith('-sub2') or url.endswith('-sub3') or url.endswith('-sub4'):
-                c = url[:-5]
+                tld_url = url[:-5]
             else:
-                c = url
+                tld_url = url
             links = []
             for i in range(4):
-                print "i got: ", c
-                el = my_get_intra_link(webdriver, c)
+                el = my_get_intra_link(webdriver, tld_url)
                 links.append(el)
-            b.sub_sites = links
-            print "AGAIN set to: ", b.sub_sites
-            url = b.sub_sites[step-1]
+            print "Links are: ", links
+            subsites.sub_sites = links
+            print "AGAIN set to: ", subsites.sub_sites
+            url = subsites.sub_sites[step-1]
             print "new url: ", url
+            if url == '' or url is None:
+                print "however it is still None"
+                # set to base domain so it least a successful request
+                url = tld_url
 
 
     tab_restart_browser(webdriver)
@@ -178,13 +183,13 @@ def get_website(url, step, sleep, visit_id, webdriver,
     except TimeoutException:
         pass
 
-    if step == 0:
+    if step == 0 or step == '0':
         # get 4 sub_sites and set them to visit now
         links = []
         for i in range(4):
             el = my_get_intra_link(webdriver, url)
             links.append(el)
-        b.sub_sites = links
+        subsites.sub_sites = links
 
     # Sleep after get returns
     time.sleep(sleep)
@@ -274,17 +279,19 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     # execute tshark is not necessary here, since it is executed in the get request which comes here as well
 
     # First get the site
-    get_website(url, 0, sleep, visit_id, webdriver,
+    # set step (second parameter) to 0 will lead to generating new sub_sites
+    get_website(url, 1, sleep, visit_id, webdriver,
                 browser_params, extension_socket)
 
     # Connect to logger
     logger = loggingclient(*manager_params['logger_address'])
 
+    print "Im Browse: ",subsites.sub_sites
     for i in range(num_links):
         try:
-            logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], b.sub_sites[i]))
+            logger.info("BROWSER %i: visiting internal link by get %s" % (browser_params['crawl_id'], subsites.sub_sites[i]))
             # Execute a get through selenium
-            webdriver.get(b.sub_sites[i])
+            webdriver.get(subsites.sub_sites[i])
         except TimeoutException:
             logger.info("im browse Timeout exception")
             pass
@@ -323,6 +330,8 @@ def dump_flash_cookies(start_time, visit_id, webdriver, browser_params,
 
 def dump_profile_cookies(start_time, visit_id, webdriver,
                          browser_params, manager_params):
+
+    print start_time
     """ Save changes to Firefox's cookies.sqlite to database
 
     We determine which cookies to save by the `start_time` timestamp.

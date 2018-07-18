@@ -10,14 +10,4 @@ class SubSites():
     def sub_sites(self, sites):
         self.__class__._sub_sites = sites
 
-    #def __init__(self):
-     #   self._sub_sites = ['','','','']
-     #   print "init"
-
-    #def set_sub_sites(self, sites):
-    #    self._sub_sites = sites
-
-    #def get_sub_sites(self):
-    #    return self._sub_sites
-
 

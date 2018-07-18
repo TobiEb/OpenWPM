@@ -64,6 +64,7 @@ def my_get_intra_link(webdriver, url):
     for i in range(len(elems)):
         # generate a random
         r = int(random.random()*len(elems))
+        print r
         try:
             href = elems[r].get_attribute('href')
         except StaleElementReferenceException:
@@ -74,7 +75,7 @@ def my_get_intra_link(webdriver, url):
         if not full_href.startswith('http'):
             continue
         if du.get_ps_plus_1(full_href) == ps1:
-            if 'http' in href and '#' not in href and 'login' not in href:
+            if 'http' in href and '#' not in href and 'login' not in href and href is not None:
                 return href
             else:
                 continue
