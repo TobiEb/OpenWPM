@@ -38,16 +38,16 @@ import six
 import subprocess # to execute shell script for tshark
 from tld import get_tld
 import sys, os
-#from crawl_sites import SubSites
+from crawl_sites import SubSites
 
 # Constants for bot mitigation
 NUM_MOUSE_MOVES = 10  # Times to randomly move the mouse
 RANDOM_SLEEP_LOW = 1  # low (in sec) for random sleep between page loads
 RANDOM_SLEEP_HIGH = 7  # high (in sec) for random sleep between page loads
 
-#global browser_cmd_sub_sites_instance
+global browser_cmd_sub_sites_instance
 #global tld_url
-#browser_cmd_sub_sites_instance = SubSites()
+browser_cmd_sub_sites_instance = SubSites()
 
 def bot_mitigation(webdriver):
     """ performs three optional commands for bot-detection
@@ -144,7 +144,7 @@ def get_website(url, step, subsites, sleep, visit_id, webdriver,
             subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
-        print "im sub", subsites
+        print "im sub", browser_cmd_sub_sites_instance.sub_sites
         if browser_cmd_sub_sites_instance.sub_sites[step-1] != '' or browser_cmd_sub_sites_instance.sub_sites[step-1] is not None:
             url = browser_cmd_sub_sites_instance.sub_sites[step-1]
             print "new url: ", url
@@ -191,8 +191,7 @@ def get_website(url, step, subsites, sleep, visit_id, webdriver,
         for i in range(4):
             el = my_get_intra_link(webdriver, url)
             links.append(el)
-        subsites = links
-        #browser_cmd_sub_sites_instance.sub_sites = links
+        browser_cmd_sub_sites_instance.sub_sites = links
 
     # Sleep after get returns
     time.sleep(sleep)
@@ -271,7 +270,7 @@ def extract_links(webdriver, browser_params, manager_params):
 
     sock.close()
 
-def browse_website(url, num_links, sleep, visit_id, webdriver,
+def browse_website(url, num_links, subsites, sleep, visit_id, webdriver,
                    browser_params, manager_params, extension_socket):
     """Calls get_website before visiting <num_links> present on the page.
 
@@ -289,6 +288,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver,
     # Connect to logger
     logger = loggingclient(*manager_params['logger_address'])
 
+    print "Im Browser Param: ",subsites
     print "Im Browse: ",browser_cmd_sub_sites_instance.sub_sites
     for i in range(num_links):
         try:
