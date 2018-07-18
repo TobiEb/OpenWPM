@@ -78,7 +78,7 @@ for site in sites_to_crawl:
     command_sequence_get4.dump_flash_cookies(timeout=default_timeout)
     #command_sequence_get4.stop_tshark(timeout=10)
 
-    command_sequence_get5 = CommandSequence.CommandSequence(site + "-sub4", reset=True)
+    command_sequence_get5 = CommandSequence.CommandSequence(site + "-sub4", reset=False)
     command_sequence_get5.get(step=4, subsites=sub_sites_instance.sub_sites, sleep=default_sleep, timeout=default_timeout)
     command_sequence_get5.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get5.dump_flash_cookies(timeout=default_timeout)
