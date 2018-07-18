@@ -41,7 +41,7 @@ class CommandSequence:
         self.total_timeout = 0
         self.contains_get_or_browse = False
 
-    def get(self, step=0, subsites=[] sleep=0, timeout=60):
+    def get(self, step=0, subsites=[], sleep=0, timeout=60):
         """ goes to a url """
         self.total_timeout += timeout
         command = ('GET', self.url, step, subsites, sleep)
