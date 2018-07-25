@@ -263,10 +263,6 @@ for resObject in result:
         browse_unique_cookies.append(resObject['final_sum_unique_cookies_names'])
         browse_unique_third_party_cookies.append(resObject['final_sum_unique_tp_cookies_names'])
 
-# fix since last element in browse was not recorded
-browse_unique_cookies.append(0)
-browse_unique_third_party_cookies.append(0)
-
 #######################################################
 # CREATE CONSOLE RESULT
 #######################################################
@@ -286,6 +282,7 @@ plt.xlabel("Site")
 plt.ylabel("# of Unique Cookies")
 plt.legend(['# Cookies GET 0', '# Third-Party Cookies GET 0'])
 plt.xticks(rotation=90)
+plt.grid()
 plt.show()
 
 

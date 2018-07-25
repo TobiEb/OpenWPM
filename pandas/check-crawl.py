@@ -8,10 +8,15 @@ wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/crawl-data.sqlite'
 conn = lite.connect(wpm_db)
 cur = conn.cursor()
 
+# CONFIG
+selected_crawl = 1
+
 # RESULT VARIABLES
 total_percentage_result = 0
 get_percentage_result = 0
 browse_percentage_result = 0
+first_timestamp = ""
+last_timestamp = ""
 
 # OPERATIONAL VARIABLES
 cmds = []
@@ -25,8 +30,8 @@ browse_errors = 0
 # iterate over all rows
 for crawl_id, cmd, args, success, timestamp in cur.execute("SELECT DISTINCT crawl_id, command, arguments, bool_success, dtg"
                                 " FROM CrawlHistory"
-                                " WHERE crawl_id = 1"
-                                " ORDER BY dtg;"):
+                                " WHERE crawl_id = ?"
+                                " ORDER BY dtg;", (selected_crawl,)):
     success_res = success
     if success == -1 or success == 0:
         success_res = "FALSE"
@@ -54,18 +59,13 @@ if len(cmds) == len(argss) and len(cmds) == len(successes) and len(cmds) == len(
 else:
     print "Es gibt unterschiedlich lange Ergebnis-Summen"
 
-# conn = sqlite3.connect("/media/tobi/Daten/Workspace/OpenWPM/Output/crawl-data.sqlite")
-# df = pd.read_sql_query("SELECT DISTINCT command, arguments, bool_success, dtg"
-#                                 " FROM CrawlHistory"
-#                                 " WHERE crawl_id = 1"
-#                                 " ORDER BY dtg;", conn)
-
 df = pd.DataFrame({'Command':list(cmds), 'Site':list(argss), 'Success':list(successes), 'Timestamp':list(timestamps)})
+print(df)
+first_timestamp = df.loc[df.index[0], 'Timestamp']
+last_timestamp = df.loc[df.index[-1], 'Timestamp']
 
-df = df.set_index(('Timestamp'))
-#df = df.sort_values(by='B')
-#print(df['command'])
-#print(df)
-print total_percentage_result,"Prozent aller Befehle waren fehlerhaft"
-print "davon sind ", get_percentage_result,"Prozent GET Befehle fehlerhaft"
-print "davon sind ", browse_percentage_result,"Prozent BROWSE Befehle fehlerhaft"
+print 'Ergebnis:'
+print "Crawled Sites: ",len(cmds), "# Failures: ", total_errors, "Failures in %: ", total_percentage_result, "Dauer des Crawls: ", first_timestamp, "-", last_timestamp 
+#print total_percentage_result,"Prozent aller Befehle waren fehlerhaft"
+#print "davon sind ", get_percentage_result,"Prozent GET Befehle fehlerhaft"
+#print "davon sind ", browse_percentage_result,"Prozent BROWSE Befehle fehlerhaft"

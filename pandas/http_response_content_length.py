@@ -9,8 +9,13 @@ import tldextract
 #
 # MAIN CONFIG
 selected_crawl = 1
-show_in_percentage = True
-show_in_total_amount = False
+#
+#
+
+show_result_total = True
+show_result_total_third_party = False
+show_result_total_to_third_party_per_GET = False
+show_result_percentage_third_party_to_total = False
 #
 #
 #
@@ -119,25 +124,24 @@ for resObject in result:
                     #    print third_party_tld
 
     resObject["total-content-length"] = content_length
-    #print resObject['total-content-length']
     resObject["tp-content-length"] = tp_content_length
 
 # Since GET subsites is cumulative, we have to add the sum of a next step to its value
 # Total Content-Lengths per Site
 sites = []
-get_0_total_content_lengths = []
-get_1_total_content_lengths = []
-get_2_total_content_lengths = []
-get_3_total_content_lengths = []
-get_4_total_content_lengths = []
+cumulative_get_0_total_content_lengths = []
+cumulative_get_1_total_content_lengths = []
+cumulative_get_2_total_content_lengths = []
+cumulative_get_3_total_content_lengths = []
+cumulative_get_4_total_content_lengths = []
 browse_total_content_lengths = []
 
 # Third-Party Content-Lengths per Site
-get_0_tp_content_lengths = []
-get_1_tp_content_lengths = []
-get_2_tp_content_lengths = []
-get_3_tp_content_lengths = []
-get_4_tp_content_lengths = []
+cumulative_get_0_tp_content_lengths = []
+cumulative_get_1_tp_content_lengths = []
+cumulative_get_2_tp_content_lengths = []
+cumulative_get_3_tp_content_lengths = []
+cumulative_get_4_tp_content_lengths = []
 browse_tp_content_lengths = []
 
 # Third-Party Content Length Percentage of Total Content-Lengths per Site
@@ -159,80 +163,80 @@ for resObject in result:
         sites.append(resObject['visited_site'])
         if resObject['success'] == True:
             # / 1000 to transform content length bytes to KB
-            get_0_total_content_lengths.append((resObject['total-content-length'])/1000)
-            get_1_total_content_lengths.append((resObject['total-content-length'])/1000)
-            get_2_total_content_lengths.append((resObject['total-content-length'])/1000)
-            get_3_total_content_lengths.append((resObject['total-content-length'])/1000)
-            get_4_total_content_lengths.append((resObject['total-content-length'])/1000)
+            cumulative_get_0_total_content_lengths.append((resObject['total-content-length'])/1000)
+            cumulative_get_1_total_content_lengths.append((resObject['total-content-length'])/1000)
+            cumulative_get_2_total_content_lengths.append((resObject['total-content-length'])/1000)
+            cumulative_get_3_total_content_lengths.append((resObject['total-content-length'])/1000)
+            cumulative_get_4_total_content_lengths.append((resObject['total-content-length'])/1000)
 
-            get_0_tp_content_lengths.append((resObject['tp-content-length'])/1000)
-            get_1_tp_content_lengths.append((resObject['tp-content-length'])/1000)
-            get_2_tp_content_lengths.append((resObject['tp-content-length'])/1000)
-            get_3_tp_content_lengths.append((resObject['tp-content-length'])/1000)
-            get_4_tp_content_lengths.append((resObject['tp-content-length'])/1000)
+            cumulative_get_0_tp_content_lengths.append((resObject['tp-content-length'])/1000)
+            cumulative_get_1_tp_content_lengths.append((resObject['tp-content-length'])/1000)
+            cumulative_get_2_tp_content_lengths.append((resObject['tp-content-length'])/1000)
+            cumulative_get_3_tp_content_lengths.append((resObject['tp-content-length'])/1000)
+            cumulative_get_4_tp_content_lengths.append((resObject['tp-content-length'])/1000)
         else:
-            get_0_total_content_lengths.append(0)
-            get_1_total_content_lengths.append(0)
-            get_2_total_content_lengths.append(0)
-            get_3_total_content_lengths.append(0)
-            get_4_total_content_lengths.append(0)
+            cumulative_get_0_total_content_lengths.append(0)
+            cumulative_get_1_total_content_lengths.append(0)
+            cumulative_get_2_total_content_lengths.append(0)
+            cumulative_get_3_total_content_lengths.append(0)
+            cumulative_get_4_total_content_lengths.append(0)
 
-            get_0_tp_content_lengths.append(0)
-            get_1_tp_content_lengths.append(0)
-            get_2_tp_content_lengths.append(0)
-            get_3_tp_content_lengths.append(0)
-            get_4_tp_content_lengths.append(0)
+            cumulative_get_0_tp_content_lengths.append(0)
+            cumulative_get_1_tp_content_lengths.append(0)
+            cumulative_get_2_tp_content_lengths.append(0)
+            cumulative_get_3_tp_content_lengths.append(0)
+            cumulative_get_4_tp_content_lengths.append(0)
 
         #Percentage
-        cumulative_get_0_tp_percentage_lengths.append(getPercentage(get_0_tp_content_lengths[i],get_0_total_content_lengths[i]))
+        cumulative_get_0_tp_percentage_lengths.append(getPercentage(cumulative_get_0_tp_content_lengths[i],cumulative_get_0_total_content_lengths[i]))
         non_cumulative_get_0_tp_percentage_lengths.append(getPercentage(resObject['tp-content-length'],resObject['total-content-length']))
     elif resObject['index'] == 1:
         if resObject['success'] == True:
-            get_1_total_content_lengths[i] += (resObject['total-content-length']/1000)
-            get_2_total_content_lengths[i] += (resObject['total-content-length']/1000)
-            get_3_total_content_lengths[i] += (resObject['total-content-length']/1000)
-            get_4_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_1_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_2_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_3_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_4_total_content_lengths[i] += (resObject['total-content-length']/1000)
 
-            get_1_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
-            get_2_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
-            get_3_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
-            get_4_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_1_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_2_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_3_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_4_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
 
         #Percentage
-        cumulative_get_1_tp_percentage_lengths.append(getPercentage(get_1_tp_content_lengths[i],get_1_total_content_lengths[i]))
+        cumulative_get_1_tp_percentage_lengths.append(getPercentage(cumulative_get_1_tp_content_lengths[i],cumulative_get_1_total_content_lengths[i]))
         non_cumulative_get_1_tp_percentage_lengths.append(getPercentage(resObject['tp-content-length'],resObject['total-content-length']))
     elif resObject['index'] == 2:
         if resObject['success'] == True:
-            get_2_total_content_lengths[i] += (resObject['total-content-length']/1000)
-            get_3_total_content_lengths[i] += (resObject['total-content-length']/1000)
-            get_4_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_2_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_3_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_4_total_content_lengths[i] += (resObject['total-content-length']/1000)
 
-            get_2_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
-            get_3_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
-            get_4_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_2_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_3_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_4_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
 
         #Percentage
-        cumulative_get_2_tp_percentage_lengths.append(getPercentage(get_2_tp_content_lengths[i],get_2_total_content_lengths[i]))
+        cumulative_get_2_tp_percentage_lengths.append(getPercentage(cumulative_get_2_tp_content_lengths[i],cumulative_get_2_total_content_lengths[i]))
         non_cumulative_get_2_tp_percentage_lengths.append(getPercentage(resObject['tp-content-length'],resObject['total-content-length']))
     elif resObject['index'] == 3:
         if resObject['success'] == True:
-            get_3_total_content_lengths[i] += (resObject['total-content-length']/1000)
-            get_4_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_3_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_4_total_content_lengths[i] += (resObject['total-content-length']/1000)
 
-            get_3_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
-            get_4_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_3_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_4_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
 
         #Percentage
-        cumulative_get_3_tp_percentage_lengths.append(getPercentage(get_3_tp_content_lengths[i],get_3_total_content_lengths[i]))
+        cumulative_get_3_tp_percentage_lengths.append(getPercentage(cumulative_get_3_tp_content_lengths[i],cumulative_get_3_total_content_lengths[i]))
         non_cumulative_get_3_tp_percentage_lengths.append(getPercentage(resObject['tp-content-length'],resObject['total-content-length']))
     elif resObject['index'] == 4:
         if resObject['success'] == True:
-            get_4_total_content_lengths[i] += (resObject['total-content-length']/1000)
+            cumulative_get_4_total_content_lengths[i] += (resObject['total-content-length']/1000)
 
-            get_4_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
+            cumulative_get_4_tp_content_lengths[i] += (resObject['tp-content-length']/1000)
 
         #Percentage
-        cumulative_get_4_tp_percentage_lengths.append(getPercentage(get_4_tp_content_lengths[i],get_4_total_content_lengths[i]))
+        cumulative_get_4_tp_percentage_lengths.append(getPercentage(cumulative_get_4_tp_content_lengths[i],cumulative_get_4_total_content_lengths[i]))
         non_cumulative_get_4_tp_percentage_lengths.append(getPercentage(resObject['tp-content-length'],resObject['total-content-length']))
         i += 1
     elif resObject['index'] == 5:
@@ -248,29 +252,69 @@ for resObject in result:
         #Percentage
         browse_tp_percentage_lengths.append(getPercentage(resObject['tp-content-length'],resObject['total-content-length']))
 
-# fix since last element in browse was not recorded
-browse_total_content_lengths.append(0)
-browse_tp_content_lengths.append(0)
-
 #######################################################
 # CREATE CONSOLE RESULT
 #######################################################
-amount_sites_with_increased_tp = 0
-# check if increased or not
-j = 0
-for value in cumulative_get_0_tp_percentage_lengths:
-    if value < cumulative_get_4_tp_percentage_lengths[j]:
-        amount_sites_with_increased_tp += 1
-    j += 1
-print "Von GET 0 zu GET 4 steigt der Anteil der Third-Party Content-Lengths bei ",amount_sites_with_increased_tp, "von insgesamt", len(sites), " Seiten. Das sind", getPercentage(amount_sites_with_increased_tp,len(sites)), "%"
+
+if show_result_percentage_third_party_to_total is True:
+    amount_sites_with_increased_tp = 0
+    # check if increased or not
+    j = 0
+    for value in cumulative_get_0_tp_percentage_lengths:
+        if value < cumulative_get_4_tp_percentage_lengths[j]:
+            amount_sites_with_increased_tp += 1
+        j += 1
+    print "Von GET 0 zu GET 4 steigt der Anteil der Third-Party Content-Lengths bei ",amount_sites_with_increased_tp, "von insgesamt", len(sites), " Seiten. Das sind", getPercentage(amount_sites_with_increased_tp,len(sites)), "%"
 
 #######################################################
 # CREATE PANDAS OBJECT
 #######################################################
 
-if show_in_percentage is True:
+if show_result_total is True:
     #plt.bar(sites, browse_tp_percentage_lengths, color="yellow")
-    plt.bar(sites, cumulative_get_0_tp_percentage_lengths, color="red")
+    plt.bar(sites, cumulative_get_4_total_content_lengths, color="blue")
+    plt.bar(sites, cumulative_get_0_total_content_lengths, color="red")
+    #plt.bar(sites, cumulative_get_1_tp_percentage_lengths, color="red")
+    #plt.bar(sites, cumulative_get_2_tp_percentage_lengths, color="green")
+    #plt.bar(sites, cumulative_get_3_tp_percentage_lengths, color="yellow")
+    plt.title("HTTP Response Content-Length")
+    plt.xlabel("Site")
+    plt.ylabel("Content-Length of total requests in Kilobytes (KB)")
+    plt.legend(['Total Traffic GET 4', 'Total Traffic GET 0'])
+    plt.xticks(rotation=90)
+    plt.grid()
+    plt.show()
+elif show_result_total_third_party is True:
+    #plt.bar(sites, browse_tp_percentage_lengths, color="yellow")
+    plt.bar(sites, cumulative_get_4_tp_content_lengths, color="blue")
+    plt.bar(sites, cumulative_get_0_tp_content_lengths, color="red")
+    #plt.bar(sites, cumulative_get_1_tp_percentage_lengths, color="red")
+    #plt.bar(sites, cumulative_get_2_tp_percentage_lengths, color="green")
+    #plt.bar(sites, cumulative_get_3_tp_percentage_lengths, color="yellow")
+    plt.title("HTTP Response Content-Length")
+    plt.xlabel("Site")
+    plt.ylabel("Content-Length of Third-Party Requests in Kilobytes (KB)")
+    plt.legend(['Third-Party Traffic GET 4', 'Third-Party Traffic GET 0'])
+    plt.xticks(rotation=90)
+    plt.grid()
+    plt.show()
+elif show_result_total_to_third_party_per_GET is True:
+    #plt.bar(sites, browse_tp_percentage_lengths, color="yellow")
+    plt.bar(sites, cumulative_get_0_total_content_lengths, color="red")
+    plt.bar(sites, cumulative_get_0_tp_content_lengths, color="blue")
+    #plt.plot(sites, cumulative_get_1_tp_percentage_lengths, color="red")
+    #plt.plot(sites, cumulative_get_2_tp_percentage_lengths, color="green")
+    #plt.plot(sites, cumulative_get_3_tp_percentage_lengths, color="yellow")
+    plt.title("HTTP Response Content-Length")
+    plt.xlabel("Site")
+    plt.ylabel("Content-Length of Third-Party Requests compared to Total Requests in Kilobytes (KB)")
+    plt.legend(['GET 0 Total Traffic', 'GET 0 Third-Party Traffic'])
+    plt.xticks(rotation=90)
+    plt.grid()
+    plt.show()
+elif show_result_percentage_third_party_to_total is True:
+    #plt.bar(sites, browse_tp_percentage_lengths, color="yellow")
+    plt.plot(sites, cumulative_get_0_tp_percentage_lengths, color="red")
     plt.plot(sites, cumulative_get_4_tp_percentage_lengths, color="blue")
     #plt.plot(sites, cumulative_get_1_tp_percentage_lengths, color="red")
     #plt.plot(sites, cumulative_get_2_tp_percentage_lengths, color="green")
@@ -278,22 +322,10 @@ if show_in_percentage is True:
     plt.title("HTTP Response Content-Length")
     plt.xlabel("Site")
     plt.ylabel("Content-Length of Third-Party Requests compared to Total Requests in %")
-    plt.legend(['Third-Party Traffic Prozentsatz GET 4', 'Third-Party Traffic Prozentsatz GET 0'])
+    plt.legend(['Third-Party Traffic Prozentsatz GET 0', 'Third-Party Traffic Prozentsatz GET 4'])
     plt.xticks(rotation=90)
     plt.show()
-elif show_in_total_amount is True:
-    #plt.bar(sites, browse_tp_percentage_lengths, color="yellow")
-    plt.bar(sites, cumulative_get_0_tp_percentage_lengths, color="red")
-    plt.plot(sites, cumulative_get_4_tp_percentage_lengths, color="blue")
-    #plt.plot(sites, cumulative_get_1_tp_percentage_lengths, color="red")
-    #plt.plot(sites, cumulative_get_2_tp_percentage_lengths, color="green")
-    #plt.plot(sites, cumulative_get_3_tp_percentage_lengths, color="yellow")
-    plt.title("HTTP Response Content-Length")
-    plt.xlabel("Site")
-    plt.ylabel("Content-Length of Third-Party Requests compared to Total Requests in %")
-    plt.legend(['Third-Party Traffic Prozentsatz GET 0', 'Third-Party Traffic Prozentsatz GET 1'])
-    plt.xticks(rotation=90)
-    plt.show()
+
 
 
 

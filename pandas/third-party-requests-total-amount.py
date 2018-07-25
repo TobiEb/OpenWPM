@@ -19,7 +19,6 @@ cur = conn.cursor()
 
 # MAIN CONFIG
 selected_crawl = 1
-observing_domains = ['google', 'doubleclick'] 
 #
 #
 #
@@ -81,7 +80,7 @@ for visit_id, site_url in cur.execute("SELECT visit_id, site_url"
 
 # add number of third-party requests
 for resObject in result:
-    requests_per_domain = []
+    total_third_party_requests = []
 
     for url_tuple in cur.execute("SELECT url"
                                     " FROM http_requests"
@@ -95,36 +94,32 @@ for resObject in result:
             third_party_tld = xt.domain
             # check if third-party
             if not visited_tld in third_party_tld:
-                # check if observing domain(s) is/are present
-                if len(observing_domains) != 0:
-                    for domain in observing_domains:
-                        if domain in third_party_tld:
-                            requests_per_domain.append(str(third_party_tld))
+                total_third_party_requests.append(third_party_tld)
         else:
             raise ValueError('http is not in url!', url)
 
-    resObject["requests_per_domain"] = requests_per_domain
 
-# Since GET subsites is cumulative, we have to add the sum of the previous step to to next step's value
+    resObject["total_third_party_requests"] = total_third_party_requests
 
+# Since GET subsites is cumulative, we have to add the sum of a next step to its value
 sites = []
 cumulative_get_0_tp_requests = []
 cumulative_get_1_tp_requests = []
 cumulative_get_2_tp_requests = []
 cumulative_get_3_tp_requests = []
 cumulative_get_4_tp_requests = []
-browse_tp_requests = []
+cumulative_browse_tp_requests = []
 
 i = 0
 for resObject in result:
     if resObject['index'] == 0:
         sites.append(resObject['visited_site'])
         if resObject['success'] == True:
-            cumulative_get_0_tp_requests.append(len(resObject['requests_per_domain']))
-            cumulative_get_1_tp_requests.append(len(resObject['requests_per_domain']))
-            cumulative_get_2_tp_requests.append(len(resObject['requests_per_domain']))
-            cumulative_get_3_tp_requests.append(len(resObject['requests_per_domain']))
-            cumulative_get_4_tp_requests.append(len(resObject['requests_per_domain']))
+            cumulative_get_0_tp_requests.append(len(resObject['total_third_party_requests']))
+            cumulative_get_1_tp_requests.append(len(resObject['total_third_party_requests']))
+            cumulative_get_2_tp_requests.append(len(resObject['total_third_party_requests']))
+            cumulative_get_3_tp_requests.append(len(resObject['total_third_party_requests']))
+            cumulative_get_4_tp_requests.append(len(resObject['total_third_party_requests']))
         else:
             cumulative_get_0_tp_requests.append(0)
             cumulative_get_1_tp_requests.append(0)
@@ -133,86 +128,46 @@ for resObject in result:
             cumulative_get_4_tp_requests.append(0)
     elif resObject['index'] == 1:
         if resObject['success'] == True:
-            cumulative_get_1_tp_requests[i] += len(resObject['requests_per_domain'])
-            cumulative_get_2_tp_requests[i] += len(resObject['requests_per_domain'])
-            cumulative_get_3_tp_requests[i] += len(resObject['requests_per_domain'])
-            cumulative_get_4_tp_requests[i] += len(resObject['requests_per_domain'])
+            cumulative_get_1_tp_requests[i] += len(resObject['total_third_party_requests'])
+            cumulative_get_2_tp_requests[i] += len(resObject['total_third_party_requests'])
+            cumulative_get_3_tp_requests[i] += len(resObject['total_third_party_requests'])
+            cumulative_get_4_tp_requests[i] += len(resObject['total_third_party_requests'])
     elif resObject['index'] == 2:
         if resObject['success'] == True:
-            cumulative_get_2_tp_requests[i] += len(resObject['requests_per_domain'])
-            cumulative_get_3_tp_requests[i] += len(resObject['requests_per_domain'])
-            cumulative_get_4_tp_requests[i] += len(resObject['requests_per_domain'])
+            cumulative_get_2_tp_requests[i] += len(resObject['total_third_party_requests'])
+            cumulative_get_3_tp_requests[i] += len(resObject['total_third_party_requests'])
+            cumulative_get_4_tp_requests[i] += len(resObject['total_third_party_requests'])
     elif resObject['index'] == 3:
         if resObject['success'] == True:
-            cumulative_get_3_tp_requests[i] += len(resObject['requests_per_domain'])
-            cumulative_get_4_tp_requests[i] += len(resObject['requests_per_domain'])
+            cumulative_get_3_tp_requests[i] += len(resObject['total_third_party_requests'])
+            cumulative_get_4_tp_requests[i] += len(resObject['total_third_party_requests'])
     elif resObject['index'] == 4:
         if resObject['success'] == True:
-            cumulative_get_4_tp_requests[i] += len(resObject['requests_per_domain'])
+            cumulative_get_4_tp_requests[i] += len(resObject['total_third_party_requests'])
         i += 1
     elif resObject['index'] == 5:
         # index 5 is BROWSE command
         if resObject['success'] == True:
-            browse_tp_requests.append(len(resObject['requests_per_domain']))
+            cumulative_browse_tp_requests.append(len(resObject['total_third_party_requests']))
         else:
-            browse_tp_requests.append(0)
-
-
-
-#######################################################
-# CREATE CONSOLE RESULT
-#######################################################
-
-# Other results
-get_sites_not_requesting_domain = []
-browse_sites_not_requesting_domain = []
-sites_not_requesting_domain_at_all = []
-
-sites_not_requesting_domain_at_first = []
-sites_requesting_domain_after_subsites = []
-
-for resObject in result:
-    if resObject['success'] == True and resObject['cmd'] == 'GET':
-        if len(resObject['requests_per_domain']) == 0:
-            get_sites_not_requesting_domain.append(resObject['visited_site'])
-            if resObject['index'] == 0:
-                sites_not_requesting_domain_at_first.append(resObject['visited_site'])
-    if resObject['success'] == True and resObject['cmd'] == 'BROWSE':
-        if len(resObject['requests_per_domain']) == 0:
-            browse_sites_not_requesting_domain.append(resObject['visited_site'])
-
-for site_not_requesting_domain in get_sites_not_requesting_domain:
-    # count() returns how many times the substring is present in it
-    count = get_sites_not_requesting_domain.count(site_not_requesting_domain)
-    if count == 5:
-        if site_not_requesting_domain in browse_sites_not_requesting_domain:
-            if site_not_requesting_domain not in sites_not_requesting_domain_at_all:
-                sites_not_requesting_domain_at_all.append(site_not_requesting_domain)
-    elif count > 0 and count < 5:
-        if site_not_requesting_domain in sites_not_requesting_domain_at_first:
-            if site_not_requesting_domain not in sites_requesting_domain_after_subsites:
-                sites_requesting_domain_after_subsites.append(site_not_requesting_domain)
-
-print len(sites_not_requesting_domain_at_all)," von insgesamt ",len(sites), "Seiten requesten GAR NICHT die angegebenen Domains"
-print "Das sind: ",sites_not_requesting_domain_at_all
-print "Es gibt ", len(sites_requesting_domain_after_subsites), "Seiten, die erst nach Browsing-Verhalten die angegebene Domains requesten"
-print "Und das sind: ",sites_requesting_domain_after_subsites
+            cumulative_browse_tp_requests.append(0)
 
 
 #######################################################
 # CREATE PANDAS OBJECT
 #######################################################
 
-
-plt.bar(sites, browse_tp_requests, color="yellow")
+plt.bar(sites, cumulative_browse_tp_requests, color="yellow")
 plt.plot(sites, cumulative_get_0_tp_requests, color="red")
 #plt.plot(sites, cumulative_get_1_tp_requests, color="red")
 #plt.plot(sites, cumulative_get_2_tp_requests, color="green")
 #plt.plot(sites, cumulative_get_3_tp_requests, color="yellow")
 plt.plot(sites, cumulative_get_4_tp_requests, color="blue")
-plt.title("Third-Party Requests to given Domains")
+plt.title("Total Third-Party Requests")
 plt.xlabel("Site")
-plt.ylabel("# of requests to domains")
+plt.ylabel("# of third-party requests")
+#plt.legend(['Landing Page', 'GET 4 subsite'])
+#plt.legend(['Browse 4 subsites', 'Get landing page'])
 plt.legend(['Landing page', 'Get 4 subsites', 'Browse 4 subsites'])
 plt.xticks(rotation=90)
 plt.grid()
