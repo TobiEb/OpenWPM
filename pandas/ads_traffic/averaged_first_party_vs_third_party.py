@@ -3,6 +3,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sqlite3 as lite
 import tldextract
+
+from ad_rules import AdRules
+from adblockparser import AdblockRules
+
+global rules_instance
+rules_instance = AdRules()
+raw_rules = rules_instance.rules
+rules = AdblockRules(raw_rules, use_re2=True)
 #
 #
 #
@@ -99,6 +107,7 @@ for resObject in result:
     content_length = 0
     first_party_content_length = 0
     third_party_content_length = 0
+    advertisements_content_length = 0
     ext = tldextract.extract(resObject["visited_site"])
     visited_tld = ext.domain
 
@@ -110,6 +119,8 @@ for resObject in result:
             current_length = header.index("Content-Length")
             content_length = content_length + current_length
             if "http" in url:
+                if rules.should_block(url) is True:
+                    advertisements_content_length = advertisements_content_length + current_length
                 xt = tldextract.extract(url)
                 third_party_tld = xt.domain
                 if not visited_tld in third_party_tld:
@@ -121,6 +132,7 @@ for resObject in result:
     resObject["total-content-length"] = content_length
     resObject["first-party-content-length"] = first_party_content_length
     resObject["third-party-content-length"] = third_party_content_length
+    resObject["ad-content-length"] = advertisements_content_length
 
 # Total Content-Lengths per Site
 sites = []
@@ -147,6 +159,14 @@ get_3_tp_content_lengths = []
 get_4_tp_content_lengths = []
 browse_tp_content_lengths = []
 
+# Advertisements Content-Lengths per Site
+get_0_ad_content_lengths = []
+get_1_ad_content_lengths = []
+get_2_ad_content_lengths = []
+get_3_ad_content_lengths = []
+get_4_ad_content_lengths = []
+browse_ad_content_lengths = []
+
 for resObject in result:
     if resObject['index'] == 0:
         sites.append(resObject['visited_site'])
@@ -154,37 +174,44 @@ for resObject in result:
             get_0_total_content_lengths.append(resObject['total-content-length'])
             get_0_fp_content_lengths.append(resObject['first-party-content-length'])
             get_0_tp_content_lengths.append(resObject['third-party-content-length'])
+            get_0_ad_content_lengths.append(resObject["ad-content-length"])
     elif resObject['index'] == 1:
         if resObject['success'] == True:
             get_1_total_content_lengths.append(resObject['total-content-length'])
             get_1_fp_content_lengths.append(resObject['first-party-content-length'])
             get_1_tp_content_lengths.append(resObject['third-party-content-length'])
+            get_1_ad_content_lengths.append(resObject["ad-content-length"])
     elif resObject['index'] == 2:
         if resObject['success'] == True:
             get_2_total_content_lengths.append(resObject['total-content-length'])
             get_2_fp_content_lengths.append(resObject['first-party-content-length'])
             get_2_tp_content_lengths.append(resObject['third-party-content-length'])
+            get_2_ad_content_lengths.append(resObject["ad-content-length"])
     elif resObject['index'] == 3:
         if resObject['success'] == True:
             get_3_total_content_lengths.append(resObject['total-content-length'])
             get_3_fp_content_lengths.append(resObject['first-party-content-length'])
             get_3_tp_content_lengths.append(resObject['third-party-content-length'])
+            get_3_ad_content_lengths.append(resObject["ad-content-length"])
     elif resObject['index'] == 4:
         if resObject['success'] == True:
             get_4_total_content_lengths.append(resObject['total-content-length'])
             get_4_fp_content_lengths.append(resObject['first-party-content-length'])
             get_4_tp_content_lengths.append(resObject['third-party-content-length'])
+            get_4_ad_content_lengths.append(resObject["ad-content-length"])
     elif resObject['index'] == 5:
         # index 5 is BROWSE command
         if resObject['success'] == True:
             browse_total_content_lengths.append(resObject['total-content-length'])
             browse_fp_content_lengths.append(resObject['first-party-content-length'])
             browse_tp_content_lengths.append(resObject['third-party-content-length'])
+            browse_ad_content_lengths.append(resObject["ad-content-length"])
 
 
 #######################################################
 # CREATE PANDAS RESULT
 #######################################################
+# NON CUMULATIVE
 
 # LANDING PAGE
 get_0_total_length = 0
@@ -199,6 +226,10 @@ get_0_third_party_length = 0
 for res in get_0_tp_content_lengths:
     get_0_third_party_length += res
 
+get_0_ad_length = 0
+for res in get_0_ad_content_lengths:
+    get_0_ad_length += res
+
 # SUBSITE 1
 get_1_total_length = 0
 for res in get_1_total_content_lengths:
@@ -211,6 +242,10 @@ for res in get_1_fp_content_lengths:
 get_1_third_party_length = 0
 for res in get_1_tp_content_lengths:
     get_1_third_party_length += res
+
+get_1_ad_length = 0
+for res in get_1_ad_content_lengths:
+    get_1_ad_length += res
 
 # SUBSITE 2
 get_2_total_length = 0
@@ -225,6 +260,10 @@ get_2_third_party_length = 0
 for res in get_2_tp_content_lengths:
     get_2_third_party_length += res
 
+get_2_ad_length = 0
+for res in get_2_ad_content_lengths:
+    get_2_ad_length += res
+
 # SUBSITE 3
 get_3_total_length = 0
 for res in get_3_total_content_lengths:
@@ -237,6 +276,10 @@ for res in get_3_fp_content_lengths:
 get_3_third_party_length = 0
 for res in get_3_tp_content_lengths:
     get_3_third_party_length += res
+
+get_3_ad_length = 0
+for res in get_3_ad_content_lengths:
+    get_3_ad_length += res
 
 # SUBSITE 4
 get_4_total_length = 0
@@ -251,6 +294,10 @@ get_4_third_party_length = 0
 for res in get_4_tp_content_lengths:
     get_4_third_party_length += res
 
+get_4_ad_length = 0
+for res in get_4_ad_content_lengths:
+    get_4_ad_length += res
+
 # BROWSE 4 FOR COMPARISON
 browse_total_length = 0
 for res in browse_total_content_lengths:
@@ -264,8 +311,10 @@ browse_third_party_length = 0
 for res in browse_tp_content_lengths:
     browse_third_party_length += res
 
+browse_ad_length = 0
+for res in browse_ad_content_lengths:
+    browse_ad_length += res
 
-# df = pd.DataFrame({'Index':list(cmds), 'Site':list(argss), 'Success':list(successes), 'Timestamp':list(timestamps)})
 print "Averaged Per Subsite Total HTTP Bytes vs First-Party Bytes vs Third-Party Bytes (and in Percentage)"
 print "Landing Page", (get_0_total_length/len(get_0_total_content_lengths)), "Bytes | ",(get_0_first_party_length/len(get_0_fp_content_lengths)), "Bytes | ", (get_0_third_party_length/len(get_0_tp_content_lengths)), "Bytes"
 print "Das sind: ",getPercentage(get_0_first_party_length, get_0_total_length),"% | ", getPercentage(get_0_third_party_length, get_0_total_length), "%"
@@ -279,5 +328,18 @@ print "Subsite 4", (get_4_total_length/len(get_4_total_content_lengths)), "Bytes
 print "Das sind: ",getPercentage(get_4_first_party_length, get_4_total_length),"% | ", getPercentage(get_4_third_party_length, get_4_total_length), "%"
 print "BROWSE 4", (browse_total_length/len(browse_total_content_lengths)), "Bytes | ",(browse_first_party_length/len(browse_fp_content_lengths)), "Bytes | ", (browse_third_party_length/len(browse_tp_content_lengths)), "Bytes"
 print "Das sind: ",getPercentage(browse_first_party_length, browse_total_length),"% | ", getPercentage(browse_third_party_length, browse_total_length), "%"
-
+print()
+print "Averaged Per Subsite Total HTTP Bytes vs Ads-related HTTP Bytes (and in Percentage)"
+print "Landing Page", (get_0_total_length/len(get_0_total_content_lengths)), "Bytes | ",(get_0_ad_length/len(get_0_ad_content_lengths)), "Bytes"
+print "Das sind: ",getPercentage(get_0_ad_length, get_0_total_length), "%"
+print "Subsite 1", (get_1_total_length/len(get_1_total_content_lengths)), "Bytes | ",(get_1_ad_length/len(get_1_ad_content_lengths)), "Bytes"
+print "Das sind: ",getPercentage(get_1_ad_length, get_1_total_length), "%"
+print "Subsite 2", (get_2_total_length/len(get_2_total_content_lengths)), "Bytes | ",(get_2_ad_length/len(get_2_ad_content_lengths)), "Bytes"
+print "Das sind: ",getPercentage(get_2_ad_length, get_2_total_length), "%"
+print "Subsite 3", (get_3_total_length/len(get_3_total_content_lengths)), "Bytes | ",(get_3_ad_length/len(get_3_ad_content_lengths)), "Bytes"
+print "Das sind: ",getPercentage(get_3_ad_length, get_3_total_length), "%"
+print "Subsite 4", (get_4_total_length/len(get_4_total_content_lengths)), "Bytes | ",(get_4_ad_length/len(get_4_ad_content_lengths)), "Bytes"
+print "Das sind: ",getPercentage(get_4_ad_length, get_4_total_length), "%"
+print "BROWSE 4", (browse_total_length/len(browse_total_content_lengths)), "Bytes | ",(browse_ad_length/len(browse_ad_content_lengths)), "Bytes"
+print "Das sind: ",getPercentage(browse_ad_length, browse_total_length), "%"
 

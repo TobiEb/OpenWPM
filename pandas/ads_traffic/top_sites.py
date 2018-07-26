@@ -3,11 +3,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sqlite3 as lite
 import tldextract
+
+from ad_rules import AdRules
+from adblockparser import AdblockRules
+
+global rules_instance
+rules_instance = AdRules()
+raw_rules = rules_instance.rules
+rules = AdblockRules(raw_rules, use_re2=True)
 #
 #
 #
 #
 # MAIN CONFIG
+display_index = 5 # 0 is landing page, 1-4 subsites, 5 browse
 selected_crawl = 1
 #
 #
@@ -96,31 +105,36 @@ for visit_id, site_url in cur.execute("SELECT visit_id, site_url"
 
 # add Content-Length
 for resObject in result:
-    content_length = 0
-    first_party_content_length = 0
-    third_party_content_length = 0
-    ext = tldextract.extract(resObject["visited_site"])
-    visited_tld = ext.domain
+    if resObject['index'] == display_index:
+        content_length = 0
+        first_party_content_length = 0
+        third_party_content_length = 0
+        advertisements_content_length = 0
+        ext = tldextract.extract(resObject["visited_site"])
+        visited_tld = ext.domain
 
-    for header, url in cur.execute("SELECT headers, url"
-                                    " FROM http_responses"
-                                    " WHERE visit_id = ?"
-                                    " AND crawl_id = ?", [resObject["visit_id"], resObject["crawl_id"]]):
-        if "Content-Length" in header:
-            current_length = header.index("Content-Length")
-            content_length = content_length + current_length
-            if "http" in url:
-                xt = tldextract.extract(url)
-                third_party_tld = xt.domain
-                if not visited_tld in third_party_tld:
-                # it is third-party
-                    third_party_content_length = third_party_content_length + current_length
-                else:
-                    first_party_content_length = first_party_content_length + current_length
+        for header, url in cur.execute("SELECT headers, url"
+                                        " FROM http_responses"
+                                        " WHERE visit_id = ?"
+                                        " AND crawl_id = ?", [resObject["visit_id"], resObject["crawl_id"]]):
+            if "Content-Length" in header:
+                current_length = header.index("Content-Length")
+                content_length = content_length + current_length
+                if "http" in url:
+                    if rules.should_block(url) is True:
+                        advertisements_content_length = advertisements_content_length + current_length
+                    xt = tldextract.extract(url)
+                    third_party_tld = xt.domain
+                    if not visited_tld in third_party_tld:
+                        # it is third-party
+                        third_party_content_length = third_party_content_length + current_length
+                    else:
+                        first_party_content_length = first_party_content_length + current_length
 
-    resObject["total-content-length"] = content_length
-    resObject["first-party-content-length"] = first_party_content_length
-    resObject["third-party-content-length"] = third_party_content_length
+        resObject["total-content-length"] = content_length
+        resObject["first-party-content-length"] = first_party_content_length
+        resObject["third-party-content-length"] = third_party_content_length
+        resObject["ad-content-length"] = advertisements_content_length
 
 # Total Content-Lengths per Site
 # NON CUMULATIVE
@@ -156,94 +170,145 @@ get_3_tp_percentage = []
 get_4_tp_percentage = []
 browse_tp_percentage = []
 
+# Advertisements Content-Lengths per Site
+get_0_ad_content_lengths = []
+get_1_ad_content_lengths = []
+get_2_ad_content_lengths = []
+get_3_ad_content_lengths = []
+get_4_ad_content_lengths = []
+browse_ad_content_lengths = []
+
+# Advertisements Percentage per Site
+get_0_ad_percentage = []
+get_1_ad_percentage = []
+get_2_ad_percentage = []
+get_3_ad_percentage = []
+get_4_ad_percentage = []
+browse_ad_percentage = []
+
 for resObject in result:
-    if resObject['index'] == 0:
+    if resObject['index'] == 0 and resObject['index'] == display_index:
         sites.append(resObject['visited_site'])
         if resObject['success'] is True:
             get_0_total_content_lengths.append(resObject['total-content-length'])
             get_0_fp_content_lengths.append(resObject['first-party-content-length'])
             get_0_tp_content_lengths.append(resObject['third-party-content-length'])
             get_0_tp_percentage.append(getPercentage(resObject['third-party-content-length'], resObject['total-content-length']))
+            get_0_ad_content_lengths.append(resObject["ad-content-length"])
+            get_0_ad_percentage.append(getPercentage(resObject['ad-content-length'], resObject['total-content-length']))
         else:
             get_0_total_content_lengths.append(np.nan)
             get_0_fp_content_lengths.append(np.nan)
             get_0_tp_content_lengths.append(np.nan)
             get_0_tp_percentage.append(np.nan)
-    elif resObject['index'] == 1:
+            get_0_ad_content_lengths.append(np.nan)
+            get_0_ad_percentage.append(np.nan)
+    elif resObject['index'] == 1 and resObject['index'] == display_index:
+        sites.append(resObject['visited_site'])
         if resObject['success'] is True:
             get_1_total_content_lengths.append(resObject['total-content-length'])
             get_1_fp_content_lengths.append(resObject['first-party-content-length'])
             get_1_tp_content_lengths.append(resObject['third-party-content-length'])
             get_1_tp_percentage.append(getPercentage(resObject['third-party-content-length'], resObject['total-content-length']))
+            get_1_ad_content_lengths.append(resObject["ad-content-length"])
+            get_1_ad_percentage.append(getPercentage(resObject['ad-content-length'], resObject['total-content-length']))
         else:
             get_1_total_content_lengths.append(np.nan)
             get_1_fp_content_lengths.append(np.nan)
             get_1_tp_content_lengths.append(np.nan)
             get_1_tp_percentage.append(np.nan)
-    elif resObject['index'] == 2:
+            get_1_ad_content_lengths.append(np.nan)
+            get_1_ad_percentage.append(np.nan)
+    elif resObject['index'] == 2 and resObject['index'] == display_index:
+        sites.append(resObject['visited_site'])
         if resObject['success'] is True:
             get_2_total_content_lengths.append(resObject['total-content-length'])
             get_2_fp_content_lengths.append(resObject['first-party-content-length'])
             get_2_tp_content_lengths.append(resObject['third-party-content-length'])
             get_2_tp_percentage.append(getPercentage(resObject['third-party-content-length'], resObject['total-content-length']))
+            get_2_ad_content_lengths.append(resObject["ad-content-length"])
+            get_2_ad_percentage.append(getPercentage(resObject['ad-content-length'], resObject['total-content-length']))
         else:
             get_2_total_content_lengths.append(np.nan)
             get_2_fp_content_lengths.append(np.nan)
             get_2_tp_content_lengths.append(np.nan)
             get_2_tp_percentage.append(np.nan)
-    elif resObject['index'] == 3:
+            get_2_ad_content_lengths.append(np.nan)
+            get_2_ad_percentage.append(np.nan)
+    elif resObject['index'] == 3 and resObject['index'] == display_index:
+        sites.append(resObject['visited_site'])
         if resObject['success'] is True:
             get_3_total_content_lengths.append(resObject['total-content-length'])
             get_3_fp_content_lengths.append(resObject['first-party-content-length'])
             get_3_tp_content_lengths.append(resObject['third-party-content-length'])
             get_3_tp_percentage.append(getPercentage(resObject['third-party-content-length'], resObject['total-content-length']))
+            get_3_ad_content_lengths.append(resObject["ad-content-length"])
+            get_3_ad_percentage.append(getPercentage(resObject['ad-content-length'], resObject['total-content-length']))
         else:
-            get_4_total_content_lengths.append(np.nan)
-            get_4_fp_content_lengths.append(np.nan)
-            get_4_tp_content_lengths.append(np.nan)
-            get_4_tp_percentage.append(np.nan)
-    elif resObject['index'] == 4:
+            get_3_total_content_lengths.append(np.nan)
+            get_3_fp_content_lengths.append(np.nan)
+            get_3_tp_content_lengths.append(np.nan)
+            get_3_tp_percentage.append(np.nan)
+            get_3_ad_content_lengths.append(np.nan)
+            get_3_ad_percentage.append(np.nan)
+    elif resObject['index'] == 4 and resObject['index'] == display_index:
+        sites.append(resObject['visited_site'])
         if resObject['success'] is True:
             get_4_total_content_lengths.append(resObject['total-content-length'])
             get_4_fp_content_lengths.append(resObject['first-party-content-length'])
             get_4_tp_content_lengths.append(resObject['third-party-content-length'])
             get_4_tp_percentage.append(getPercentage(resObject['third-party-content-length'], resObject['total-content-length']))
+            get_4_ad_content_lengths.append(resObject["ad-content-length"])
+            get_4_ad_percentage.append(getPercentage(resObject['ad-content-length'], resObject['total-content-length']))
         else:
             get_4_total_content_lengths.append(np.nan)
             get_4_fp_content_lengths.append(np.nan)
             get_4_tp_content_lengths.append(np.nan)
             get_4_tp_percentage.append(np.nan)
-    elif resObject['index'] == 5:
+            get_4_ad_content_lengths.append(np.nan)
+            get_4_ad_percentage.append(np.nan)
+    elif resObject['index'] == 5 and resObject['index'] == display_index:
+        sites.append(resObject['visited_site'])
         # index 5 is BROWSE command
         if resObject['success'] is True:
             browse_total_content_lengths.append(resObject['total-content-length'])
             browse_fp_content_lengths.append(resObject['first-party-content-length'])
             browse_tp_content_lengths.append(resObject['third-party-content-length'])
             browse_tp_percentage.append(getPercentage(resObject['third-party-content-length'], resObject['total-content-length']))
+            browse_ad_content_lengths.append(resObject['ad-content-length'])
+            browse_ad_percentage.append(getPercentage(resObject['ad-content-length'], resObject['total-content-length']))
         else:
             browse_total_content_lengths.append(np.nan)
             browse_fp_content_lengths.append(np.nan)
             browse_tp_content_lengths.append(np.nan)
             browse_tp_percentage.append(np.nan)
+            browse_ad_content_lengths.append(np.nan)
+            browse_ad_percentage.append(np.nan)
 
 #######################################################
 # CREATE PANDAS RESULT
 #######################################################
 # show if landing page
-# df = pd.DataFrame({'Site':list(sites), 'Total':list(get_0_total_content_lengths), 'First-Party':list(get_0_fp_content_lengths), 'Third-Party':list(get_0_tp_content_lengths), 'Percentage':list(get_0_tp_percentage)})
+if display_index == 0:
+    df = pd.DataFrame({'Site':list(sites), 'Total':list(get_0_total_content_lengths), 'First-Party':list(get_0_fp_content_lengths), 'Third-Party':list(get_0_tp_content_lengths), 'Third-Party-Percentage':list(get_0_tp_percentage), 'Ads':list(get_0_ad_content_lengths), 'Ads-Percentage':list(get_0_ad_percentage)})
 # show if subsite 1
-# df = pd.DataFrame({'Site':list(sites), 'Total':list(get_1_total_content_lengths), 'First-Party':list(get_1_fp_content_lengths), 'Third-Party':list(get_1_tp_content_lengths), 'Percentage':list(get_1_tp_percentage)})
+if display_index == 1:
+    df = pd.DataFrame({'Site':list(sites), 'Total':list(get_1_total_content_lengths), 'First-Party':list(get_1_fp_content_lengths), 'Third-Party':list(get_1_tp_content_lengths), 'Third-Party-Percentage':list(get_1_tp_percentage), 'Ads':list(get_1_ad_content_lengths), 'Ads-Percentage':list(get_1_ad_percentage)})
 # show if subsite 2
-# df = pd.DataFrame({'Site':list(sites), 'Total':list(get_2_total_content_lengths), 'First-Party':list(get_2_fp_content_lengths), 'Third-Party':list(get_2_tp_content_lengths), 'Percentage':list(get_2_tp_percentage)})
+if display_index == 2:
+    df = pd.DataFrame({'Site':list(sites), 'Total':list(get_2_total_content_lengths), 'First-Party':list(get_2_fp_content_lengths), 'Third-Party':list(get_2_tp_content_lengths), 'Third-Party-Percentage':list(get_2_tp_percentage), 'Ads':list(get_2_ad_content_lengths), 'Ads-Percentage':list(get_2_ad_percentage)})
 # show if subsite 3
-# df = pd.DataFrame({'Site':list(sites), 'Total':list(get_3_total_content_lengths), 'First-Party':list(get_3_fp_content_lengths), 'Third-Party':list(get_3_tp_content_lengths), 'Percentage':list(get_3_tp_percentage)})
+if display_index == 3:
+    df = pd.DataFrame({'Site':list(sites), 'Total':list(get_3_total_content_lengths), 'First-Party':list(get_3_fp_content_lengths), 'Third-Party':list(get_3_tp_content_lengths), 'Third-Party-Percentage':list(get_3_tp_percentage), 'Ads':list(get_3_ad_content_lengths), 'Ads-Percentage':list(get_3_ad_percentage)})
 # show if subsite 4
-df = pd.DataFrame({'Site':list(sites), 'Total':list(get_4_total_content_lengths), 'First-Party':list(get_4_fp_content_lengths), 'Third-Party':list(get_4_tp_content_lengths), 'Percentage':list(get_4_tp_percentage)})
+if display_index == 4:
+    df = pd.DataFrame({'Site':list(sites), 'Total':list(get_4_total_content_lengths), 'First-Party':list(get_4_fp_content_lengths), 'Third-Party':list(get_4_tp_content_lengths), 'Third-Party-Percentage':list(get_4_tp_percentage), 'Ads':list(get_4_ad_content_lengths), 'Ads-Percentage':list(get_4_ad_percentage)})
 # show if browse
-# df = pd.DataFrame({'Site':list(sites), 'Total':list(browse_total_content_lengths), 'First-Party':list(browse_fp_content_lengths), 'Third-Party':list(browse_tp_content_lengths), 'Percentage':list(browse_tp_percentage)})
+if display_index == 5:
+    df = pd.DataFrame({'Site':list(sites), 'Total':list(browse_total_content_lengths), 'First-Party':list(browse_fp_content_lengths), 'Third-Party':list(browse_tp_content_lengths), 'Third-Party-Percentage':list(browse_tp_percentage), 'Ads':list(browse_ad_content_lengths), 'Ads-Percentage':list(browse_ad_percentage)})
 
 
-df = df.sort_values(by=['Percentage'], ascending=False)
+df = df.sort_values(by=['Ads-Percentage'], ascending=False)
 df = df.head(10)
 print(df)
 
