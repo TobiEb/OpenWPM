@@ -61,6 +61,7 @@ def my_get_intra_link(webdriver, url):
     ps1 = du.get_ps_plus_1(url)
     elems = webdriver.find_elements_by_tag_name("a")
     # iterate over the amount of times which is available in links
+    print "in der my_get_intra_link", len(elems), "a-elements found"
     if len(elems) > 0:
         for i in range(len(elems)):
             # generate a random

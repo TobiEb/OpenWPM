@@ -16,7 +16,7 @@ rules = AdblockRules(raw_rules, use_re2=True)
 #
 #
 # MAIN CONFIG
-display_index = 2 # 0 is UNTIL landing page, UNTIL 1-4 subsites, 5 browse, since it is cumulated here
+display_index = 1 # 0 is UNTIL landing page, UNTIL 1-4 subsites, 5 browse, since it is cumulated here
 selected_crawl = 1
 #
 #
@@ -105,11 +105,11 @@ for visit_id, site_url in cur.execute("SELECT visit_id, site_url"
 
 # add Content-Length
 for resObject in result:
+    content_length = 0
+    first_party_content_length = 0
+    third_party_content_length = 0
+    advertisements_content_length = 0
     if resObject['index'] <= display_index:
-        content_length = 0
-        first_party_content_length = 0
-        third_party_content_length = 0
-        advertisements_content_length = 0
         ext = tldextract.extract(resObject["visited_site"])
         visited_tld = ext.domain
 
@@ -131,10 +131,10 @@ for resObject in result:
                     else:
                         first_party_content_length = first_party_content_length + current_length
 
-        resObject["total-content-length"] = content_length
-        resObject["first-party-content-length"] = first_party_content_length
-        resObject["third-party-content-length"] = third_party_content_length
-        resObject["ad-content-length"] = advertisements_content_length
+    resObject["total-content-length"] = content_length
+    resObject["first-party-content-length"] = first_party_content_length
+    resObject["third-party-content-length"] = third_party_content_length
+    resObject["ad-content-length"] = advertisements_content_length
 
 # Total Content-Lengths per Site
 # CUMULATIVE
@@ -188,7 +188,7 @@ browse_ad_percentage = []
 
 i = 0
 for resObject in result:
-    if resObject['index'] == 0 and resObject['index'] <= display_index:
+    if resObject['index'] == 0:
         sites.append(resObject['visited_site'])
         if resObject['success'] is True:
             cumulative_get_0_total_content_lengths.append(resObject['total-content-length'])
@@ -214,6 +214,9 @@ for resObject in result:
             cumulative_get_2_ad_content_lengths.append(resObject['ad-content-length'])
             cumulative_get_3_ad_content_lengths.append(resObject['ad-content-length'])
             cumulative_get_4_ad_content_lengths.append(resObject['ad-content-length'])
+
+            cumulative_get_0_tp_percentage.append(getPercentage(cumulative_get_0_tp_content_lengths[i], cumulative_get_0_total_content_lengths[i]))
+            cumulative_get_0_ad_percentage.append(getPercentage(cumulative_get_0_ad_content_lengths[i], cumulative_get_0_total_content_lengths[i]))
         else:
             cumulative_get_0_total_content_lengths.append(0)
             cumulative_get_1_total_content_lengths.append(0)
@@ -238,7 +241,10 @@ for resObject in result:
             cumulative_get_2_ad_content_lengths.append(0)
             cumulative_get_3_ad_content_lengths.append(0)
             cumulative_get_4_ad_content_lengths.append(0)
-    elif resObject['index'] == 1 and resObject['index'] <= display_index:
+
+            cumulative_get_0_tp_percentage.append(np.nan)
+            cumulative_get_0_ad_percentage.append(np.nan)
+    elif resObject['index'] == 1:
         if resObject['success'] is True:
             cumulative_get_1_total_content_lengths[i] += resObject['total-content-length']
             cumulative_get_2_total_content_lengths[i] += resObject['total-content-length']
@@ -259,7 +265,10 @@ for resObject in result:
             cumulative_get_2_ad_content_lengths[i] += resObject['ad-content-length']
             cumulative_get_3_ad_content_lengths[i] += resObject['ad-content-length']
             cumulative_get_4_ad_content_lengths[i] += resObject['ad-content-length']
-    elif resObject['index'] == 2 and resObject['index'] <= display_index:
+
+        cumulative_get_1_tp_percentage.append(getPercentage(cumulative_get_1_tp_content_lengths[i], cumulative_get_1_total_content_lengths[i]))
+        cumulative_get_1_ad_percentage.append(getPercentage(cumulative_get_1_ad_content_lengths[i], cumulative_get_1_total_content_lengths[i]))
+    elif resObject['index'] == 2:
         if resObject['success'] is True:
             cumulative_get_2_total_content_lengths[i] += resObject['total-content-length']
             cumulative_get_3_total_content_lengths[i] += resObject['total-content-length']
@@ -276,7 +285,10 @@ for resObject in result:
             cumulative_get_2_ad_content_lengths[i] += resObject['ad-content-length']
             cumulative_get_3_ad_content_lengths[i] += resObject['ad-content-length']
             cumulative_get_4_ad_content_lengths[i] += resObject['ad-content-length']
-    elif resObject['index'] == 3 and resObject['index'] <= display_index:
+
+        cumulative_get_2_tp_percentage.append(getPercentage(cumulative_get_2_tp_content_lengths[i], cumulative_get_2_total_content_lengths[i]))
+        cumulative_get_2_ad_percentage.append(getPercentage(cumulative_get_2_ad_content_lengths[i], cumulative_get_2_total_content_lengths[i]))
+    elif resObject['index'] == 3:
         if resObject['success'] is True:
             cumulative_get_3_total_content_lengths[i] += resObject['total-content-length']
             cumulative_get_4_total_content_lengths[i] += resObject['total-content-length']
@@ -289,19 +301,31 @@ for resObject in result:
 
             cumulative_get_3_ad_content_lengths[i] += resObject['ad-content-length']
             cumulative_get_4_ad_content_lengths[i] += resObject['ad-content-length']
-    elif resObject['index'] == 4 and resObject['index'] <= display_index:
+
+        cumulative_get_3_tp_percentage.append(getPercentage(cumulative_get_3_tp_content_lengths[i], cumulative_get_3_total_content_lengths[i]))
+        cumulative_get_3_ad_percentage.append(getPercentage(cumulative_get_3_ad_content_lengths[i], cumulative_get_3_total_content_lengths[i]))
+    elif resObject['index'] == 4:
         if resObject['success'] is True:
             cumulative_get_4_total_content_lengths[i] += resObject['total-content-length']
             cumulative_get_4_fp_content_lengths[i] += resObject['first-party-content-length']
             cumulative_get_4_tp_content_lengths[i] += resObject['third-party-content-length']
             cumulative_get_4_ad_content_lengths[i] += resObject['ad-content-length']
+
+        cumulative_get_4_tp_percentage.append(getPercentage(cumulative_get_4_tp_content_lengths[i], cumulative_get_4_total_content_lengths[i]))
+        cumulative_get_4_ad_percentage.append(getPercentage(cumulative_get_4_ad_content_lengths[i], cumulative_get_4_total_content_lengths[i]))
         i += 1
-    elif resObject['index'] == 5 and resObject['index'] <= display_index:
+    elif resObject['index'] == 5:
         if resObject['success'] is True:
             browse_total_content_lengths.append(resObject['total-content-length'])
             browse_fp_content_lengths.append(resObject['first-party-content-length'])
             browse_tp_content_lengths.append(resObject['third-party-content-length'])
             browse_ad_content_lengths.append(resObject['ad-content-length'])
+
+            browse_tp_percentage.append(getPercentage(resObject['third-party-content-length'], resObject['total-content-length']))
+            browse_ad_percentage.append(getPercentage(resObject['ad-content-length'], resObject['total-content-length']))
+        else:
+            browse_tp_percentage.append(np.nan)
+            browse_ad_percentage.append(np.nan)
 
 #######################################################
 # CREATE PANDAS RESULT
@@ -320,14 +344,14 @@ if display_index == 3:
     df = pd.DataFrame({'Site':list(sites), 'Total':list(cumulative_get_3_total_content_lengths), 'First-Party':list(cumulative_get_3_fp_content_lengths), 'Third-Party':list(cumulative_get_3_tp_content_lengths), 'Third-Party-Percentage':list(cumulative_get_3_tp_percentage), 'Ads':list(cumulative_get_3_ad_content_lengths), 'Ads-Percentage':list(cumulative_get_3_ad_percentage)})
 # show if subsite 4
 if display_index == 4:
-    df = pd.DataFrame({'Site':list(sites), 'Total':list(cumulative_get_4_total_content_lengths), 'First-Party':list(cumulative_get_4_fp_content_lengths), 'Third-Party':list(cumulative_get_4_tp_content_lengths), 'Third-Party-Percentage':list(cumulative_get_4_tp_percentage), 'Ads':list(get_4_ad_content_lengths), 'Ads-Percentage':list(get_4_ad_percentage)})
+    df = pd.DataFrame({'Site':list(sites), 'Total':list(cumulative_get_4_total_content_lengths), 'First-Party':list(cumulative_get_4_fp_content_lengths), 'Third-Party':list(cumulative_get_4_tp_content_lengths), 'Third-Party-Percentage':list(cumulative_get_4_tp_percentage), 'Ads':list(cumulative_get_4_ad_content_lengths), 'Ads-Percentage':list(cumulative_get_4_ad_percentage)})
 # show if browse
 if display_index == 5:
     df = pd.DataFrame({'Site':list(sites), 'Total':list(browse_total_content_lengths), 'First-Party':list(browse_fp_content_lengths), 'Third-Party':list(browse_tp_content_lengths), 'Third-Party-Percentage':list(browse_tp_percentage), 'Ads':list(browse_ad_content_lengths), 'Ads-Percentage':list(browse_ad_percentage)})
 
 
 df = df.sort_values(by=['Ads-Percentage'], ascending=False)
-df = df.head(10)
+df = df.head(20)
 print(df)
 
 

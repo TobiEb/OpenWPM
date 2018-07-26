@@ -16,7 +16,7 @@ rules = AdblockRules(raw_rules, use_re2=True)
 #
 #
 # MAIN CONFIG
-display_index = 5 # 0 is landing page, 1-4 subsites, 5 browse
+display_index = 1 # 0 is landing page, 1-4 subsites, 5 browse
 selected_crawl = 1
 #
 #
@@ -309,7 +309,7 @@ if display_index == 5:
 
 
 df = df.sort_values(by=['Ads-Percentage'], ascending=False)
-df = df.head(10)
+df = df.head(20)
 print(df)
 
 

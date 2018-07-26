@@ -144,7 +144,7 @@ def get_website(url, step, sleep, visit_id, webdriver,
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
         print "im sub", browser_commands_subsite_instance.sub_sites
-        if browser_commands_subsite_instance.sub_sites[step-1] != '' or browser_commands_subsite_instance.sub_sites[step-1] is not None:
+        if not browser_commands_subsite_instance.sub_sites[step-1] or browser_commands_subsite_instance.sub_sites[step-1] is not '' or browser_commands_subsite_instance.sub_sites[step-1] != "" or browser_commands_subsite_instance.sub_sites[step-1] is not None:
             url = browser_commands_subsite_instance.sub_sites[step-1]
             print "new url: ", url
         else:
@@ -153,10 +153,7 @@ def get_website(url, step, sleep, visit_id, webdriver,
             # So we have to get sub_sites again!
             # ATTENTION: url is ...-subX so we have to subtract that again
             # get 4 sub_sites and set them to visit now
-            if url.endswith('-sub1') or url.endswith('-sub2') or url.endswith('-sub3') or url.endswith('-sub4'):
-                tld_url = url[:-5]
-            else:
-                tld_url = url
+            tld_url = url[:-5]
             links = []
             print "drin im else, subsites was empty"
             for i in range(4):
@@ -165,9 +162,10 @@ def get_website(url, step, sleep, visit_id, webdriver,
             print "Links are: ", links
             browser_commands_subsite_instance.sub_sites = links
             print "AGAIN set to: ", browser_commands_subsite_instance.sub_sites
-            url = browser_commands_subsite_instance.sub_sites[step-1]
-            print "new url: ", url
-            if url == '' or url is None:
+            if not browser_commands_subsite_instance.sub_sites[step-1] or browser_commands_subsite_instance.sub_sites[step-1] is not '' or browser_commands_subsite_instance.sub_sites[step-1] != "" or browser_commands_subsite_instance.sub_sites[step-1] is not None:
+                url = browser_commands_subsite_instance.sub_sites[step-1]
+                print "new url: ", url
+            else:
                 print "however it is still None"
                 # set to base domain so it least a successful request
                 url = tld_url
