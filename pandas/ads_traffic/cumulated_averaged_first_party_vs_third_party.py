@@ -36,7 +36,7 @@ def getPercentage(subset, superset):
         return 0
     else:
         percentage = (float(subset)/float(superset)) * 100
-    return percentage
+    return int(round(percentage))
 
 # connect to the output database
 wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/crawl-data.sqlite'
@@ -280,6 +280,7 @@ for resObject in result:
             cumulative_get_4_ad_content_lengths[i] += resObject['ad-content-length']
         i += 1
     elif resObject['index'] == 5:
+        # only append if is true, since the result is devided by len(), so unsuccesful ones are removed from result.
         if resObject['success'] == True:
             browse_total_content_lengths.append(resObject['total-content-length'])
             browse_fp_content_lengths.append(resObject['first-party-content-length'])

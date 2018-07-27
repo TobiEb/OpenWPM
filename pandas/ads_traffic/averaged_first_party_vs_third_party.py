@@ -316,17 +316,17 @@ for res in browse_ad_content_lengths:
     browse_ad_length += res
 
 print "Averaged Per Subsite Total HTTP Bytes vs First-Party Bytes vs Third-Party Bytes (and in Percentage)"
-print "Landing Page", (get_0_total_length/len(get_0_total_content_lengths)), "Bytes | ",(get_0_first_party_length/len(get_0_fp_content_lengths)), "Bytes | ", (get_0_third_party_length/len(get_0_tp_content_lengths)), "Bytes"
+print "Landing Page", int(round(float(get_0_total_length)/float(len(get_0_total_content_lengths)))), "Bytes | ",int(round(float(get_0_first_party_length)/float(len(get_0_fp_content_lengths)))), "Bytes | ", int(round(float(get_0_third_party_length)/float(len(get_0_tp_content_lengths)))), "Bytes"
 print "Das sind: ",getPercentage(get_0_first_party_length, get_0_total_length),"% | ", getPercentage(get_0_third_party_length, get_0_total_length), "%"
-print "Subsite 1", (get_1_total_length/len(get_1_total_content_lengths)), "Bytes | ",(get_1_first_party_length/len(get_1_fp_content_lengths)), "Bytes | ", (get_1_third_party_length/len(get_1_tp_content_lengths)), "Bytes"
+print "Subsite 1", int(round(float(get_1_total_length)/float(len(get_1_total_content_lengths)))), "Bytes | ",int(round(float(get_1_first_party_length)/float(len(get_1_fp_content_lengths)))), "Bytes | ", int(round(float(get_1_third_party_length)/float(len(get_1_tp_content_lengths)))), "Bytes"
 print "Das sind: ",getPercentage(get_1_first_party_length, get_1_total_length),"% | ", getPercentage(get_1_third_party_length, get_1_total_length), "%"
-print "Subsite 2", (get_2_total_length/len(get_2_total_content_lengths)), "Bytes | ",(get_2_first_party_length/len(get_2_fp_content_lengths)), "Bytes | ", (get_2_third_party_length/len(get_2_tp_content_lengths)), "Bytes"
+print "Subsite 2", int(round(float(get_2_total_length)/float(len(get_2_total_content_lengths)))), "Bytes | ",int(round(float(get_2_first_party_length)/float(len(get_2_fp_content_lengths)))), "Bytes | ", int(round(float(get_2_third_party_length)/float(len(get_2_tp_content_lengths)))), "Bytes"
 print "Das sind: ",getPercentage(get_2_first_party_length, get_2_total_length),"% | ", getPercentage(get_2_third_party_length, get_2_total_length), "%"
-print "Subsite 3", (get_3_total_length/len(get_3_total_content_lengths)), "Bytes | ",(get_3_first_party_length/len(get_3_fp_content_lengths)), "Bytes | ", (get_3_third_party_length/len(get_3_tp_content_lengths)), "Bytes"
+print "Subsite 3", int(round(float(get_3_total_length)/float(len(get_3_total_content_lengths)))), "Bytes | ",int(round(float(get_3_first_party_length)/float(len(get_3_fp_content_lengths)))), "Bytes | ", int(round(float(get_3_third_party_length)/float(len(get_3_tp_content_lengths)))), "Bytes"
 print "Das sind: ",getPercentage(get_3_first_party_length, get_3_total_length),"% | ", getPercentage(get_3_third_party_length, get_3_total_length), "%"
-print "Subsite 4", (get_4_total_length/len(get_4_total_content_lengths)), "Bytes | ",(get_4_first_party_length/len(get_4_fp_content_lengths)), "Bytes | ", (get_4_third_party_length/len(get_4_tp_content_lengths)), "Bytes"
+print "Subsite 4", int(round(float(get_4_total_length)/float(len(get_4_total_content_lengths)))), "Bytes | ",int(round(float(get_4_first_party_length)/float(len(get_4_fp_content_lengths)))), "Bytes | ", int(round(float(get_4_third_party_length)/float(len(get_4_tp_content_lengths)))), "Bytes"
 print "Das sind: ",getPercentage(get_4_first_party_length, get_4_total_length),"% | ", getPercentage(get_4_third_party_length, get_4_total_length), "%"
-print "BROWSE 4", (browse_total_length/len(browse_total_content_lengths)), "Bytes | ",(browse_first_party_length/len(browse_fp_content_lengths)), "Bytes | ", (browse_third_party_length/len(browse_tp_content_lengths)), "Bytes"
+print "BROWSE 4", int(round(float(browse_total_length)/float(len(browse_total_content_lengths)))), "Bytes | ",int(round(float(browse_first_party_length)/float(len(browse_fp_content_lengths)))), "Bytes | ", int(round(float(browse_third_party_length)/float(len(browse_tp_content_lengths)))), "Bytes"
 print "Das sind: ",getPercentage(browse_first_party_length, browse_total_length),"% | ", getPercentage(browse_third_party_length, browse_total_length), "%"
 print()
 print "Averaged Per Subsite Total HTTP Bytes vs Ads-related HTTP Bytes (and in Percentage)"

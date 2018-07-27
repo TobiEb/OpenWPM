@@ -109,6 +109,7 @@ for resObject in result:
     first_party_content_length = 0
     third_party_content_length = 0
     advertisements_content_length = 0
+    
     if resObject['index'] <= display_index:
         ext = tldextract.extract(resObject["visited_site"])
         visited_tld = ext.domain
