@@ -4,12 +4,15 @@ import numpy as np
 import sqlite3 as lite
 import tldextract
 
+from tracking_rules import TrackingRules
 from ad_rules import AdRules
 from adblockparser import AdblockRules
 
 global rules_instance
-rules_instance = AdRules()
-raw_rules = rules_instance.rules
+ad_rules_instance = AdRules()
+tracking_rules_instance = TrackingRules()
+raw_rules = ad_rules_instance.rules
+raw_rules += tracking_rules_instance.rules
 rules = AdblockRules(raw_rules, use_re2=True)
 #
 #
@@ -17,9 +20,10 @@ rules = AdblockRules(raw_rules, use_re2=True)
 #
 # MAIN CONFIG
 selected_crawl = 1
-display_index = 0 # 0 is landing page, 1-4 subsites, 5 browse
-show_advertising_and_third_parties = False # True: show ads-percentage as part of third-party percentage in diagram
-                                           # False: show only ads percentage in diagram
+display_index = 1 # 0 is landing page, 1-4 subsites, 5 browse
+show_ad_tracking_and_third_parties = True
+show_tracking_and_third_parties = True # True: show tracking-percentage as part of third-party percentage in diagram
+                                           # False: show only tracking percentage in diagram
 #
 #
 #
@@ -105,14 +109,14 @@ for visit_id, site_url in cur.execute("SELECT visit_id, site_url"
 # Now we have an object containing all necessary information, saved in result array
 #################################################################################
 
-# add ad-urls
+# add tracking-urls
 all_crawled_sites = []
-all_advertising_sites = []
+all_ad_and_tracking_sites = []
 all_third_party_sites = []
 for resObject in result:
-    if resObject['index'] == display_index:
+    if resObject['index'] <= display_index:
         third_party_sites = []
-        advertising_sites = []
+        tracking_sites = []
         ext = tldextract.extract(resObject["visited_site"])
         visited_tld = ext.domain
         all_crawled_sites.append(visited_tld)
@@ -132,68 +136,69 @@ for resObject in result:
                     if not third_party_tld in third_party_sites:
                         third_party_sites.append(str(third_party_tld))
                 if rules.should_block(url) is True:
-                    # check if advertisement
-                    if not third_party_tld in all_advertising_sites:
-                        all_advertising_sites.append(str(third_party_tld))
-                    if not third_party_tld in advertising_sites:
-                        advertising_sites.append(str(third_party_tld))
+                    # check if tracking site
+                    if not third_party_tld in all_ad_and_tracking_sites:
+                        all_ad_and_tracking_sites.append(str(third_party_tld))
+                    if not third_party_tld in tracking_sites:
+                        tracking_sites.append(str(third_party_tld))
             else:
                 raise ValueError('http is not in url!', url)
 
         resObject["third_party_sites"] = third_party_sites
-        resObject["advertising_sites"] = advertising_sites
+        resObject["tracking_sites"] = tracking_sites
 
 # NON CUMULATIVE
 # Percentages (each percentage per third-party site)
-# Percentages (each percentage per advertiser site)
+# Percentages (each percentage per tracking site)
 
 third_party_percentages_array = []
-advertiser_percentages_array = []
+tracker_percentages_array = []
 
-if show_advertising_and_third_parties is True:
+if show_tracking_and_third_parties is True:
     for third_party_site in all_third_party_sites:
         tp_occurences = 0
-        advertiser_occurences = 0
+        tracker_occurences = 0
         for resObject in result:
-            if resObject['index'] == display_index:
+            if resObject['index'] <= display_index:
                 if third_party_site in resObject['third_party_sites']:
                     tp_occurences += 1
-                if third_party_site in resObject['advertising_sites']:
-                    advertiser_occurences += 1
+                if third_party_site in resObject['tracking_sites']:
+                    tracker_occurences += 1
         third_party_percentages_array.append(getPercentage(tp_occurences, len(all_crawled_sites)))
-        advertiser_percentages_array.append(getPercentage(advertiser_occurences, len(all_crawled_sites)))
+        tracker_percentages_array.append(getPercentage(tracker_occurences, len(all_crawled_sites)))
 else:
-    for ad_site in all_advertising_sites:
-        advertiser_occurences = 0
+    for ad_site in all_ad_and_tracking_sites:
+        tracker_occurences = 0
         for resObject in result:
             if resObject['index'] == display_index:
-                if ad_site in resObject['advertising_sites']:
-                    advertiser_occurences += 1
-        advertiser_percentages_array.append(getPercentage(advertiser_occurences, len(all_crawled_sites)))
+                if ad_site in resObject['tracking_sites']:
+                    tracker_occurences += 1
+        tracker_percentages_array.append(getPercentage(tracker_occurences, len(all_crawled_sites)))
 
 #######################################################
 # CREATE PANDAS RESULT
 #######################################################
-if show_advertising_and_third_parties is True:
-    df = pd.DataFrame({'Site':all_third_party_sites, 'tp-Percentage':third_party_percentages_array, 'Ad-Percentage':advertiser_percentages_array})
+
+if show_tracking_and_third_parties is True:
+    df = pd.DataFrame({'Site':all_third_party_sites, 'tp-Percentage':third_party_percentages_array, 'Tracker-Percentage':tracker_percentages_array})
     df = df.sort_values(by=['tp-Percentage'], ascending=False)
 else:
-    df = pd.DataFrame({'Site':all_advertising_sites, 'Ad-Percentage':advertiser_percentages_array})
-    df = df.sort_values(by=['Ad-Percentage'], ascending=False)
+    df = pd.DataFrame({'Site':all_ad_and_tracking_sites, 'Tracker-Percentage':tracker_percentages_array})
+    df = df.sort_values(by=['Tracker-Percentage'], ascending=False)
 
 df = df.head(30)
 
-if show_advertising_and_third_parties is True:
+if show_tracking_and_third_parties is True:
     plt.bar(df['Site'], df['tp-Percentage'], color="blue")
-    plt.bar(df['Site'], df['Ad-Percentage'], color="red")
-    plt.title("Most prevalent Third-Parties and Advertizers")
+    plt.bar(df['Site'], df['Tracker-Percentage'], color="red")
+    plt.title("Most prevalent Third-Parties and Trackers")
     plt.xlabel("Third-Party and Advertizer Domain")
-    plt.legend(['Third-Party Percentage', 'Ad-Percentage'])
+    plt.legend(['Third-Party Percentage', 'Tracker-Percentage'])
 else:
-    plt.bar(df['Site'], df['Ad-Percentage'], color="red")
-    plt.title("Most prevalent Advertizers")
+    plt.bar(df['Site'], df['Tracker-Percentage'], color="red")
+    plt.title("Most prevalent Trackers")
     plt.xlabel("Advertizer Domain")
-    plt.legend(['Ad-Percentage'])
+    plt.legend(['Tracker-Percentage'])
 plt.ylabel("Percentage of presence on crawled sites")
 plt.xticks(rotation=90)
 plt.grid()

@@ -141,7 +141,11 @@ for third_party_site in all_third_party_sites:
 # CREATE PANDAS RESULT
 #######################################################
 
-plt.bar(all_third_party_sites, third_party_percentages_array, color="red")
+df = pd.DataFrame({'Site':all_third_party_sites, 'Percentage':third_party_percentages_array})
+df = df.sort_values(by=['Percentage'], ascending=False)
+df = df.head(20)
+
+plt.bar(df['Site'], df['Percentage'], color="red")
 plt.title("Most prevalent Third-Parties")
 plt.xlabel("Domain")
 plt.ylabel("Percentage of presence on crawled sites")

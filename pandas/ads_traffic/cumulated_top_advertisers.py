@@ -17,7 +17,7 @@ rules = AdblockRules(raw_rules, use_re2=True)
 #
 # MAIN CONFIG
 selected_crawl = 1
-display_index = 0 # 0 is landing page, 1-4 subsites, 5 browse
+display_index = 2 # 0 is UNTIL landing page, 1-4 subsites, 5 browse
 show_advertising_and_third_parties = False # True: show ads-percentage as part of third-party percentage in diagram
                                            # False: show only ads percentage in diagram
 #
@@ -110,12 +110,14 @@ all_crawled_sites = []
 all_advertising_sites = []
 all_third_party_sites = []
 for resObject in result:
-    if resObject['index'] == display_index:
+    if resObject['index'] <= display_index:
         third_party_sites = []
         advertising_sites = []
         ext = tldextract.extract(resObject["visited_site"])
         visited_tld = ext.domain
-        all_crawled_sites.append(visited_tld)
+        if resObject['index'] == 0:
+            # only add once per site
+            all_crawled_sites.append(visited_tld)
 
         for url_tuple in cur.execute("SELECT url"
                                         " FROM http_requests"
@@ -143,7 +145,7 @@ for resObject in result:
         resObject["third_party_sites"] = third_party_sites
         resObject["advertising_sites"] = advertising_sites
 
-# NON CUMULATIVE
+# CUMULATIVE
 # Percentages (each percentage per third-party site)
 # Percentages (each percentage per advertiser site)
 
@@ -165,15 +167,30 @@ if show_advertising_and_third_parties is True:
 else:
     for ad_site in all_advertising_sites:
         advertiser_occurences = 0
+        site_has_ad = False
         for resObject in result:
-            if resObject['index'] == display_index:
+            if resObject['index'] <= display_index:
+                if resObject['index'] == 0:
+                    # for each site set to false
+                    site_has_ad = False
                 if ad_site in resObject['advertising_sites']:
-                    advertiser_occurences += 1
+                    # check if ad is already matched to this crawled site
+                    if site_has_ad is False:
+                        advertiser_occurences += 1
+                        site_has_ad = True
+
+        #test
+        # if 'doubleclick' in ad_site:
+        #     print ad_site
+        #     print advertiser_occurences
+        #     print len(all_crawled_sites)
+        #     print getPercentage(advertiser_occurences, len(all_crawled_sites))
         advertiser_percentages_array.append(getPercentage(advertiser_occurences, len(all_crawled_sites)))
 
 #######################################################
 # CREATE PANDAS RESULT
 #######################################################
+
 if show_advertising_and_third_parties is True:
     df = pd.DataFrame({'Site':all_third_party_sites, 'tp-Percentage':third_party_percentages_array, 'Ad-Percentage':advertiser_percentages_array})
     df = df.sort_values(by=['tp-Percentage'], ascending=False)
