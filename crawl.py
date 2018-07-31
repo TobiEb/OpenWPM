@@ -85,19 +85,12 @@ for site in sites_to_crawl:
     command_sequence_get5.dump_flash_cookies(timeout=default_timeout)
     #command_sequence_get5.stop_tshark(timeout=10)
 
-    command_sequence_browse5 = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence_browse5.browse(num_links=4, sleep=default_sleep, timeout=(5*default_timeout))
-    command_sequence_browse5.dump_profile_cookies(timeout=(5*default_timeout))
-    command_sequence_browse5.dump_flash_cookies(timeout=(5*default_timeout))
-    #command_sequence_browse5.stop_tshark(timeout=10)
-
     #manager.execute_command_sequence(command_sequence_google, index='**')
     manager.execute_command_sequence(command_sequence_get1, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get2, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get3, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get4, index='**') # ** = synchronized browsers
     manager.execute_command_sequence(command_sequence_get5, index='**') # ** = synchronized browsers
-    manager.execute_command_sequence(command_sequence_browse5, index='**') # ** = synchronized browsers
     
 # Shuts down the browsers and waits for the data to finish logging
 manager.close()
