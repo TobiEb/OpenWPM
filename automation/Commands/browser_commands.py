@@ -143,8 +143,7 @@ def get_website(url, step, sleep, visit_id, webdriver,
             subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
-        print "im sub", browser_commands_subsite_instance.sub_sites
-        if not browser_commands_subsite_instance.sub_sites[step-1] or browser_commands_subsite_instance.sub_sites[step-1] is not '' or browser_commands_subsite_instance.sub_sites[step-1] is not 'None' or browser_commands_subsite_instance.sub_sites[step-1] != "" or browser_commands_subsite_instance.sub_sites[step-1] is not None:
+        if 'http' in browser_commands_subsite_instance.sub_sites[step-1]:
             url = browser_commands_subsite_instance.sub_sites[step-1]
             print "new url: ", url
         else:
@@ -162,7 +161,7 @@ def get_website(url, step, sleep, visit_id, webdriver,
             print "Links are: ", links
             browser_commands_subsite_instance.sub_sites = links
             print "AGAIN set to: ", browser_commands_subsite_instance.sub_sites
-            if not browser_commands_subsite_instance.sub_sites[step-1] or browser_commands_subsite_instance.sub_sites[step-1] is not '' or browser_commands_subsite_instance.sub_sites[step-1] != "" or browser_commands_subsite_instance.sub_sites[step-1] is not None:
+            if 'http' in browser_commands_subsite_instance.sub_sites[step-1]:
                 url = browser_commands_subsite_instance.sub_sites[step-1]
                 print "new url: ", url
             else:
