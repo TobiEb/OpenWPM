@@ -154,7 +154,7 @@ def get_website(url, step, sleep, visit_id, webdriver,
             # get 4 sub_sites and set them to visit now
             tld_url = url[:-5]
             # set to base domain so it least a successful request
-            url = tld_ur
+            url = tld_url
             # set to 0, so we visit top level domain and then get intra links again
             step = 0
 
