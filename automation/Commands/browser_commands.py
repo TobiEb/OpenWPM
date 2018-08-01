@@ -153,21 +153,10 @@ def get_website(url, step, sleep, visit_id, webdriver,
             # ATTENTION: url is ...-subX so we have to subtract that again
             # get 4 sub_sites and set them to visit now
             tld_url = url[:-5]
-            links = []
-            print "drin im else, subsites was empty"
-            for i in range(4):
-                el = my_get_intra_link(webdriver, tld_url)
-                links.append(el)
-            print "Links are: ", links
-            browser_commands_subsite_instance.sub_sites = links
-            print "AGAIN set to: ", browser_commands_subsite_instance.sub_sites
-            if 'http' in browser_commands_subsite_instance.sub_sites[step-1]:
-                url = browser_commands_subsite_instance.sub_sites[step-1]
-                print "new url: ", url
-            else:
-                print "however it is still None"
-                # set to base domain so it least a successful request
-                url = tld_url
+            # set to base domain so it least a successful request
+            url = tld_ur
+            # set to 0, so we visit top level domain and then get intra links again
+            step = 0
 
 
     tab_restart_browser(webdriver)
