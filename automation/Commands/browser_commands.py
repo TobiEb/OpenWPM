@@ -143,18 +143,23 @@ def get_website(url, step, sleep, visit_id, webdriver,
             subprocess.call(['/home/OpenWPM/start_tshark.sh', str(url), str(visit_id)])
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
-        if 'http' in browser_commands_subsite_instance.sub_sites[step-1]:
-            url = browser_commands_subsite_instance.sub_sites[step-1]
-            print "new url: ", url
+        print browser_commands_subsite_instance.sub_sites
+        if browser_commands_subsite_instance.sub_sites is not None:
+            if 'http' in browser_commands_subsite_instance.sub_sites[step-1]:
+                url = browser_commands_subsite_instance.sub_sites[step-1]
+                print "new url: ", url
+            else:
+                tld_url = url[:-5]
+                # set to base domain so it least a successful request
+                url = tld_url
+                print url
+                # set to 0, so we visit top level domain and then get intra links again
+                step = 0
         else:
-            # it is empty as soon as there was an error in previous measurement like a timeout. 
-            # This leads to a restart of BrowserManager and SubSites() is newly instantiated
-            # So we have to get sub_sites again!
-            # ATTENTION: url is ...-subX so we have to subtract that again
-            # get 4 sub_sites and set them to visit now
             tld_url = url[:-5]
             # set to base domain so it least a successful request
             url = tld_url
+            print url
             # set to 0, so we visit top level domain and then get intra links again
             step = 0
 
