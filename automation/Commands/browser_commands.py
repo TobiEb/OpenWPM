@@ -144,7 +144,7 @@ def get_website(url, step, sleep, visit_id, webdriver,
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
         print browser_commands_subsite_instance.sub_sites
-        if browser_commands_subsite_instance.sub_sites is not None:
+        if len(browser_commands_subsite_instance.sub_sites) > 0 and browser_commands_subsite_instance.sub_sites is not None and browser_commands_subsite_instance.sub_sites[step-1] is not None:
             if 'http' in browser_commands_subsite_instance.sub_sites[step-1]:
                 url = browser_commands_subsite_instance.sub_sites[step-1]
                 print "new url: ", url
