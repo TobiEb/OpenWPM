@@ -8,7 +8,7 @@ NUM_BROWSERS = 1
 
 global sub_sites_instance
 sub_sites_instance = SubSites()
-sites_to_crawl = sub_sites_instance.sites_100_DE
+sites_to_crawl = sub_sites_instance.sites_1000_DE
 
 # Loads the manager preference and 3 copies of the default browser dictionaries
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)

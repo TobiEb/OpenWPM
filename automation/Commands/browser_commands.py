@@ -156,7 +156,6 @@ def get_website(url, step, sleep, visit_id, webdriver,
                 url = tld_url
                 print url
         except TypeError:
-            print "in exception"
             step = 0
             # set to 0, so we visit top level domain and then get intra links again
             raise ValueError("No links found. Browsing not possible!")
