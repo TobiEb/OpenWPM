@@ -144,22 +144,22 @@ def get_website(url, step, sleep, visit_id, webdriver,
 
     if 'sub1' in url or 'sub2' in url or 'sub3' in url or 'sub4' in url:
         print browser_commands_subsite_instance.sub_sites
-# try:
-        if 'http' in browser_commands_subsite_instance.sub_sites[step-1]:
-            url = browser_commands_subsite_instance.sub_sites[step-1]
-            print "new url: ", url
-        else:
-            print "im else nach timeout exception zb"
+        try:
+            if 'http' in browser_commands_subsite_instance.sub_sites[step-1]:
+                url = browser_commands_subsite_instance.sub_sites[step-1]
+                print "new url: ", url
+            else:
+                print "im else nach timeout exception zb"
+                step = 0
+                tld_url = url[:-5]
+                # set to base domain and get subsites again
+                url = tld_url
+                print url
+        except TypeError:
+            print "in exception"
             step = 0
-            tld_url = url[:-5]
-            # set to base domain so it least a successful request
-            url = tld_url
-            print url
-        # except Exception:
-            # print "in exception"
-            # step = 0
             # set to 0, so we visit top level domain and then get intra links again
-            # raise ValueError("That is not a positive number!")
+            raise ValueError("No links found. Browsing not possible!")
 
         # if len(browser_commands_subsite_instance.sub_sites) > 0 and browser_commands_subsite_instance.sub_sites is not None and browser_commands_subsite_instance.sub_sites[step-1] is not None:
 
