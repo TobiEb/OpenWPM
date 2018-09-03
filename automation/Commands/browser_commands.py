@@ -197,7 +197,6 @@ def get_website(url, step, sleep, visit_id, webdriver,
         my_scroll_down(webdriver)
     #login
     if browser_params['login']:
-        print url
         if "facebook" in url:
             try:
                 email = webdriver.find_element_by_id("email")
