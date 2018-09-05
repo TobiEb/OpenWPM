@@ -20,7 +20,7 @@ rules = AdblockRules(raw_rules, use_re2=True)
 #
 # NON CUMULATIVE
 # MAIN CONFIG
-selected_crawl = 1
+selected_crawl = 2
 display_index = 0 # 0 is landing page, 1-4 subsites
 show_tracking_and_third_parties = True # True: show tracking-percentage as part of third-party percentage in diagram
                                            # False: show only tracking percentage in diagram
@@ -46,7 +46,8 @@ def getPercentage(subset, superset):
     return int(round(percentage))
 
 # connect to the output database
-wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/crawl-data.sqlite'
+# wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/crawl-data.sqlite'
+wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/facebook.sqlite'
 conn = lite.connect(wpm_db)
 cur = conn.cursor()
 
@@ -202,7 +203,7 @@ plt.ylabel("Percentage of presence on crawled sites")
 plt.xticks(rotation=90)
 plt.grid()
 # plt.show()
-plt.savefig('figures/top_trackers_homepage.png', bbox_inches='tight')
+plt.savefig('figures/top_trackers_facebook.png', bbox_inches='tight')
 
 
 

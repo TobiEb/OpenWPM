@@ -5,12 +5,12 @@ import sqlite3 as lite
 from datetime import datetime
 
 # connect to the output database
-wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/crawl-data.sqlite'
+wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/facebook.sqlite'
 conn = lite.connect(wpm_db)
 cur = conn.cursor()
 
 # CONFIG
-selected_crawl = 1
+selected_crawl = 2
 fmt = '%Y-%m-%d %H:%M:%S'
 
 # RESULT VARIABLES
@@ -56,7 +56,9 @@ else:
     print "Es gibt unterschiedlich lange Ergebnis-Summen"
 
 df = pd.DataFrame({'Command':list(cmds), 'Site':list(argss), 'Success':list(successes), 'Timestamp':list(timestamps)})
-# print(df)
+print(df)
+df.to_csv('test.csv', sep='\t', encoding='utf-8', index=False)
+
 first_timestamp = df.loc[df.index[0], 'Timestamp']
 last_timestamp = df.loc[df.index[-1], 'Timestamp']
 
@@ -64,7 +66,6 @@ last_timestamp = df.loc[df.index[-1], 'Timestamp']
 tstamp1 = datetime.strptime(first_timestamp, fmt)
 tstamp2 = datetime.strptime(last_timestamp, fmt)
 td = tstamp2 - tstamp1
-# td_mins = int(round(td.total_seconds() / 60))
 
 print 'Ergebnis:'
 print "Crawled Sites: ",len(cmds), "# Failures: ", total_errors, "Failures in %: ", total_percentage_result, "Dauer des Crawls: ", first_timestamp, "-", last_timestamp, "thus: ", td 

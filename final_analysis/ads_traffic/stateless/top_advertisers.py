@@ -145,9 +145,9 @@ for resObject in result:
         resObject["advertising_sites"] = advertising_sites
 
 # Percentages (each percentage per third-party site)
-# Percentages (each percentage per advertiser site)
-
 third_party_percentages_array = []
+
+# Percentages (each percentage per advertiser site)
 advertiser_percentages_array = []
 
 if show_advertising_and_third_parties is True:

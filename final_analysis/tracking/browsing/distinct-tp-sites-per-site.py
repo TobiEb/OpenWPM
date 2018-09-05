@@ -105,7 +105,6 @@ for resObject in result:
     resObject["unique_third_party_sites"] = unique_third_party_sites
 
 # Since GET subsites is cumulative, we have to check and add unique (!) requested third-party sites and add them to the next sub_site
-# !!!! Success is not regarded yet
 
 sites = []
 cumulative_get_0_tp_request_sites = []
@@ -152,45 +151,45 @@ for resObject in result:
 
 
 # from sub_sites get the length to show in diagram
-get_0_tp_requests = 0
+get_0_distinct_tp_requests = 0
 get_0_successes = 0
-get_1_tp_requests = 0
+get_1_distinct_tp_requests = 0
 get_1_successes = 0
-get_2_tp_requests = 0
+get_2_distinct_tp_requests = 0
 get_2_successes = 0
-get_3_tp_requests = 0
+get_3_distinct_tp_requests = 0
 get_3_successes = 0
-get_4_tp_requests = 0
+get_4_distinct_tp_requests = 0
 get_4_successes = 0
 
 for resObject in result:
     if resObject['index'] == 0:
         if resObject['success'] is True:
-            get_0_tp_requests += len(resObject['final_unique_third_party_sites'])
+            get_0_distinct_tp_requests += len(resObject['final_unique_third_party_sites'])
             get_0_successes += 1
     elif resObject['index'] == 1:
         if resObject['success'] is True:
-            get_1_tp_requests += len(resObject['final_unique_third_party_sites'])
+            get_1_distinct_tp_requests += len(resObject['final_unique_third_party_sites'])
             get_1_successes += 1
     elif resObject['index'] == 2:
         if resObject['success'] is True:
-            get_2_tp_requests += len(resObject['final_unique_third_party_sites'])
+            get_2_distinct_tp_requests += len(resObject['final_unique_third_party_sites'])
             get_2_successes += 1
     elif resObject['index'] == 3:
         if resObject['success'] is True:
-            get_3_tp_requests += len(resObject['final_unique_third_party_sites'])
+            get_3_distinct_tp_requests += len(resObject['final_unique_third_party_sites'])
             get_3_successes += 1
     elif resObject['index'] == 4:
         if resObject['success'] is True:
-            get_4_tp_requests += len(resObject['final_unique_third_party_sites'])
+            get_4_distinct_tp_requests += len(resObject['final_unique_third_party_sites'])
             get_4_successes += 1
 
 
-print float(get_0_tp_requests)/float(get_0_successes), 'distinct third-party sites'
-print float(get_1_tp_requests)/float(get_1_successes), 'distinct third-party sites'
-print float(get_2_tp_requests)/float(get_2_successes), 'distinct third-party sites'
-print float(get_3_tp_requests)/float(get_3_successes), 'distinct third-party sites'
-print float(get_4_tp_requests)/float(get_4_successes), 'distinct third-party sites'
+print float(get_0_distinct_tp_requests)/float(get_0_successes), 'distinct third-party sites'
+print float(get_1_distinct_tp_requests)/float(get_1_successes), 'distinct third-party sites'
+print float(get_2_distinct_tp_requests)/float(get_2_successes), 'distinct third-party sites'
+print float(get_3_distinct_tp_requests)/float(get_3_successes), 'distinct third-party sites'
+print float(get_4_distinct_tp_requests)/float(get_4_successes), 'distinct third-party sites'
 
 
 

@@ -20,7 +20,7 @@ rules = AdblockRules(raw_rules, use_re2=True)
 #
 ## NON CUMULATIVE
 # MAIN CONFIG
-display_index = 0 # 0 is UNTIL landing page, UNTIL 1-4 subsites
+display_index = 4 # 0 is UNTIL landing page, UNTIL 1-4 subsites
 selected_crawl = 1
 #
 #
@@ -175,14 +175,27 @@ get_0_tracking_percentage = []
 get_1_tracking_percentage = []
 get_2_tracking_percentage = []
 get_3_tracking_percentage = []
-get_racking_tp_percentage = []
+get_4_tracking_percentage = []
 
 # mean third-party percentage of all sites
 get_0_mean_tp_percentage = 0
+get_1_mean_tp_percentage = 0
+get_2_mean_tp_percentage = 0
+get_3_mean_tp_percentage = 0
+get_4_mean_tp_percentage = 0
 
 # mean tracking percentage of all sites
 get_0_mean_tracking_percentage = 0
+get_1_mean_tracking_percentage = 0
+get_2_mean_tracking_percentage = 0
+get_3_mean_tracking_percentage = 0
+get_4_mean_tracking_percentage = 0
+
 get_0_successes = 0
+get_1_successes = 0
+get_2_successes = 0
+get_3_successes = 0
+get_4_successes = 0
 
 for resObject in result:
     if resObject['index'] == 0 and resObject['index'] == display_index:
@@ -207,6 +220,10 @@ for resObject in result:
 
             get_1_tp_percentage.append(getPercentage(resObject['total_third_party_requests'], resObject['total_requests']))
             get_1_tracking_percentage.append(getPercentage(resObject['total_tracking_requests'], resObject['total_requests']))
+
+            get_1_mean_tp_percentage += getPercentage(resObject['total_third_party_requests'], resObject['total_requests'])
+            get_1_mean_tracking_percentage += getPercentage(resObject['total_tracking_requests'], resObject['total_requests'])
+            get_1_successes += 1
     elif resObject['index'] == 2 and resObject['index'] == display_index:
         if resObject['success'] is True:
             sites.append(resObject['visited_site'])
@@ -216,6 +233,10 @@ for resObject in result:
 
             get_2_tp_percentage.append(getPercentage(resObject['total_third_party_requests'], resObject['total_requests']))
             get_2_tracking_percentage.append(getPercentage(resObject['total_tracking_requests'], resObject['total_requests']))
+
+            get_2_mean_tp_percentage += getPercentage(resObject['total_third_party_requests'], resObject['total_requests'])
+            get_2_mean_tracking_percentage += getPercentage(resObject['total_tracking_requests'], resObject['total_requests'])
+            get_2_successes += 1
     elif resObject['index'] == 3 and resObject['index'] == display_index:
         if resObject['success'] is True:
             sites.append(resObject['visited_site'])
@@ -225,6 +246,10 @@ for resObject in result:
 
             get_3_tp_percentage.append(getPercentage(resObject['total_third_party_requests'], resObject['total_requests']))
             get_3_tracking_percentage.append(getPercentage(resObject['total_tracking_requests'], resObject['total_requests']))
+
+            get_3_mean_tp_percentage += getPercentage(resObject['total_third_party_requests'], resObject['total_requests'])
+            get_3_mean_tracking_percentage += getPercentage(resObject['total_tracking_requests'], resObject['total_requests'])
+            get_3_successes += 1
     elif resObject['index'] == 4 and resObject['index'] == display_index:
         if resObject['success'] is True:
             sites.append(resObject['visited_site'])
@@ -235,6 +260,10 @@ for resObject in result:
             get_4_tp_percentage.append(getPercentage(resObject['total_third_party_requests'], resObject['total_requests']))
             get_4_tracking_percentage.append(getPercentage(resObject['total_tracking_requests'], resObject['total_requests']))
 
+            get_4_mean_tp_percentage += getPercentage(resObject['total_third_party_requests'], resObject['total_requests'])
+            get_4_mean_tracking_percentage += getPercentage(resObject['total_tracking_requests'], resObject['total_requests'])
+            get_4_successes += 1
+
 
 #######################################################
 # CREATE PANDAS RESULT
@@ -243,24 +272,32 @@ for resObject in result:
 # show if landing page
 if display_index == 0:
     df = pd.DataFrame({'Site':list(sites), 'Total':list(get_0_total_requests), 'Third-Party':list(get_0_tp_requests), 'Third-Party-Percentage':list(get_0_tp_percentage), 'Tracking':list(get_0_tracking_requests), 'Tracking-Percentage':list(get_0_tracking_percentage)})
+    print "Average Third-Party-Percentage is:", float(get_0_mean_tp_percentage)/float(get_0_successes), '%'
+    print "Average Tracking-Percentage is:", float(get_0_mean_tracking_percentage)/float(get_0_successes), '%'
 # show if subsite 1
 if display_index == 1:
     df = pd.DataFrame({'Site':list(sites), 'Total':list(get_1_total_requests), 'Third-Party':list(get_1_tp_requests), 'Third-Party-Percentage':list(get_1_tp_percentage), 'Tracking':list(get_1_tracking_requests), 'Tracking-Percentage':list(get_1_tracking_percentage)})
+    print "Average Third-Party-Percentage is:", float(get_1_mean_tp_percentage)/float(get_1_successes), '%'
+    print "Average Tracking-Percentage is:", float(get_1_mean_tracking_percentage)/float(get_1_successes), '%'
 # show if subsite 2
 if display_index == 2:
     df = pd.DataFrame({'Site':list(sites), 'Total':list(get_2_total_requests), 'Third-Party':list(get_2_tp_requests), 'Third-Party-Percentage':list(get_2_tp_percentage), 'Tracking':list(get_2_tracking_requests), 'Tracking-Percentage':list(get_2_tracking_percentage)})
+    print "Average Third-Party-Percentage is:", float(get_2_mean_tp_percentage)/float(get_2_successes), '%'
+    print "Average Tracking-Percentage is:", float(get_2_mean_tracking_percentage)/float(get_2_successes), '%'
 # show if subsite 3
 if display_index == 3:
     df = pd.DataFrame({'Site':list(sites), 'Total':list(get_3_total_requests), 'Third-Party':list(get_3_tp_requests), 'Third-Party-Percentage':list(get_3_tp_percentage), 'Tracking':list(get_3_tracking_requests), 'Tracking-Percentage':list(get_3_tracking_percentage)})
+    print "Average Third-Party-Percentage is:", float(get_3_mean_tp_percentage)/float(get_3_successes), '%'
+    print "Average Tracking-Percentage is:", float(get_3_mean_tracking_percentage)/float(get_3_successes), '%'
 # show if subsite 4
 if display_index == 4:
     df = pd.DataFrame({'Site':list(sites), 'Total':list(get_4_total_requests), 'Third-Party':list(get_4_tp_requests), 'Third-Party-Percentage':list(get_4_tp_percentage), 'Tracking':list(get_4_tracking_requests), 'Tracking-Percentage':list(get_4_tracking_percentage)})
+    print "Average Third-Party-Percentage is:", float(get_4_mean_tp_percentage)/float(get_4_successes), '%'
+    print "Average Tracking-Percentage is:", float(get_4_mean_tracking_percentage)/float(get_4_successes), '%'
 
 df = df.sort_values(by=['Third-Party-Percentage'], ascending=False)
 df = df.head(30)
 
-print "Average Third-Party-Percentage is:", float(get_0_mean_tp_percentage)/float(get_0_successes), '%'
-print "Average Tracking-Percentage is:", float(get_0_mean_tracking_percentage)/float(get_0_successes), '%'
 df.to_csv('tables/worst-tp-related-sites.csv', sep='\t', encoding='utf-8', index=False)
 
 

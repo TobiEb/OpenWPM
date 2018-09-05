@@ -14,11 +14,11 @@ rules = AdblockRules(raw_rules, use_re2=True)
 #
 #
 #
-#
+# CUMULATED
 # MAIN CONFIG
 selected_crawl = 1
 display_index = 4 # 0 is UNTIL landing page, 1-4 subsites
-show_advertising_and_third_parties = False # True: show ads-percentage as part of third-party percentage in diagram
+show_advertising_and_third_parties = True # True: show ads-percentage as part of third-party percentage in diagram
                                            # False: show only ads percentage in diagram
 #
 #
@@ -145,23 +145,31 @@ for resObject in result:
         resObject["third_party_sites"] = third_party_sites
         resObject["advertising_sites"] = advertising_sites
 
-# CUMULATIVE
 # Percentages (each percentage per third-party site)
-# Percentages (each percentage per advertiser site)
-
 third_party_percentages_array = []
+
+# Percentages (each percentage per advertiser site)
 advertiser_percentages_array = []
 
 if show_advertising_and_third_parties is True:
     for third_party_site in all_third_party_sites:
         tp_occurences = 0
+        site_has_tp = False
         advertiser_occurences = 0
+        site_has_ad = False
         for resObject in result:
-            if resObject['index'] == display_index:
+            if resObject['index'] <= display_index:
+                if resObject['index'] == 0:
+                    site_has_tp = False
+                    site_has_ad = False
                 if third_party_site in resObject['third_party_sites']:
-                    tp_occurences += 1
+                    if site_has_tp is False:
+                        tp_occurences += 1
+                        site_has_tp = True
                 if third_party_site in resObject['advertising_sites']:
-                    advertiser_occurences += 1
+                    if site_has_ad is False:
+                        advertiser_occurences += 1
+                        site_has_ad = True
         third_party_percentages_array.append(getPercentage(tp_occurences, len(all_crawled_sites)))
         advertiser_percentages_array.append(getPercentage(advertiser_occurences, len(all_crawled_sites)))
 else:
@@ -209,7 +217,10 @@ plt.ylabel("Percentage of presence on crawled sites")
 plt.xticks(rotation=90)
 plt.grid()
 # plt.show()
-plt.savefig('top_advertisers_after_browsing.png', bbox_inches='tight')
+if show_advertising_and_third_parties is True:
+    plt.savefig('figures/top_third_parties_after_browsing.png', bbox_inches='tight')
+else:
+    plt.savefig('figures/top_advertisers_after_browsing.png', bbox_inches='tight')
 
 
 
