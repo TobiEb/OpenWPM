@@ -8,7 +8,7 @@ NUM_BROWSERS = 1
 
 global sub_sites_instance
 sub_sites_instance = SubSites()
-sites_to_crawl = sub_sites_instance.sites_100_DE
+sites_to_crawl = sub_sites_instance.sites_1000_DE
 
 # Loads the manager preference and 3 copies of the default browser dictionaries
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)
@@ -30,7 +30,7 @@ for i in range(NUM_BROWSERS):
     # if profile should be saved
     #browser_params[i]['profile_archive_dir'] = '/home/OpenWPM/Output/Profile'
     # if profile should be loaded
-    browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Facebook'
+    #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Facebook'
 
     #self written
     browser_params[i]['scroll_down'] = False
@@ -38,8 +38,8 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['execute_tshark'] = False
 
 # Update TaskManager configuration (use this for crawl-wide settings)
-manager_params['data_directory'] = '/home/OpenWPM/Output'
-manager_params['log_directory'] = '/home/OpenWPM/Output'
+manager_params['data_directory'] = '/home/OpenWPM/Output/Data'
+manager_params['log_directory'] = '/home/OpenWPM/Output/Data'
 #manager_params['database_name'] = 'output.sqlite'
 
 default_timeout = 60
@@ -59,3 +59,4 @@ for site in sites_to_crawl:
     
 # Shuts down the browsers and waits for the data to finish logging
 manager.close()
+ 
