@@ -8,7 +8,8 @@ NUM_BROWSERS = 1
 
 global sub_sites_instance
 sub_sites_instance = SubSites()
-sites_to_crawl = sub_sites_instance.sites_1000_DE
+# sites_to_crawl = sub_sites_instance.sites_1000_DE
+sites_to_crawl = ['http://www.spiegel.de', 'http://www.kicker.de', 'http://www.sport1.de', 'http://www.github.com']
 
 # Loads the manager preference and 3 copies of the default browser dictionaries
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)
@@ -30,7 +31,7 @@ for i in range(NUM_BROWSERS):
     # if profile should be saved
     browser_params[i]['profile_archive_dir'] = '/home/OpenWPM/Output/Profile'
     # if profile should be loaded
-    #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Facebook'
+    browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Facebook'
 
     #self written
     browser_params[i]['scroll_down'] = False
@@ -50,7 +51,7 @@ manager = TaskManager.TaskManager(manager_params, browser_params)
 # Visits the sites with all browsers simultaneously
 for site in sites_to_crawl:
     # define crawl actions
-    command_sequence_get1 = CommandSequence.CommandSequence(site, reset=False)
+    command_sequence_get1 = CommandSequence.CommandSequence(site, reset=True)
     command_sequence_get1.get(step=0, sleep=default_sleep, timeout=default_timeout)
     command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
     command_sequence_get1.dump_flash_cookies(timeout=default_timeout)

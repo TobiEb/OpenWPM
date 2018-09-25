@@ -7,6 +7,9 @@ import tldextract
 from tracking_rules import TrackingRules
 from ad_rules import AdRules
 from adblockparser import AdblockRules
+import json
+
+BLOCKLIST = "../../assets/disconnect_blocklist.json"
 
 global rules_instance
 ad_rules_instance = AdRules()
@@ -18,13 +21,23 @@ rules = AdblockRules(raw_rules, use_re2=True)
 #
 #
 #
-# NON CUMULATIVE
+# CUMULATIVE
 # MAIN CONFIG
-wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/1000_2.sqlite'
+wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/1000_1.sqlite'
 selected_crawl = 1
-display_index = 0 # 0 is landing page, 1-4 subsites
+display_index = 4 # 0 is landing page, 1-4 subsites
 show_tracking_and_third_parties = True # True: show tracking-percentage as part of third-party percentage in diagram
                                            # False: show only tracking percentage in diagram
+
+def _load_json(path):
+    '''Reads json file ignoring comments'''
+    ignore = ["__comment", "license"]
+    with open(path) as raw:
+        data = json.load(raw)
+        for ele in ignore:
+            if ele in data:
+                data.pop(ele)
+    return data
 
 def getTldOfSubURL(subUrl):
     # ATTENTION: url is ...-subX so we have to subtract that again
@@ -48,13 +61,28 @@ def getDomain(site):
     d = ext.domain
     s = ext.suffix
     res = d + "." + s
-    if res == "de.com":
-        res = "research.de.com"
+    # sonderfall abchecken: research.de.com
+    if res == 'de.com':
+        res = 'research.de.com'
     return res
+
+def get_organisation(json_tree, target_domain):
+    orga = ''
+    for category in json_tree['categories']:
+        for company_obj in json_tree['categories'][category]:
+            # company_obj is json element again
+            company_name = company_obj.keys() # returns list
+            orga = company_name[0]
+            main_domain = company_obj[company_name[0]].keys() # returns list
+            for domain in company_obj[company_name[0]][main_domain[0]]:
+                if target_domain == domain:
+                    return orga
 
 # connect to the output database
 conn = lite.connect(wpm_db)
 cur = conn.cursor()
+blocklist_json = _load_json(BLOCKLIST)
+
 result = []
 
 # get index and success from CrawlHistory, create result array
@@ -113,14 +141,17 @@ for visit_id, site_url in cur.execute("SELECT visit_id, site_url"
 
 # add tracking-urls
 all_crawled_sites = []
-all_ad_and_tracking_sites = []
-all_third_party_sites = []
+all_ad_and_tracking_orgas = []
+all_third_party_orgas = []
 for resObject in result:
-    if resObject['index'] == display_index and resObject['success'] is True:
-        third_party_sites = []
-        tracking_sites = []
+    if resObject['index'] <= display_index:
+        third_party_orgas = []
+        tracking_orgas = []
         visited_tld = getDomain(resObject['visited_site'])
-        all_crawled_sites.append(visited_tld)
+
+        if resObject['index'] == 0 and resObject['success'] is True:
+        # only add once per site
+            all_crawled_sites.append(visited_tld)
 
         for url_tuple in cur.execute("SELECT url"
                                         " FROM http_requests"
@@ -129,23 +160,36 @@ for resObject in result:
             url = url_tuple[0]
             if "http" in url:
                 third_party_tld = getDomain(url)
-                if not visited_tld in third_party_tld:
+                if visited_tld != third_party_tld:
                     # check if third-party
-                    if not third_party_tld in all_third_party_sites:
-                        all_third_party_sites.append(str(third_party_tld))
-                    if not third_party_tld in third_party_sites:
-                        third_party_sites.append(str(third_party_tld))
+                    temp_orga = get_organisation(blocklist_json, third_party_tld)
+                    if temp_orga is not None:
+                        if not temp_orga in all_third_party_orgas:
+                            all_third_party_orgas.append(temp_orga)
+                        if not temp_orga in third_party_orgas:
+                            third_party_orgas.append(temp_orga)
+                    else:
+                        if not third_party_tld in all_third_party_orgas:
+                            all_third_party_orgas.append(third_party_tld)
+                        if not third_party_tld in third_party_orgas:
+                            third_party_orgas.append(third_party_tld)
                     if rules.should_block(url) is True:
                         # check if tracking site
-                        if not third_party_tld in all_ad_and_tracking_sites:
-                            all_ad_and_tracking_sites.append(str(third_party_tld))
-                        if not third_party_tld in tracking_sites:
-                            tracking_sites.append(str(third_party_tld))
+                        if temp_orga is not None:
+                            if not temp_orga in all_ad_and_tracking_orgas:
+                                all_ad_and_tracking_orgas.append(temp_orga)
+                            if not temp_orga in tracking_orgas:
+                                tracking_orgas.append(temp_orga)
+                        else:
+                            if not third_party_tld in all_ad_and_tracking_orgas:
+                                all_ad_and_tracking_orgas.append(third_party_tld)
+                            if not third_party_tld in tracking_orgas:
+                                tracking_orgas.append(third_party_tld)
             else:
                 raise ValueError('http is not in url!', url)
 
-        resObject["third_party_sites"] = third_party_sites
-        resObject["tracking_sites"] = tracking_sites
+        resObject["third_party_orgas"] = third_party_orgas
+        resObject["tracking_orgas"] = tracking_orgas
 
 # Percentages (each percentage per third-party site)
 third_party_percentages_array = []
@@ -154,24 +198,50 @@ third_party_percentages_array = []
 tracker_percentages_array = []
 
 if show_tracking_and_third_parties is True:
-    for third_party_site in all_third_party_sites:
+    for third_party_orga in all_third_party_orgas:
         tp_occurences = 0
         tracker_occurences = 0
+        site_has_tp = False
+        site_has_tracker = False
+        site_was_successful = False
         for resObject in result:
-            if resObject['index'] == display_index and resObject['success'] is True:
-                if third_party_site in resObject['third_party_sites']:
-                    tp_occurences += 1
-                if third_party_site in resObject['tracking_sites']:
-                    tracker_occurences += 1
+            if resObject['index'] <= display_index:
+                if resObject['index'] == 0 and resObject['success'] is True:
+                    # for each site set to false
+                    site_has_tp = False
+                    site_has_tracker = False
+                    site_was_successful = True
+                elif resObject['index'] == 0 and resObject['success'] is False:
+                    site_was_successful = False
+                if site_was_successful is True:
+                    if site_has_tp is False:
+                        if third_party_orga in resObject['third_party_orgas']:
+                            tp_occurences += 1
+                            site_has_tp = True
+                    if site_has_tracker is False:
+                        if third_party_orga in resObject['tracking_orgas']:
+                            tracker_occurences += 1
+                            site_has_tracker = True
         third_party_percentages_array.append(getPercentage(tp_occurences, len(all_crawled_sites)))
         tracker_percentages_array.append(getPercentage(tracker_occurences, len(all_crawled_sites)))
 else:
-    for tracker_site in all_ad_and_tracking_sites:
+    for tracker_orga in all_ad_and_tracking_orgas:
         tracker_occurences = 0
+        site_has_tracker = False
+        site_was_successful = False
         for resObject in result:
-            if resObject['index'] == display_index and resObject['success'] is True:
-                if tracker_site in resObject['tracking_sites']:
-                    tracker_occurences += 1
+            if resObject['index'] <= display_index:
+                if resObject['index'] == 0 and resObject['success'] is True:
+                    # for each successful site set to false
+                    site_has_tracker = False
+                    site_was_successful = True
+                elif resObject['index'] == 0 and resObject['success'] is False:
+                    site_was_successful = False
+                if site_was_successful is True and site_has_tracker is False:
+                    # check if ad is already matched to this crawled site
+                    if tracker_orga in resObject['tracking_orgas']:
+                        tracker_occurences += 1
+                        site_has_tracker = True
         tracker_percentages_array.append(getPercentage(tracker_occurences, len(all_crawled_sites)))
 
 #######################################################
@@ -179,30 +249,13 @@ else:
 #######################################################
 
 if show_tracking_and_third_parties is True:
-    df = pd.DataFrame({'Site':all_third_party_sites, 'TP-Percentage':third_party_percentages_array, 'Tracker-Percentage':tracker_percentages_array})
-    df = df.sort_values(by=['TP-Percentage'], ascending=False)
+    df = pd.DataFrame({'Site':all_third_party_orgas, 'tp-Percentage':third_party_percentages_array, 'Tracker-Percentage':tracker_percentages_array})
+    df = df.sort_values(by=['tp-Percentage'], ascending=False)
 else:
-    df = pd.DataFrame({'Site':all_ad_and_tracking_sites, 'Tracker-Percentage':tracker_percentages_array})
+    df = pd.DataFrame({'Site':all_ad_and_tracking_orgas, 'Tracker-Percentage':tracker_percentages_array})
     df = df.sort_values(by=['Tracker-Percentage'], ascending=False)
 
-df.to_csv('tables/top_trackers_2.csv', sep='\t', encoding='utf-8', index=False)
-
-# if show_tracking_and_third_parties is True:
-#     plt.bar(df['Site'], df['TP-Percentage'], color="grey")
-#     plt.bar(df['Site'], df['Tracker-Percentage'], color="black")
-#     # plt.title("Most prevalent Third-Parties and Trackers")
-#     plt.xlabel("Third-Party or Tracker")
-#     plt.legend(['Third-Party Percentage', 'Tracker Percentage'])
-# else:
-#     plt.bar(df['Site'], df['Tracker-Percentage'], color="black")
-#     # plt.title("Most prevalent Trackers")
-#     plt.xlabel("Tracker")
-#     plt.legend(['Tracker Percentage'])
-# plt.ylabel("% of First-Party Sites")
-# plt.xticks(rotation=-45, horizontalalignment="left")
-# # plt.grid()
-# # plt.show()
-# plt.savefig('figures/top_third-parties_and_trackers.png', bbox_inches='tight')
+df.to_csv('tables/cumulated_top_tracker_orgas_1.csv', sep='\t', encoding='utf-8', index=False)
 
 
 

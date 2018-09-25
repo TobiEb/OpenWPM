@@ -40,6 +40,15 @@ def getPercentage(subset, superset):
         percentage = (float(subset)/float(superset)) * 100
     return int(round(percentage))
 
+def getDomain(site):
+    ext = tldextract.extract(site)
+    d = ext.domain
+    s = ext.suffix
+    res = d + "." + s
+    if res == "de.com":
+        res = "research.de.com"
+    return res
+
 # connect to the output database
 wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/crawl-data.sqlite'
 conn = lite.connect(wpm_db)

@@ -13,17 +13,23 @@ def getTldOfSubURL(subUrl):
     else:
         return subUrl
 
+def getDomain(site):
+    ext = tldextract.extract(site)
+    d = ext.domain
+    s = ext.suffix
+    res = d + "." + s
+    if res == "de.com":
+        res = "research.de.com"
+    return res
+
+# NON CUMULATIVE
+# MAIN CONFIG
 # connect to the output database
-wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/crawl-data.sqlite'
+wpm_db = '/media/tobi/Daten/Workspace/OpenWPM/Output/1000_2.sqlite'
+selected_crawl = 1
 conn = lite.connect(wpm_db)
 cur = conn.cursor()
 
-# CUMULATIVE
-# MAIN CONFIG
-selected_crawl = 1
-#
-#
-#
 result = []
 
 # get index and success from CrawlHistory, create result array
@@ -88,17 +94,14 @@ for resObject in result:
                                     " FROM http_requests"
                                     " WHERE visit_id = ?"
                                     " AND crawl_id = ?", [resObject["visit_id"], resObject["crawl_id"]]):
-        ext = tldextract.extract(resObject["visited_site"])
-        visited_tld = ext.domain
+        visited_tld = getDomain(resObject['visited_site'])
         url = url_tuple[0]
         if "http" in url:
-            xt = tldextract.extract(url)
-            third_party_tld = xt.domain
-            # check if is a third-party
+            third_party_tld = getDomain(url)
             if not visited_tld in third_party_tld:
+            # check if is a third-party
                 if not third_party_tld in unique_third_party_sites:
                     unique_third_party_sites.append(str(third_party_tld))
-
         else:
             raise ValueError('http is not in url!', url)
 
@@ -147,7 +150,6 @@ for resObject in result:
         cumulative_get_2_tp_request_sites = []
         cumulative_get_3_tp_request_sites = []
         cumulative_get_4_tp_request_sites = []
-
 
 
 # from sub_sites get the length to show in diagram

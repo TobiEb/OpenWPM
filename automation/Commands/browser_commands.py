@@ -173,13 +173,13 @@ def get_website(url, step, sleep, visit_id, webdriver,
     except TimeoutException:
         pass
 
-    if step == 0:
+    # if step == 0:
         # get 4 sub_sites and set them to visit now
-        links = []
-        for i in range(4):
-            el = my_get_intra_link(webdriver, url)
-            links.append(el)
-        browser_commands_subsite_instance.sub_sites = links
+        # links = []
+        # for i in range(4):
+        #     el = my_get_intra_link(webdriver, url)
+        #     links.append(el)
+        # browser_commands_subsite_instance.sub_sites = links
 
     # Sleep after get returns
     time.sleep(sleep)
