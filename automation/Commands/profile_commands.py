@@ -199,12 +199,13 @@ def load_profile(browser_profile_folder, manager_params, browser_params,
     unzips it to <browser_profile_folder>. This will load whatever profile
     is in the folder, either full_profile.tar.gz or profile.tar.gz
     """
-    # TOBI
-    logger.debug("BROWSER: IN LOAD_PROFILE")
 
     try:
         # Connect to logger
         logger = loggingclient(*manager_params['logger_address'])
+
+        # TOBI
+        logger.debug("BROWSER: IN LOAD_PROFILE")
 
         # ensures that folder paths end with slashes
         if browser_profile_folder[-1] != '/':
