@@ -21,7 +21,7 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['js_instrument'] = True
     browser_params[i]['save_javascript'] = True
     browser_params[i]['cookie_instrument'] = True
-    browser_params[i]['disable_flash'] = False
+    browser_params[i]['disable_flash'] = True
     browser_params[i]['tp_cookies'] = 'always' # or never or from_visited
     browser_params[i]['bot_mitigation'] = False # throws a lot of errors if enabled
     # add ons related
