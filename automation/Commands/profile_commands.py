@@ -200,7 +200,7 @@ def load_profile(browser_profile_folder, manager_params, browser_params,
     is in the folder, either full_profile.tar.gz or profile.tar.gz
     """
     # TOBI
-     logger.debug("BROWSER: IN LOAD_PROFILE")
+    logger.debug("BROWSER: IN LOAD_PROFILE")
 
     try:
         # Connect to logger
