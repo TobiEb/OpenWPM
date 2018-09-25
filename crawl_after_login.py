@@ -8,8 +8,8 @@ NUM_BROWSERS = 1
 
 global sub_sites_instance
 sub_sites_instance = SubSites()
-# sites_to_crawl = sub_sites_instance.sites_1000_DE
-sites_to_crawl = ['http://www.spiegel.de', 'http://www.kicker.de', 'http://www.sport1.de', 'http://www.github.com']
+sites_to_crawl = sub_sites_instance.sites_1000_DE
+#sites_to_crawl = ['http://www.spiegel.de', 'http://www.kicker.de', 'http://www.sport1.de', 'http://www.github.com']
 
 # Loads the manager preference and 3 copies of the default browser dictionaries
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)
