@@ -21,7 +21,7 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['js_instrument'] = True
     browser_params[i]['save_javascript'] = True
     browser_params[i]['cookie_instrument'] = True
-    browser_params[i]['disable_flash'] = True
+    browser_params[i]['disable_flash'] = False
     browser_params[i]['tp_cookies'] = 'always' # or never or from_visited
     browser_params[i]['bot_mitigation'] = False # throws a lot of errors if enabled
     # add ons related
@@ -54,7 +54,7 @@ for site in sites_to_crawl:
     command_sequence_get1 = CommandSequence.CommandSequence(site, reset=False)
     command_sequence_get1.get(step=0, sleep=default_sleep, timeout=default_timeout)
     command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
-    # command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
+    command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
 
     manager.execute_command_sequence(command_sequence_get1, index='**') # ** = synchronized browsers
     
