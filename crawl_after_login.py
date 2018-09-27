@@ -49,12 +49,12 @@ default_sleep = 5
 manager = TaskManager.TaskManager(manager_params, browser_params)
 
 # Visits the sites with all browsers simultaneously
-for site in sites_to_crawl:
+for site in reversed(sites_to_crawl):
     # define crawl actions
     command_sequence_get1 = CommandSequence.CommandSequence(site, reset=False)
     command_sequence_get1.get(step=0, sleep=default_sleep, timeout=default_timeout)
-    # command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
-    # command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
+    command_sequence_get1.dump_profile_cookies(timeout=default_timeout)
+    command_sequence_get1.dump_flash_cookies(timeout=default_timeout)
 
     manager.execute_command_sequence(command_sequence_get1, index='**') # ** = synchronized browsers
     
