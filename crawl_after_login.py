@@ -9,14 +9,14 @@ NUM_BROWSERS = 1
 global sub_sites_instance
 sub_sites_instance = SubSites()
 sites_to_crawl = sub_sites_instance.sites_1000_DE
-#sites_to_crawl = ['http://www.spiegel.de', 'http://www.kicker.de', 'http://www.sport1.de', 'http://www.github.com']
+#sites_to_crawl = ['http://www.facebook.com']
 
 # Loads the manager preference and 3 copies of the default browser dictionaries
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)
 
 # Update browser configuration (use this for per-browser settings)
 for i in range(NUM_BROWSERS):
-    browser_params[i]['headless'] = True
+    browser_params[i]['headless'] = False
     browser_params[i]['http_instrument'] = True
     browser_params[i]['js_instrument'] = True
     browser_params[i]['save_javascript'] = True
@@ -29,9 +29,11 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['ghostery'] = False
     browser_params[i]['ublock-origin'] = False
     # if profile should be saved
-    browser_params[i]['profile_archive_dir'] = '/home/OpenWPM/Output/Profile'
+    #browser_params[i]['profile_archive_dir'] = '/home/OpenWPM/Output/Profile'
+    browser_params[i]['profile_archive_dir'] = 'Output/Profile'
     # if profile should be loaded
     #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Facebook'
+    browser_params[i]['profile_tar'] = 'Output/Profiles/Facebook'
 
     #self written
     browser_params[i]['scroll_down'] = False
@@ -39,8 +41,8 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['execute_tshark'] = False
 
 # Update TaskManager configuration (use this for crawl-wide settings)
-manager_params['data_directory'] = '/home/OpenWPM/Output/Data'
-manager_params['log_directory'] = '/home/OpenWPM/Output/Data'
+manager_params['data_directory'] = 'Output/Data'
+manager_params['log_directory'] = 'Output/Data'
 #manager_params['database_name'] = 'output.sqlite'
 
 default_timeout = 60
@@ -49,7 +51,7 @@ default_sleep = 5
 manager = TaskManager.TaskManager(manager_params, browser_params)
 
 # Visits the sites with all browsers simultaneously
-for site in reversed(sites_to_crawl):
+for site in sites_to_crawl:
     # define crawl actions
     command_sequence_get1 = CommandSequence.CommandSequence(site, reset=False)
     command_sequence_get1.get(step=0, sleep=default_sleep, timeout=default_timeout)
