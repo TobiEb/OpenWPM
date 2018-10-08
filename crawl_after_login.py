@@ -33,7 +33,7 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['profile_archive_dir'] = 'Output/Profile'
     # if profile should be loaded
     #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Profiles/Facebook'
-    browser_params[i]['profile_tar'] = 'Output/Profiles/Facebook'
+    browser_params[i]['profile_tar'] = 'Output/Profiles/Facebook_2'
 
     #self written
     browser_params[i]['scroll_down'] = False

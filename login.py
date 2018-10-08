@@ -33,7 +33,7 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['ghostery'] = False
     browser_params[i]['ublock-origin'] = False
     # if profile should be saved
-    browser_params[i]['profile_archive_dir'] = '/home/OpenWPM/Output/Profile/Facebook'
+    browser_params[i]['profile_archive_dir'] = 'Output/Profiles/Facebook_2'
     # if profile should be loaded
     #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Profile'
 
@@ -43,8 +43,8 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['execute_tshark'] = False
 
 # Update TaskManager configuration (use this for crawl-wide settings)
-manager_params['data_directory'] = '/home/OpenWPM/Output'
-manager_params['log_directory'] = '/home/OpenWPM/Output'
+manager_params['data_directory'] = 'Output/Profile'
+manager_params['log_directory'] = 'Output/Profile'
 #manager_params['database_name'] = 'output.sqlite'
 
 default_timeout = 60
