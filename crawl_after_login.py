@@ -16,7 +16,7 @@ manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)
 
 # Update browser configuration (use this for per-browser settings)
 for i in range(NUM_BROWSERS):
-    browser_params[i]['headless'] = False
+    browser_params[i]['headless'] = True
     browser_params[i]['http_instrument'] = True
     browser_params[i]['js_instrument'] = True
     browser_params[i]['save_javascript'] = True
@@ -32,7 +32,7 @@ for i in range(NUM_BROWSERS):
     #browser_params[i]['profile_archive_dir'] = '/home/OpenWPM/Output/Profile'
     browser_params[i]['profile_archive_dir'] = 'Output/Profile'
     # if profile should be loaded
-    #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Facebook'
+    #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Profiles/Facebook'
     browser_params[i]['profile_tar'] = 'Output/Profiles/Facebook'
 
     #self written
