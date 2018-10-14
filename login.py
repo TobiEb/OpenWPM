@@ -34,7 +34,7 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['ghostery'] = False
     browser_params[i]['ublock-origin'] = False
     # if profile should be saved
-    browser_params[i]['profile_archive_dir'] = 'Output/Profiles/Twitter_1'
+    browser_params[i]['profile_archive_dir'] = 'Output/Profiles/Twitter_2'
     # if profile should be loaded
     #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Profile'
 
