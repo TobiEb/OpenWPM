@@ -9,7 +9,7 @@ NUM_BROWSERS = 1
 global sub_sites_instance
 sub_sites_instance = SubSites()
 # sites_to_crawl = sub_sites_instance.sites_100_DE
-sites_to_crawl = ['http://www.web.de']
+sites_to_crawl = ['http://www.github.com']
 # http://accounts.google.de
 # http://www.twitter.com
 # http://www.amazon.de
@@ -34,7 +34,7 @@ for i in range(NUM_BROWSERS):
     browser_params[i]['ghostery'] = False
     browser_params[i]['ublock-origin'] = False
     # if profile should be saved
-    browser_params[i]['profile_archive_dir'] = 'Output/Profiles/Web_2'
+    browser_params[i]['profile_archive_dir'] = 'Output/Profiles/Github_1'
     # if profile should be loaded
     #browser_params[i]['profile_tar'] = '/home/OpenWPM/Output/Profile'
 
